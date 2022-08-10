@@ -8,9 +8,20 @@ body,
   @apply h-full w-full relative;
 }
 
+.btn {
+  @apply px-12 py-3 rounded-sm shadow-lg font-bold;
+  background-color: rgba(0, 247, 255, 0.378);
+}
+html {
+  background-color: rgb(245, 245, 245);
+}
 /* Hide scrollbar for Chrome, Safari and Opera */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
+}
+
+header {
+  @apply bg-white;
 }
 
 /* Hide scrollbar for IE, Edge and Firefox */
@@ -23,6 +34,27 @@ body,
   display: none;
 }
 
-.web3modal-modal-card, .web3modal-modal-card > * > *{
+.web3modal-modal-card,
+.web3modal-modal-card > * > * {
   border-radius: 0px !important;
+}
+
+.welcomeCard > div > h3 {
+  @apply text-xl mb-4 font-semibold w-max;
+}
+
+.welcomeCard > div > p {
+  @apply text-base font-light;
+}
+
+.welcomeCard > div {
+  @apply py-4 px-6 w-full bg-white flex flex-col justify-between;
+}
+
+.welcomeCard > div > button {
+  @apply px-6 py-1 border rounded w-max mt-20;
+}
+
+.welcomeCard {
+  @apply shadow-lg grid grid-flow-col w-full bg-gray-300 gap-1px rounded-xl;
 }
