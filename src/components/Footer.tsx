@@ -32,7 +32,7 @@ export default function Footer() {
           </div>
           <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2">
             <div className="flex justify-center overflow-visible">
-              <p>© Hashmesh Labs 2022</p>
+              <p>Hashmesh Labs © 2022</p>
             </div>
           </div>
           <div className="flex text-blue-300 text-xs justify-end items-center">
