@@ -22,3 +22,7 @@ body,
 ::-webkit-scrollbar-track {
   display: none;
 }
+
+.web3modal-modal-card, .web3modal-modal-card > * > *{
+  border-radius: 0px !important;
+}

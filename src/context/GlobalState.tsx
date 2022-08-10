@@ -23,13 +23,13 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
         const web3Modal = new Web3Modal({
           cacheProvider: true,
           network: 'mainnet', // optional
-          theme: {
-            background: 'rgb(0, 0, 0, 1)',
-            main: 'rgb(199, 199, 199)',
-            secondary: 'rgb(136, 136, 136)',
-            border: 'rgba(45, 45, 45, 1)',
-            hover: 'rgba(58, 123, 191, .3)',
-          },
+          // theme: {
+          //   background: 'rgb(0, 0, 0, 1)',
+          //   main: 'rgb(199, 199, 199)',
+          //   secondary: 'rgb(136, 136, 136)',
+          //   border: 'rgba(45, 45, 45, 1)',
+          //   hover: 'rgba(58, 123, 191, .3)',
+          // },
           providerOptions: {
             walletconnect: {
               package: WalletConnectProvider, // required

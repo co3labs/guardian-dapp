@@ -6,16 +6,18 @@ module.exports = {
   darkMode: 'class',
   mode: 'jit',
   theme: {
-    spacing: {
-      '1px': '1px',
-      '2px': '2px',
-    },
-    colors: {
-      primary: colors.gray,
-      secondary: colors.indigo,
-      tertiary: colors.sky,
-      gray: colors.stone,
-      background: colors.black,
+    extend: {
+      spacing: {
+        '1px': '1px',
+        '2px': '2px',
+      },
+      colors: {
+        primary: colors.gray,
+        secondary: colors.indigo,
+        tertiary: colors.sky,
+        gray: colors.stone,
+        background: colors.black,
+      },
     },
   },
 };
