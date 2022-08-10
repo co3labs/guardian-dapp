@@ -96,14 +96,3 @@ export function connectedWalletViaGA({ wallet }: { wallet: string | null }) {
   }
 }
 
-export function transactionTypeGA(type: string) {
-  try {
-    ReactGA.event({
-      category: 'Transaction',
-      action: `User made a transaction: ${type}`,
-      label: 'Transaction Event',
-    });
-  } catch (error) {
-    console.error(error);
-  }
-}
