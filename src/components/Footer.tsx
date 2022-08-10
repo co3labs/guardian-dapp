@@ -4,7 +4,6 @@ import { getCommitInfo } from '../utils/gitInfo';
 import { GlobalContext } from '../context/GlobalState';
 import SocialLinkIcons from './SocialLinkIcons';
 
-
 export default function Footer() {
   const { web3 } = useContext(GlobalContext);
   // console.log(web3);
