@@ -3,12 +3,14 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import { GlobalProvider } from './context/GlobalState';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Home from './components/Home';
+import Home from './pages/Home';
 import ReactDOMClient from 'react-dom/client';
-import Header from './components/Header';
-import Footer from './components/Footer';
-import Welcome from './components/Welcome';
-import CreateVault from './components/CreateVault';
+import Header from './elements/Header';
+import Footer from './elements/Footer';
+import Welcome from './pages/Welcome';
+import CreateVault from './pages/CreateVault';
+import LoadVault from './pages/LoadVault';
+import EditVault from './pages/EditVault';
 
 try {
   const container = document.querySelector('body');
@@ -22,13 +24,14 @@ try {
       <GlobalProvider>
         <Router>
           <Header />
-          <div className='flex-grow'>
+          <div className="flex-grow">
             <Routes>
               <Route path="" element={<Home />} />
               <Route path="app">
                 <Route path="welcome" element={<Welcome />} />
-                <Route path="vault/edit" element={<></>} />
-                <Route path="vault/create" element={<CreateVault />} />
+                <Route path="edit" element={<EditVault />} />
+                <Route path="create" element={<CreateVault />} />
+                <Route path="load" element={<LoadVault />} />
               </Route>
               <Route path="*" element={<div>Not Found</div>} />
             </Routes>

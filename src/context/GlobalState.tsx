@@ -2,7 +2,7 @@ import { createContext, PropsWithChildren, useEffect, useState } from 'react';
 import Web3 from 'web3';
 import Web3Modal from 'web3modal';
 import WalletConnectProvider from '@walletconnect/web3-provider';
-import { globalStates, supportedChains } from '../@types/types';
+import { globalStates, IVaultInfo, supportedChains } from '../@types/types';
 
 export const GlobalContext = createContext({} as globalStates);
 
@@ -15,6 +15,9 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
   const [web3, setWeb3] = useState<Web3>();
   const [unsupportedNet, setUnsupportedNet] = useState<boolean>(false);
   const [cookiesAllowed, setCookiesAllowed] = useState<boolean | null>(null);
+  const [allVaults, setAllVaults] = useState({})
+  const [currentVault, setCurrentVault] = useState({})
+  const [currentVaultEdits, setCurrentVaultEdits] = useState<IVaultInfo | null>(null)
 
   // intitialize web3modal to use to connect to provider
   useEffect(() => {
@@ -121,6 +124,8 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
         unsupportedNet,
         cookiesAllowed,
         setCookiesAllowed,
+        currentVaultEdits, 
+        setCurrentVaultEdits
       }}
     >
       <>{children}</>
