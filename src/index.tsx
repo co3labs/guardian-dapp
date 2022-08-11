@@ -8,6 +8,7 @@ import ReactDOMClient from 'react-dom/client';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Welcome from './components/Welcome';
+import CreateVault from './components/CreateVault';
 
 try {
   const container = document.querySelector('body');
@@ -20,15 +21,19 @@ try {
     <React.StrictMode>
       <GlobalProvider>
         <Router>
-          <Header/>
-          <Routes>
-            <Route path="" element={<Home />} />
-            <Route path="app">
-              <Route path="welcome" element={<Welcome />} />
-            </Route>
-            <Route path="*" element={<div>Not Found</div>} />
-          </Routes>
-          <Footer/>
+          <Header />
+          <div className='flex-grow'>
+            <Routes>
+              <Route path="" element={<Home />} />
+              <Route path="app">
+                <Route path="welcome" element={<Welcome />} />
+                <Route path="vault/edit" element={<></>} />
+                <Route path="vault/create" element={<CreateVault />} />
+              </Route>
+              <Route path="*" element={<div>Not Found</div>} />
+            </Routes>
+          </div>
+          <Footer />
         </Router>
       </GlobalProvider>
     </React.StrictMode>

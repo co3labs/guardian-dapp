@@ -15,7 +15,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="absolute bottom-0 pb-2 w-full mt-5 hidden lg:block text-xs">
+    <footer className="pb-2 w-full mt-5 hidden lg:block text-xs">
       <ul className="flex justify-center overflow-visible">
         <p></p>
         {links.map((link: string[], index: number) => (
