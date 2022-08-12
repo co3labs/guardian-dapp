@@ -4,7 +4,13 @@ import Web3Modal from 'web3modal';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import { globalStates, IVaultInfo, supportedChains } from '../@types/types';
 
-export const INITIAL_VAULT_STATE: IVaultInfo = { vaultName: '', threshold: 1, guardianList: { 0: { name: '', address: '' } } };
+export const INITIAL_VAULT_STATE: IVaultInfo = {
+  vaultName: '',
+  threshold: 1,
+  address: '',
+  guardianCount: 1,
+  guardianList: { 0: { name: '', address: '' } },
+};
 
 export const GlobalContext = createContext({} as globalStates);
 

@@ -2,6 +2,7 @@ import ConnectWallet from '../elements/ConnectWallet';
 import GuardianForm from '../elements/GuardianForm';
 import ManageVaultConstructor from '../elements/ManageVaultConstructor';
 import NameVault from '../elements/NameVault';
+import ReviewChanges from '../elements/ReviewChanges';
 import SelectVault from '../elements/SelectVault';
 
 export default function EditVault() {
@@ -9,10 +10,9 @@ export default function EditVault() {
     <ManageVaultConstructor
       steps={[
         ['Connect Wallet', <ConnectWallet />],
-        ['Select Vault', <SelectVault />],
         ['Name', <NameVault />],
         ['Guardians', <GuardianForm />],
-        ['Review', <></>],
+        ['Review', <ReviewChanges/>],
       ]}
       title="Edit Existing Recover Vault"
     />

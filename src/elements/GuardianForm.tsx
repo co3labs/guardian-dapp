@@ -1,14 +1,35 @@
 import { useContext, useEffect, useState } from 'react';
-import { BsChevronDown, BsTrash } from 'react-icons/bs';
+import { BsChevronDown, BsTrash, BsXCircle } from 'react-icons/bs';
 import OutsideClickHandler from 'react-outside-click-handler';
+import { MoonLoader } from 'react-spinners';
 import { IGuardianInfo, IGuardianList, IVaultInfo } from '../@types/types';
 import { GlobalContext } from '../context/GlobalState';
 import BackOrContinueBtns from './BackOrContinue';
+import GuardianInput from './GuardianInput';
+import InvalidInputAlert from './InvalidInputAlert';
 
 export default function GuardianForm() {
   const { currentVaultEdits, accountId, setCurrentVaultEdits } = useContext(GlobalContext);
   const [guardianCount, setGuardianCount] = useState(Object.keys(currentVaultEdits.guardianList).length);
   const [openThresholdSelect, setOpenThresholdSelect] = useState(false);
+  const [formIsValid, setFormIsValid] = useState(false);
+  const [validating, setValidating] = useState(false);
+
+  useEffect(() => {
+    const culprit = Object.values(currentVaultEdits.guardianList).find(
+      (guardian) => !guardian.name || !guardian.address
+    );
+
+    console.log("Culprit ", culprit);
+    
+    if (!culprit) {
+      setFormIsValid(true);
+    } else {
+      setFormIsValid(false);
+    }
+    setValidating(false);
+  }, [currentVaultEdits.guardianList, guardianCount]);
+
   useEffect(() => {
     setGuardianCount(Object.keys(currentVaultEdits.guardianList).length);
   }, []);
@@ -17,17 +38,6 @@ export default function GuardianForm() {
     if (currentVaultEdits.threshold > guardianCount && guardianCount > 0)
       setCurrentVaultEdits({ ...currentVaultEdits, threshold: guardianCount });
   }, [guardianCount, currentVaultEdits.threshold]);
-
-  function updateGuardian(val: string, index: number, field: 'name' | 'address') {
-    const newGuardians = currentVaultEdits.guardianList;
-    if (field === 'name') {
-      newGuardians[index] = { ...newGuardians[index], name: val };
-    } else {
-      newGuardians[index] = { ...newGuardians[index], address: val };
-    }
-
-    setCurrentVaultEdits({ ...currentVaultEdits, guardianList: newGuardians });
-  }
 
   return (
     <>
@@ -42,47 +52,22 @@ export default function GuardianForm() {
             <p>Name</p>
             <p>Address</p>
           </div>
-          {Object.entries(currentVaultEdits.guardianList).map(([id, owner]: [string, IGuardianInfo], index: number) => (
-            <div key={`owner_${index}`} className="grid grid-flow-col gap-4 my-4">
-              <input
-                type="text"
-                onChange={(event) => {
-                  updateGuardian(event.target.value, index, 'name');
-                }}
-                className="border rounded-sm p-2"
-                value={owner.name}
-                placeholder="name"
+          {Object.entries(currentVaultEdits.guardianList).map(
+            ([id, guardian]: [string, IGuardianInfo], index: number) => (
+              <GuardianInput
+                id={id}
+                guardian={guardian}
+                index={index}
+                setGuardianCount={setGuardianCount}
+                guardianCount={guardianCount}
+                setIsLoading={setValidating}
               />
-              <input
-                type="text"
-                onChange={(event) => {
-                  updateGuardian(event.target.value, index, 'address');
-                }}
-                className="border rounded-sm p-2"
-                value={owner.address}
-                placeholder="address"
-              />
-              {index > 0 ? (
-                <button
-                  type="button"
-                  onClick={() => {
-                    const newGuardians = currentVaultEdits.guardianList;
-                    delete newGuardians[Number(id)];
-                    setCurrentVaultEdits({ ...currentVaultEdits, guardianList: newGuardians });
-                    setGuardianCount(guardianCount - 1);
-                  }}
-                >
-                  <BsTrash />
-                </button>
-              ) : (
-                <></>
-              )}
-            </div>
-          ))}
+            )
+          )}
         </div>
 
         <button
-          className="border rounded-sm"
+          className="btn btnSmall btnSecondary w-fit"
           type="button"
           onClick={() => {
             setCurrentVaultEdits({
@@ -139,8 +124,10 @@ export default function GuardianForm() {
             <span>out of {guardianCount} guardian(s)</span>
           </div>
         </div>
-
-        <BackOrContinueBtns />
+        <div className="flex items-center">
+          <BackOrContinueBtns conditionNext={formIsValid} />
+          {/* {validating ? <MoonLoader /> : <></>}{' '} */}
+        </div>
       </form>
     </>
   );

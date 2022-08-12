@@ -1,5 +1,19 @@
+import GuardianForm from '../elements/GuardianForm';
+import ImportVault from '../elements/ImportVault';
 import ManageVaultConstructor from '../elements/ManageVaultConstructor';
+import NameVault from '../elements/NameVault';
+import ReviewChanges from '../elements/ReviewChanges';
 
 export default function LoadVault() {
-  return <ManageVaultConstructor steps={[['', <></>]]} title="Load an Existing Vault" />;
+  return (
+    <ManageVaultConstructor
+      steps={[
+        ['Import', <ImportVault />],
+        ['Name', <NameVault />],
+        ['Edit Guardians', <GuardianForm/>],
+        ['Review', <ReviewChanges/>]
+      ]}
+      title="Load an Existing Vault"
+    />
+  );
 }

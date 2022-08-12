@@ -16,6 +16,8 @@ export interface IVaultInfo {
   vaultName: string
   guardianList: IGuardianList
   threshold: number
+  guardianCount: number
+  address: string
 }
 
 

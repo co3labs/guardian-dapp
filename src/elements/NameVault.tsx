@@ -30,7 +30,7 @@ export default function NameVault() {
             const value = e.target.value;
             if (value.length < maxLength) setCurrentVaultEdits({ ...currentVaultEdits, vaultName: value });
           }}
-          className="border rounded-sm w-min p-4"
+          className=""
           type="text"
           id="recovery_vault_name"
           value={currentVaultEdits.vaultName}
