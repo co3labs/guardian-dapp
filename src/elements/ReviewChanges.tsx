@@ -39,7 +39,7 @@ export default function ReviewChanges() {
       ) : (
         <>{/**TODO: Throw / show an error here */}</>
       )}
-      <BackOrContinueBtns />
+      <BackOrContinueBtns conditionNext={false} />
     </div>
   );
 }
