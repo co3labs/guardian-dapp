@@ -15,6 +15,7 @@ export interface IGuardianList {
 export interface IVaultInfo {
   vaultName: string
   guardianList: IGuardianList
+  threshold: number
 }
 
 
@@ -27,6 +28,8 @@ export interface globalStates {
   unsupportedNet: boolean;
   cookiesAllowed: boolean | null;
   setCookiesAllowed: React.Dispatch<React.SetStateAction<boolean | null>>;
-  currentVaultEdits: IVaultInfo | null;
-  setCurrentVaultEdits: React.Dispatch<React.SetStateAction<IVaultInfo | null>>;
+  currentVaultEdits: IVaultInfo;
+  setCurrentVaultEdits: React.Dispatch<React.SetStateAction<IVaultInfo>>;
+  currentStep: number
+  setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
 }

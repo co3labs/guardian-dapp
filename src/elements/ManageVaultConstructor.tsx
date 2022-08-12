@@ -1,21 +1,24 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { GlobalContext } from '../context/GlobalState';
 import ManageVaultContainer from './ManageVaultContainer';
 
 export default function ManageVaultConstructor({ steps, title }: { steps: [string, JSX.Element][]; title: string }) {
-  const [currentStep, setCurrentStep] = useState(0);
-
-
+  const { currentStep, setCurrentStep } = useContext(GlobalContext);
   return (
     <ManageVaultContainer>
-      <div className="p-4">
+      <div className="py-4 text-2xl">
         <h3>{title}</h3>
       </div>
-      <div className="shadow-lg bg-white ">
-        <div className="grid grid-flow-col w-full">
+      <div className="">
+        <div className={`grid grid-flow-col w-full rounded-sm shadow-md bg-white`}>
           {steps.map(([title], index) => (
-            <button className='px-2 py-1' onClick={()=> setCurrentStep(index)}>
-              <h4>{title}</h4>
-            </button>
+            <h4
+              className={`px-2 py-1 bg ${index === currentStep ? 'bg-blue-100' : 'bg-blue-50'} ${
+                index !== 0 ? 'border-l-[1px] border-blue-100' : ''
+              }`}
+            >
+              {title}
+            </h4>
           ))}
         </div>
 

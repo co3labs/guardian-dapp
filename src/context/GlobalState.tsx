@@ -4,6 +4,8 @@ import Web3Modal from 'web3modal';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import { globalStates, IVaultInfo, supportedChains } from '../@types/types';
 
+export const INITIAL_VAULT_STATE: IVaultInfo = { vaultName: '', threshold: 1, guardianList: { 0: { name: '', address: '' } } };
+
 export const GlobalContext = createContext({} as globalStates);
 
 export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }) => {
@@ -15,9 +17,14 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
   const [web3, setWeb3] = useState<Web3>();
   const [unsupportedNet, setUnsupportedNet] = useState<boolean>(false);
   const [cookiesAllowed, setCookiesAllowed] = useState<boolean | null>(null);
-  const [allVaults, setAllVaults] = useState({})
-  const [currentVault, setCurrentVault] = useState({})
-  const [currentVaultEdits, setCurrentVaultEdits] = useState<IVaultInfo | null>(null)
+  const [allVaults, setAllVaults] = useState({});
+  const [currentVault, setCurrentVault] = useState({});
+  const [currentVaultEdits, setCurrentVaultEdits] = useState<IVaultInfo>(INITIAL_VAULT_STATE);
+  const [currentStep, setCurrentStep] = useState(0);
+
+  useEffect(() => {
+    console.log(currentVaultEdits.guardianList[0]);
+  }, [currentVaultEdits.guardianList, currentVaultEdits.vaultName]);
 
   // intitialize web3modal to use to connect to provider
   useEffect(() => {
@@ -25,7 +32,7 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
       try {
         const web3Modal = new Web3Modal({
           cacheProvider: true,
-          network: 'mainnet', 
+          network: 'mainnet',
           providerOptions: {
             walletconnect: {
               package: WalletConnectProvider, // required
@@ -69,14 +76,14 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
 
       const accounts = await web3.eth.getAccounts();
       const account = accounts[0] ? accounts[0].toLowerCase() : null;
-      setAccountId(accounts[0])
+      setAccountId(accounts[0]);
 
       const _chainId = String(await web3.eth.getChainId());
       setChainId(_chainId as supportedChains);
 
-      setListeners(provider, web3)
+      setListeners(provider, web3);
 
-      console.info("Connected to account" + account + ", on chain" + _chainId)
+      console.info('Connected to account' + account + ', on chain' + _chainId);
     } catch (error) {
       console.error(error);
     }
@@ -91,14 +98,12 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
 
   function setListeners(provider: any, web3: Web3) {
     provider.on('accountsChanged', async (accounts: string[]) => {
-      console.info("Account changed");
-      
+      console.info('Account changed');
     });
 
     // Subscribe to chainId change
     provider.on('chainChanged', async (chainId: supportedChains) => {
-      console.info("Chain changed")
-
+      console.info('Chain changed');
     });
 
     // Subscribe to provider connection
@@ -124,8 +129,10 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
         unsupportedNet,
         cookiesAllowed,
         setCookiesAllowed,
-        currentVaultEdits, 
-        setCurrentVaultEdits
+        currentVaultEdits,
+        setCurrentVaultEdits,
+        currentStep,
+        setCurrentStep,
       }}
     >
       <>{children}</>

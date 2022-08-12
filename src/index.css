@@ -8,9 +8,19 @@ body,
   @apply h-full w-full relative flex flex-col;
 }
 
-.btn {
-  @apply px-12 py-3 rounded-sm shadow-lg font-bold;
-  background-color: rgba(0, 247, 255, 0.378);
+.btnPrimary {
+  @apply rounded-sm shadow-md  bg-blue-200;
+}
+
+.btnSecondary {
+  @apply rounded-sm shadow-md bg-blue-100;
+}
+.btnBig {
+  @apply px-12 py-3 font-bold;
+}
+
+.btnSmall {
+  @apply px-6 py-1 mx-2;
 }
 html {
   background-color: rgb(245, 245, 245);
@@ -36,7 +46,7 @@ header {
 
 .web3modal-modal-card,
 .web3modal-modal-card > * > * {
-  border-radius: 0px !important;
+  border-radius: 0.125rem !important/* 2px */;
 }
 
 .welcomeCard > div > h3 {
