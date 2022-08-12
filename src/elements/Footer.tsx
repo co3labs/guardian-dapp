@@ -10,12 +10,11 @@ export default function Footer() {
     ['Privacy'],
     ['Licenses'],
     ['Cookie Policy'],
-    ['Preferences'],
     ['v1.0.0beta'],
   ];
 
   return (
-    <footer className="pb-2 w-full mt-5 hidden lg:block text-xs">
+    <footer className="pb-2 w-full mt-5 hidden lg:block text-xs text-gray-500">
       <ul className="flex justify-center overflow-visible">
         <p></p>
         {links.map((link: string[], index: number) => (

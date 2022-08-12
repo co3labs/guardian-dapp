@@ -1,91 +1,95 @@
 import { useContext, useEffect, useState } from 'react';
-import { BsChevronDown, BsTrash, BsXCircle } from 'react-icons/bs';
+import { BsChevronDown } from 'react-icons/bs';
 import OutsideClickHandler from 'react-outside-click-handler';
-import { MoonLoader } from 'react-spinners';
-import { IGuardianInfo, IGuardianList, IVaultInfo } from '../@types/types';
+import { IGuardianInfo } from '../@types/types';
 import { GlobalContext } from '../context/GlobalState';
-import BackOrContinueBtns from './BackOrContinue';
+import BackOrContinueBtns from './BackOrContinueBtns';
 import GuardianInput from './GuardianInput';
-import InvalidInputAlert from './InvalidInputAlert';
 
 export default function GuardianForm() {
-  const { currentVaultEdits, accountId, setCurrentVaultEdits } = useContext(GlobalContext);
-  const [guardianCount, setGuardianCount] = useState(Object.keys(currentVaultEdits.guardianList).length);
+  const { currentVaultEdits, setCurrentVaultEdits, accountId } = useContext(GlobalContext);
   const [openThresholdSelect, setOpenThresholdSelect] = useState(false);
   const [formIsValid, setFormIsValid] = useState(false);
   const [validating, setValidating] = useState(false);
+  const [addressList, setAddressList] = useState<string[]>([]);
+  useEffect(() => {
+    if (currentVaultEdits.guardianList[0].address === '' && accountId) {
+      setCurrentVaultEdits({
+        ...currentVaultEdits,
+        guardianList: { 0: { ...currentVaultEdits.guardianList[0], address: accountId } },
+      });
+
+      setAddressList([...addressList, accountId.toLowerCase()]);
+    }
+  }, []);
 
   useEffect(() => {
     const culprit = Object.values(currentVaultEdits.guardianList).find(
-      (guardian) => !guardian.name || !guardian.address
+      (guardian) =>
+        !guardian.name ||
+        !guardian.address ||
+        guardian.address.match(/[^A-Za-z0-9]/) ||
+        guardian.address.length !== 42 ||
+        addressList.includes(guardian.address.toLowerCase())
     );
 
-    console.log("Culprit ", culprit);
-    
     if (!culprit) {
       setFormIsValid(true);
     } else {
       setFormIsValid(false);
     }
     setValidating(false);
-  }, [currentVaultEdits.guardianList, guardianCount]);
+  }, [currentVaultEdits.guardianList, currentVaultEdits.guardianCount]);
 
   useEffect(() => {
-    setGuardianCount(Object.keys(currentVaultEdits.guardianList).length);
-  }, []);
-
-  useEffect(() => {
-    if (currentVaultEdits.threshold > guardianCount && guardianCount > 0)
-      setCurrentVaultEdits({ ...currentVaultEdits, threshold: guardianCount });
-  }, [guardianCount, currentVaultEdits.threshold]);
+    const count = currentVaultEdits.guardianCount;
+    if (currentVaultEdits.threshold > count && count > 0)
+      setCurrentVaultEdits({ ...currentVaultEdits, threshold: count });
+  }, [currentVaultEdits.guardianCount, currentVaultEdits.threshold]);
 
   return (
     <>
-      <form
-        className="flex flex-col h-full p-4"
-        onSubmit={(e) => {
-          e.preventDefault();
-        }}
-      >
-        <div className="flex flex-col h-full">
-          <div className="grid grid-flow-col">
-            <p>Name</p>
-            <p>Address</p>
-          </div>
-          {Object.entries(currentVaultEdits.guardianList).map(
-            ([id, guardian]: [string, IGuardianInfo], index: number) => (
-              <GuardianInput
-                id={id}
-                guardian={guardian}
-                index={index}
-                setGuardianCount={setGuardianCount}
-                guardianCount={guardianCount}
-                setIsLoading={setValidating}
-              />
-            )
-          )}
-        </div>
+      <div className="flex flex-col h-full m-6">
+        <p className="font-light">Add Guardians</p>
 
-        <button
-          className="btn btnSmall btnSecondary w-fit"
-          type="button"
-          onClick={() => {
-            setCurrentVaultEdits({
-              ...currentVaultEdits,
-              guardianList: {
-                ...currentVaultEdits.guardianList,
-                [guardianCount]: {
-                  name: '',
-                  address: '',
+        {Object.entries(currentVaultEdits.guardianList).map(
+          ([id, guardian]: [string, IGuardianInfo], index: number) => (
+            <GuardianInput
+              id={id}
+              guardian={guardian}
+              index={index}
+              setIsLoading={setValidating}
+              addressList={addressList}
+              setAddressList={setAddressList}
+            />
+          )
+        )}
+      </div>
+
+      <div className="mx-6">
+        <div className="w-full flex justify-end">
+          <button
+            className="btn btnSmall btnSecondary w-fit"
+            type="button"
+            onClick={() => {
+              setCurrentVaultEdits({
+                ...currentVaultEdits,
+                guardianCount: currentVaultEdits.guardianCount + 1,
+                guardianList: {
+                  ...currentVaultEdits.guardianList,
+                  [currentVaultEdits.guardianCount]: {
+                    name: '',
+                    address: '',
+                  },
                 },
-              },
-            });
-            setGuardianCount(guardianCount + 1);
-          }}
-        >
-          + Add Another Guardian
-        </button>
-        <div className="my-4">
+              });
+            }}
+          >
+            + Add Another Guardian
+          </button>
+        </div>
+        <div className="w-full h-1px bg-gray-400 my-4" />
+        <div className="my-4 font-light">
           <p>Any transaction requires the confirmation of:</p>
           <div className="flex items-center">
             <button
@@ -97,7 +101,7 @@ export default function GuardianForm() {
               <span>
                 <BsChevronDown />
               </span>
-              {openThresholdSelect && guardianCount > 0 ? (
+              {openThresholdSelect && currentVaultEdits.guardianCount > 0 ? (
                 <OutsideClickHandler
                   onOutsideClick={() => {
                     setOpenThresholdSelect(false);
@@ -121,14 +125,12 @@ export default function GuardianForm() {
                 <></>
               )}
             </button>
-            <span>out of {guardianCount} guardian(s)</span>
+            <span>out of {currentVaultEdits.guardianCount} guardian(s)</span>
           </div>
         </div>
-        <div className="flex items-center">
-          <BackOrContinueBtns conditionNext={formIsValid} />
-          {/* {validating ? <MoonLoader /> : <></>}{' '} */}
-        </div>
-      </form>
+      </div>
+      <BackOrContinueBtns conditionNext={formIsValid} />
+      {/* {validating ? <MoonLoader /> : <></>}{' '} */}
     </>
   );
 }

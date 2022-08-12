@@ -6,23 +6,23 @@ export default function BackOrContinueBtns({
   back,
   skip,
   conditionNext = true,
-  formSubmit = false,
-  last = false
+  last = false,
+  onClick,
 }: {
   back?: string;
   skip?: 1 | 2;
   conditionNext?: boolean;
-  formSubmit?: boolean;
-  last?:boolean
+  last?: boolean;
+  onClick?: Function;
 }) {
-  const {setCurrentStep, currentStep } = useContext(GlobalContext);
+  const { setCurrentStep, currentStep } = useContext(GlobalContext);
 
   return (
-    <div className="flex mt-4">
+    <div className="flex m-4 justify-between">
       {back && skip !== 1 ? (
-        <Link to={back} className="btn btnSmall btnSecondary">
-          Cancel
-        </Link>
+        <div className="h-full flex items-center btn btnSmall btnSecondary">
+          <Link to={back}>Cancel</Link>
+        </div>
       ) : (
         <button
           onClick={() => setCurrentStep(currentStep - 1)}
@@ -35,13 +35,15 @@ export default function BackOrContinueBtns({
 
       {skip !== 2 ? (
         <button
-          type={formSubmit ? 'submit' : 'button'}
+          type="button"
           onClick={() => {
-            if (conditionNext) setCurrentStep(currentStep + 1);
+            if (onClick) {
+              onClick();
+            } else if (conditionNext) setCurrentStep(currentStep + 1);
           }}
-          className={`btn btnSmall ${conditionNext ? 'btnPrimary' : 'bg-gray-200 opacity-25'} w-min `}
+          className={`btn btnSmall ${conditionNext ? 'btnPrimary' : 'bg-gray-200 opacity-25'} w-min transition-colors`}
         >
-          {last? "Confirm" : "Continue"}
+          {last ? 'Confirm' : 'Continue'}
         </button>
       ) : (
         <></>

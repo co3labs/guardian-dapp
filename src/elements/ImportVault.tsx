@@ -1,5 +1,5 @@
 import { BsInfoCircle } from 'react-icons/bs';
-import BackOrContinueBtns from './BackOrContinue';
+import BackOrContinueBtns from './BackOrContinueBtns';
 
 export default function ImportVault() {
   return (

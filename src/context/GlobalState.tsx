@@ -12,32 +12,38 @@ export const INITIAL_VAULT_STATE: IVaultInfo = {
   guardianList: { 0: { name: '', address: '' } },
 };
 
+export const networks = {
+  1: "Ethereum", 
+  56: "Binance", 
+  137: "Polygon", 
+  246: "Energyweb", 
+  1285: "Moonriver"
+}
+
 export const GlobalContext = createContext({} as globalStates);
 
 export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }) => {
   // essential states for connection to web3, user wallet, ocean operations, and DataX configurations
   const [web3Modal, setWeb3Modal] = useState<Web3Modal>();
   const [accountId, setAccountId] = useState<string>();
-  const [chainId, setChainId] = useState<supportedChains>();
+  const [chainId, setChainId] = useState<any>();
   const [provider, setProvider] = useState<Web3Modal>();
   const [web3, setWeb3] = useState<Web3>();
   const [unsupportedNet, setUnsupportedNet] = useState<boolean>(false);
   const [cookiesAllowed, setCookiesAllowed] = useState<boolean | null>(null);
-  const [allVaults, setAllVaults] = useState({});
+  const [allVaults, setAllVaults] = useState<IVaultInfo[]>([]);
   const [currentVault, setCurrentVault] = useState({});
   const [currentVaultEdits, setCurrentVaultEdits] = useState<IVaultInfo>(INITIAL_VAULT_STATE);
   const [currentStep, setCurrentStep] = useState(0);
 
-  useEffect(() => {
-    console.log(currentVaultEdits.guardianList[0]);
-  }, [currentVaultEdits.guardianList, currentVaultEdits.vaultName]);
 
   // intitialize web3modal to use to connect to provider
   useEffect(() => {
     async function init() {
       try {
         const web3Modal = new Web3Modal({
-          cacheProvider: true,
+          // disableInjectedProvider:true,
+          cacheProvider: false,
           network: 'mainnet',
           providerOptions: {
             walletconnect: {
@@ -85,7 +91,7 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
       setAccountId(accounts[0]);
 
       const _chainId = String(await web3.eth.getChainId());
-      setChainId(_chainId as supportedChains);
+      setChainId(_chainId);
 
       setListeners(provider, web3);
 
@@ -104,12 +110,12 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
 
   function setListeners(provider: any, web3: Web3) {
     provider.on('accountsChanged', async (accounts: string[]) => {
-      console.info('Account changed');
+      setAccountId(accounts[0])
     });
 
     // Subscribe to chainId change
     provider.on('chainChanged', async (chainId: supportedChains) => {
-      console.info('Chain changed');
+      setChainId(parseInt(chainId))
     });
 
     // Subscribe to provider connection
@@ -123,6 +129,10 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
       console.error(error);
     });
   }
+
+  useEffect(()=>{
+    localStorage.setItem("user_vaults", JSON.stringify(allVaults))
+  }, [allVaults])
 
   return (
     <GlobalContext.Provider
@@ -139,6 +149,8 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
         setCurrentVaultEdits,
         currentStep,
         setCurrentStep,
+        allVaults,
+        setAllVaults
       }}
     >
       <>{children}</>

@@ -34,4 +34,6 @@ export interface globalStates {
   setCurrentVaultEdits: React.Dispatch<React.SetStateAction<IVaultInfo>>;
   currentStep: number
   setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
+  allVaults: IVaultInfo[], 
+  setAllVaults: React.Dispatch<React.SetStateAction<IVaultInfo[]>>;
 }

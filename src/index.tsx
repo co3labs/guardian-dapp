@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import { GlobalProvider } from './context/GlobalState';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Home from './pages/Home';
+import LandingPage from './pages/LandingPage';
 import ReactDOMClient from 'react-dom/client';
 import Header from './elements/Header';
 import Footer from './elements/Footer';
@@ -26,7 +26,7 @@ try {
           <Header />
           <div className="flex-grow">
             <Routes>
-              <Route path="" element={<Home />} />
+              <Route path="" element={<LandingPage />} />
               <Route path="app">
                 <Route path="welcome" element={<Welcome />} />
                 <Route path="edit" element={<EditVault />} />

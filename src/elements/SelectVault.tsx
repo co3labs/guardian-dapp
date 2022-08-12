@@ -1,4 +1,4 @@
-import BackOrContinueBtns from "./BackOrContinue";
+import BackOrContinueBtns from "./BackOrContinueBtns";
 
 export default function SelectVault() {
     return <div>
