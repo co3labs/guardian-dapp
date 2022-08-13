@@ -12,7 +12,7 @@ export default function Welcome() {
 
   return (
     <div className="flex m-auto h-full justify-center items-center px-4 w-full md:w-3/4 lg:w-2/3 relative">
-      <img src={logo} className="absolute z-0 -translate-x-2/3 translate-y-1/2 opacity-20 select-none pointer-events-none" style={{filter:"contrast(0%) drop-shadow(30px 30px 10px #545454)"}}/>
+      {/* <img src={logo} className="absolute z-0 -translate-x-2/3 translate-y-1/2 opacity-20 select-none pointer-events-none" style={{filter:"contrast(0%) drop-shadow(30px 30px 10px #545454)"}}/> */}
       <div className='border rounded-sm px-12 pb-12 shadow-lg bg-gray-50 relative z-10'>
         <div className="my-10">
           <h2 className="text-3xl font-bold">Be Safe, Use Guardians</h2>
