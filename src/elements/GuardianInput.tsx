@@ -66,7 +66,7 @@ export default function GuardianInput({
       <div className="relative min-w-[30%]">
         <ElementWithTitle
           title="Guardian Name"
-          input={
+          element={
             <input
               type="text"
               //   debounceTimeout={500}
@@ -84,7 +84,7 @@ export default function GuardianInput({
       <div className="relative w-full">
         <ElementWithTitle
           title="Wallet Address"
-          input={
+          element={
             <input
               type="text"
               //   debounceTimeout={500}

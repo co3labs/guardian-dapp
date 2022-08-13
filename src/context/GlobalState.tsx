@@ -13,11 +13,18 @@ export const INITIAL_VAULT_STATE: IVaultInfo = {
 };
 
 export const networks = {
-  1: "Ethereum", 
-  56: "Binance", 
-  137: "Polygon", 
-  246: "Energyweb", 
-  1285: "Moonriver"
+  1: 'Ethereum',
+  56: 'Binance',
+  137: 'Polygon',
+  246: 'Energyweb',
+  1285: 'Moonriver',
+};
+
+export const getShortId = (id:string) => {
+  if(!id) return
+  const split = id.split('');
+  split.splice(5, 33, "...")
+  return split.join('')
 }
 
 export const GlobalContext = createContext({} as globalStates);
@@ -35,7 +42,6 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
   const [currentVault, setCurrentVault] = useState({});
   const [currentVaultEdits, setCurrentVaultEdits] = useState<IVaultInfo>(INITIAL_VAULT_STATE);
   const [currentStep, setCurrentStep] = useState(0);
-
 
   // intitialize web3modal to use to connect to provider
   useEffect(() => {
@@ -110,12 +116,12 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
 
   function setListeners(provider: any, web3: Web3) {
     provider.on('accountsChanged', async (accounts: string[]) => {
-      setAccountId(accounts[0])
+      setAccountId(accounts[0]);
     });
 
     // Subscribe to chainId change
     provider.on('chainChanged', async (chainId: supportedChains) => {
-      setChainId(parseInt(chainId))
+      setChainId(parseInt(chainId));
     });
 
     // Subscribe to provider connection
@@ -130,9 +136,13 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
     });
   }
 
-  useEffect(()=>{
-    localStorage.setItem("user_vaults", JSON.stringify(allVaults))
-  }, [allVaults])
+  useEffect(() => {
+    if (!allVaults.length) {
+      const storage = localStorage.getItem('user_vaults');
+      if(storage)setAllVaults(JSON.parse(storage))
+    }
+  }, []);
+
 
   return (
     <GlobalContext.Provider
@@ -150,7 +160,7 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
         currentStep,
         setCurrentStep,
         allVaults,
-        setAllVaults
+        setAllVaults,
       }}
     >
       <>{children}</>

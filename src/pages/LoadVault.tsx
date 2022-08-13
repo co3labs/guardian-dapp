@@ -1,3 +1,4 @@
+import ConnectWallet from '../elements/ConnectWallet';
 import GuardianForm from '../elements/GuardianForm';
 import ImportVault from '../elements/ImportVault';
 import ManageVaultConstructor from '../elements/ManageVaultConstructor';
@@ -8,10 +9,11 @@ export default function LoadVault() {
   return (
     <ManageVaultConstructor
       steps={[
-        ['Import', <ImportVault />],
+        ['Connect Wallet', <ConnectWallet />],
+        ['Vault', <ImportVault />],
         ['Name', <NameVault />],
-        ['Edit Guardians', <GuardianForm/>],
-        ['Review', <ReviewChanges/>]
+        ['Guardians', <GuardianForm />],
+        ['Review', <ReviewChanges />],
       ]}
       title="Load an Existing Vault"
     />

@@ -19,7 +19,7 @@ export default function NameVault() {
 
         <ElementWithTitle
           title="Vault Name"
-          input={
+          element={
             <input
               onChange={(e) => {
                 const value = e.target.value;

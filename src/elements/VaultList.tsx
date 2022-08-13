@@ -3,6 +3,7 @@ import { BsPen } from 'react-icons/bs';
 import { useContext } from 'react';
 import { GlobalContext } from '../context/GlobalState';
 import { Link } from 'react-router-dom';
+import { IVaultInfo } from '../@types/types';
 
 const { setCurrentVaultEdits } = useContext(GlobalContext);
 
@@ -28,7 +29,7 @@ export default function VaultList() {
               <td>{info.threshold}</td>
               <td>{info.address}</td>
               <Link
-                onClick={() => setCurrentVaultEdits({ ...info, vaultName: vault })}
+                onClick={() => setCurrentVaultEdits({ ...info, vaultName: vault } as IVaultInfo)}
                 to="/app/edit"
                 className="absolute -right-0 translate-x-[200%]"
               >
