@@ -16,7 +16,7 @@ export default function SelectOrImport() {
     <>
       <div className="m-6 font-light">
         <div className="mb-6">
-          <p className="font-light">Import your vault by entering thier ERC725 address.</p>
+          <p className="font-light">Import a vault by entering it's ERC725 address</p>
           <InfoParagraph text="Make sure you are connected to the same chain your vault is on." />
         </div>
         <ElementWithTitle title="Import Vault" element={<input type="text" className="md:w-full" />} />

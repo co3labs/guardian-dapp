@@ -2,8 +2,8 @@ import { useContext, useEffect, useState } from 'react';
 import { GlobalContext } from '../context/GlobalState';
 
 export default function Snackbar() {
-  const [showSnackbarItem, setShowSnackbarItem] = useState(true);
-  const [currentSnackbarItem, setCurrentSnackbarItem] = useState('testing123');
+  const [showSnackbarItem, setShowSnackbarItem] = useState(false);
+  const [currentSnackbarItem, setCurrentSnackbarItem] = useState("'testing123'");
   const { globalSnackbarQue, setGlobalSnackbarQue } = useContext(GlobalContext);
 
   useEffect(() => {
