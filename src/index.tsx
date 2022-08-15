@@ -10,7 +10,7 @@ import Footer from './elements/Footer';
 import Welcome from './pages/Welcome';
 import CreateVault from './pages/CreateVault';
 import LoadVault from './pages/LoadVault';
-import EditVault from './pages/EditVault';
+import NotFound from './elements/NotFound';
 
 try {
   const container = document.querySelector('body');
@@ -29,11 +29,10 @@ try {
               <Route path="" element={<LandingPage />} />
               <Route path="app">
                 <Route path="welcome" element={<Welcome />} />
-                <Route path="edit" element={<EditVault />} />
                 <Route path="create" element={<CreateVault />} />
                 <Route path="load" element={<LoadVault />} />
               </Route>
-              <Route path="*" element={<div>Not Found</div>} />
+              <Route path="*" element={<NotFound/>} />
             </Routes>
           </div>
           <Footer />

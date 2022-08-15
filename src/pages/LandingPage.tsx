@@ -4,6 +4,7 @@ import heros from '../assets/heros.png';
 export default function LandingPage() {
   return (
     <div className="flex absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+      
       <div className="mr-8">
         <img src={heros} alt="multiple_users" className="w-96" />
       </div>
