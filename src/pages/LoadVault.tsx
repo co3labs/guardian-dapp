@@ -1,6 +1,6 @@
 import ConnectWallet from '../elements/ConnectWallet';
 import GuardianForm from '../elements/GuardianForm';
-import ImportVault from '../elements/ImportVault';
+import SelectOrImport from '../elements/SelectOrImport';
 import ManageVaultConstructor from '../elements/ManageVaultConstructor';
 import NameVault from '../elements/NameVault';
 import ReviewChanges from '../elements/ReviewChanges';
@@ -10,7 +10,7 @@ export default function LoadVault() {
     <ManageVaultConstructor
       steps={[
         ['Connect Wallet', <ConnectWallet />],
-        ['Vault', <ImportVault />],
+        ['Vault', <SelectOrImport />],
         ['Name', <NameVault />],
         ['Guardians', <GuardianForm />],
         ['Review', <ReviewChanges />],

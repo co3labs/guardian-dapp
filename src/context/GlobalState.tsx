@@ -20,12 +20,12 @@ export const networks = {
   1285: 'Moonriver',
 };
 
-export const getShortId = (id:string) => {
-  if(!id) return
+export const getShortId = (id: string) => {
+  if (!id) return;
   const split = id.split('');
-  split.splice(5, 33, "...")
-  return split.join('')
-}
+  split.splice(5, 33, '...');
+  return split.join('');
+};
 
 export const GlobalContext = createContext({} as globalStates);
 
@@ -139,11 +139,19 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
   useEffect(() => {
     if (!allVaults.length) {
       const storage = localStorage.getItem('user_vaults');
-      if(storage)setAllVaults(JSON.parse(storage))
+      console.log('Storage found:', storage);
+      if (storage) setAllVaults(JSON.parse(storage));
     }
   }, []);
 
+  useEffect(() => {
+    if (allVaults.length > 1) localStorage.setItem('user_vaults', JSON.stringify(allVaults));
+  }, [allVaults]);
 
+  const resetVaultAndSteps = () => {
+    setCurrentStep(accountId ? 1 : 0);
+    setCurrentVaultEdits(INITIAL_VAULT_STATE);
+  };
   return (
     <GlobalContext.Provider
       value={{
@@ -161,6 +169,7 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
         setCurrentStep,
         allVaults,
         setAllVaults,
+        resetVaultAndSteps,
       }}
     >
       <>{children}</>

@@ -1,9 +1,10 @@
+import { useContext } from 'react';
+import { GlobalContext } from '../context/GlobalState';
 import ConnectWallet from '../elements/ConnectWallet';
 import GuardianForm from '../elements/GuardianForm';
 import ManageVaultConstructor from '../elements/ManageVaultConstructor';
 import NameVault from '../elements/NameVault';
 import ReviewChanges from '../elements/ReviewChanges';
-import SelectVault from '../elements/SelectVault';
 
 export default function EditVault() {
   return (

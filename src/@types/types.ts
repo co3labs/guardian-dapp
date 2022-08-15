@@ -13,13 +13,12 @@ export interface IGuardianList {
   [id: number]: IGuardianInfo;
 }
 export interface IVaultInfo {
-  vaultName: string
-  guardianList: IGuardianList
-  threshold: number
-  guardianCount: number
-  address: string
+  vaultName: string;
+  guardianList: IGuardianList;
+  threshold: number;
+  guardianCount: number;
+  address: string;
 }
-
 
 export interface globalStates {
   handleConnect: Function;
@@ -32,8 +31,9 @@ export interface globalStates {
   setCookiesAllowed: React.Dispatch<React.SetStateAction<boolean | null>>;
   currentVaultEdits: IVaultInfo;
   setCurrentVaultEdits: React.Dispatch<React.SetStateAction<IVaultInfo>>;
-  currentStep: number
+  currentStep: number;
   setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
-  allVaults: IVaultInfo[], 
+  allVaults: IVaultInfo[];
   setAllVaults: React.Dispatch<React.SetStateAction<IVaultInfo[]>>;
+  resetVaultAndSteps: () => void;
 }

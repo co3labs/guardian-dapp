@@ -43,7 +43,7 @@ export default function ReviewChanges() {
       <BackOrContinueBtns
         onClick={() => {
           setAllVaults([
-            ...allVaults.filter((vault) => vault.vaultName === currentVaultEdits.vaultName),
+            ...allVaults.filter((vault) => vault.vaultName !== currentVaultEdits.vaultName),
             currentVaultEdits,
           ]);
 

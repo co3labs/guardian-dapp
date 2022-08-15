@@ -20,9 +20,9 @@ export default function BackOrContinueBtns({
   return (
     <div className="flex m-4 justify-between">
       {back && skip !== 1 ? (
-        <div className="h-full flex items-center btn btnSmall btnSecondary">
-          <Link to={back}>Cancel</Link>
-        </div>
+        <Link to={back} className="h-full flex items-center btn btnSmall btnSecondary">
+          Cancel
+        </Link>
       ) : (
         <button
           onClick={() => setCurrentStep(currentStep - 1)}
