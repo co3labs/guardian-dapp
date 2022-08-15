@@ -1,11 +1,13 @@
 import { useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { GlobalContext } from '../context/GlobalState';
 import BackOrContinueBtns from './BackOrContinueBtns';
 
 export default function ReviewChanges() {
-  const { currentVaultEdits, setAllVaults, allVaults } = useContext(GlobalContext);
-  const navigate = useNavigate()
+  const { currentVaultEdits, setAllVaults, allVaults, setGlobalSnackbarQue, globalSnackbarQue } =
+    useContext(GlobalContext);
+  const navigate = useNavigate();
+  const location = useLocation();
   //? show previous vault here ?
   return (
     <>
@@ -46,8 +48,14 @@ export default function ReviewChanges() {
             ...allVaults.filter((vault) => vault.vaultName !== currentVaultEdits.vaultName),
             currentVaultEdits,
           ]);
+          console.log(location.pathname);
 
-          navigate("/app/welcome", {replace:true})
+          setGlobalSnackbarQue([
+            ...globalSnackbarQue,
+            `Vault succesfully ${location.pathname.includes('load') ? 'updated' : ' created'}`,
+          ]);
+
+          navigate('/app/welcome', { replace: true });
         }}
       />
     </>

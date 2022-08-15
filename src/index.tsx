@@ -11,6 +11,7 @@ import Welcome from './pages/Welcome';
 import CreateVault from './pages/CreateVault';
 import LoadVault from './pages/LoadVault';
 import NotFound from './elements/NotFound';
+import Snackbar from './elements/Snackbar';
 
 try {
   const container = document.querySelector('body');
@@ -24,6 +25,7 @@ try {
       <GlobalProvider>
         <Router>
           <Header />
+          <Snackbar/>
           <div className="flex-grow">
             <Routes>
               <Route path="" element={<LandingPage />} />

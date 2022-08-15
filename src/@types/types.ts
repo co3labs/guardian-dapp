@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import Web3 from 'web3';
 import Web3Modal from 'web3modal';
 
@@ -28,12 +28,14 @@ export interface globalStates {
   web3?: Web3;
   unsupportedNet: boolean;
   cookiesAllowed: boolean | null;
-  setCookiesAllowed: React.Dispatch<React.SetStateAction<boolean | null>>;
+  setCookiesAllowed: Dispatch<SetStateAction<boolean | null>>;
   currentVaultEdits: IVaultInfo;
-  setCurrentVaultEdits: React.Dispatch<React.SetStateAction<IVaultInfo>>;
+  setCurrentVaultEdits: Dispatch<SetStateAction<IVaultInfo>>;
   currentStep: number;
-  setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
+  setCurrentStep: Dispatch<SetStateAction<number>>;
   allVaults: IVaultInfo[];
-  setAllVaults: React.Dispatch<React.SetStateAction<IVaultInfo[]>>;
+  setAllVaults: Dispatch<SetStateAction<IVaultInfo[]>>;
   resetVaultAndSteps: () => void;
+  globalSnackbarQue: string[];
+  setGlobalSnackbarQue: Dispatch<SetStateAction<string[]>>;
 }

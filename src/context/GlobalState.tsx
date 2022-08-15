@@ -39,9 +39,9 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
   const [unsupportedNet, setUnsupportedNet] = useState<boolean>(false);
   const [cookiesAllowed, setCookiesAllowed] = useState<boolean | null>(null);
   const [allVaults, setAllVaults] = useState<IVaultInfo[]>([]);
-  const [currentVault, setCurrentVault] = useState({});
   const [currentVaultEdits, setCurrentVaultEdits] = useState<IVaultInfo>(INITIAL_VAULT_STATE);
   const [currentStep, setCurrentStep] = useState(0);
+  const [globalSnackbarQue, setGlobalSnackbarQue] = useState<string[]>([])
 
   // intitialize web3modal to use to connect to provider
   useEffect(() => {
@@ -170,6 +170,8 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
         allVaults,
         setAllVaults,
         resetVaultAndSteps,
+        globalSnackbarQue,
+        setGlobalSnackbarQue
       }}
     >
       <>{children}</>

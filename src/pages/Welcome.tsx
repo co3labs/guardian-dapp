@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { GlobalContext, INITIAL_VAULT_STATE } from '../context/GlobalState';
 import logo from '../assets/grayscale.png';
 export default function Welcome() {
-  const { resetVaultAndSteps } = useContext(GlobalContext);
+  const { resetVaultAndSteps, setGlobalSnackbarQue, globalSnackbarQue } = useContext(GlobalContext);
 
   return (
     <div className="flex m-auto h-full justify-center items-center px-4 w-full md:w-3/4 lg:w-2/3 relative z-0">
@@ -40,6 +40,9 @@ export default function Welcome() {
           </div>
         </div>
       </div>
+      {/* <button onClick={()=>{setGlobalSnackbarQue([...globalSnackbarQue, "A new message"])}}>
+        pressme
+      </button> */}
     </div>
   );
 }
