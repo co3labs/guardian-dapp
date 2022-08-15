@@ -121,7 +121,7 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
 
     // Subscribe to chainId change
     provider.on('chainChanged', async (chainId: supportedChains) => {
-      setChainId(parseInt(chainId));
+      setChainId(parseInt(String(chainId)));
     });
 
     // Subscribe to provider connection

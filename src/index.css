@@ -22,7 +22,7 @@ body,
   @apply rounded-sm shadow-md border-2 border-blue-800 bg-white hover:bg-blue-800 hover:bg-opacity-10;
 }
 .btnBig {
-  @apply px-12 py-3 font-bold;
+  @apply px-12 py-3;
 }
 
 .btnSmall {
@@ -46,6 +46,11 @@ input {
 .no-scrollbar {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
+}
+
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
 }
 
 ::-webkit-scrollbar-track {
@@ -77,6 +82,6 @@ input {
   @apply border-gray-400 rounded-sm;
 }
 
-.vaultListItem > td{
-  @apply p-4 border-y 
+.vaultListItem > td {
+  @apply p-4 border-y;
 }

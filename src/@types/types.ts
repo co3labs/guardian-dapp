@@ -2,7 +2,7 @@ import React, { Dispatch, SetStateAction } from 'react';
 import Web3 from 'web3';
 import Web3Modal from 'web3modal';
 
-export type supportedChains = '137';
+export type supportedChains = 1  | 56 | 137 | 246 | 1285;
 
 export interface IGuardianInfo {
   name: string;
