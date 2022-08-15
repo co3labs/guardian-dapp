@@ -62,15 +62,15 @@ select {
   border-radius: 0.125rem !important/* 2px */;
 }
 
-.welcomeCard > div > h3 {
+.welcomeCard > section > h3 {
   @apply text-xl mb-4 font-semibold w-max;
 }
 
-.welcomeCard > div > p {
+.welcomeCard > section > p {
   @apply text-base font-light;
 }
 
-.welcomeCard > div {
+.welcomeCard > section {
   @apply py-4 px-6 w-full bg-white rounded-sm flex flex-col justify-between;
 }
 

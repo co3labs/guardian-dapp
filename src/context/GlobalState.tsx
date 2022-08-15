@@ -149,7 +149,7 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
   }, [allVaults]);
 
   const resetVaultAndSteps = () => {
-    setCurrentStep(accountId ? 1 : 0);
+    setCurrentStep(0);
     setCurrentVaultEdits(INITIAL_VAULT_STATE);
   };
   return (
