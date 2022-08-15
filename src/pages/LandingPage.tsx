@@ -9,8 +9,8 @@ export default function LandingPage() {
       </div>
       <div>
         <h2 className="text-5xl mb-4">Guardians of your legacy</h2>
-        <h3 className="text-xl font-light  mb-8">Secure your online legacy with guardians.</h3>
-        <Link to="app/welcome" className="rounded-sm border border-black px-5 py-1 ">
+        <h3 className="text-xl font-light mb-8">Secure your online legacy with guardians.</h3>
+        <Link to="app/welcome" className="btnPrimary btnSmall">
           Enter App
         </Link>
       </div>

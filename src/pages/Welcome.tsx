@@ -11,7 +11,7 @@ export default function Welcome() {
   };
 
   return (
-    <div className="flex m-auto h-full justify-center items-center px-4 w-full md:w-3/4 lg:w-2/3 relative">
+    <div className="flex m-auto h-full justify-center items-center px-4 w-full md:w-3/4 lg:w-2/3 relative z-0">
       {/* <img src={logo} className="absolute z-0 -translate-x-2/3 translate-y-1/2 opacity-20 select-none pointer-events-none" style={{filter:"contrast(0%) drop-shadow(30px 30px 10px #545454)"}}/> */}
       <div className='border rounded-sm px-12 pb-12 shadow-lg bg-gray-50 relative z-10'>
         <div className="my-10">
@@ -24,7 +24,7 @@ export default function Welcome() {
         </div>
         <div className="welcomeCard">
           <div className="shadow-lg">
-            <h3>Create A New vault</h3>
+            <h3>Create A New Vault</h3>
             <p>Create a new vault that is controlled by one or multiple owners.</p>
             <p>You will be required to pay a network fee for creating your new vault.</p>
             <Link className="btnSmall btnPrimary w-fit my-6" onClick={resetDefaults} to="/app/create">
@@ -34,7 +34,7 @@ export default function Welcome() {
           <div className="shadow-lg">
             <h3>Load An Existing Vault</h3>
             <p>
-              Already have a Vault or want to access it form a different device? Easily load your Vault using your Vault
+              Already have a Vault or want to access it from a different device? Easily load your Vault using your Vault
               address.
             </p>
             <Link  className="btnSmall btnSecondary w-fit my-6" to="/app/load" onClick={resetDefaults}>

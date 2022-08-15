@@ -1,7 +1,7 @@
 import React, { PropsWithChildren, SetStateAction, useContext, useEffect, useState } from 'react';
 import { DebounceInput, PropConstraints } from 'react-debounce-input';
 import { BsTrash } from 'react-icons/bs';
-import { IGuardianInfo } from '../@types/types';
+import { IGuardianInfo, IGuardianList } from '../@types/types';
 import { GlobalContext } from '../context/GlobalState';
 import ElementWithTitle from './ElementWithTitle';
 import InvalidInputAlert from './InvalidInputAlert';
@@ -11,15 +11,15 @@ export default function GuardianInput({
   guardian,
   id,
   setIsLoading,
-  addressList,
-  setAddressList,
+  setDuplicate,
+  duplicate,
 }: {
   index: number;
   guardian: IGuardianInfo;
   id: string;
   setIsLoading: React.Dispatch<SetStateAction<boolean>>;
-  addressList: string[];
-  setAddressList: React.Dispatch<SetStateAction<string[]>>;
+  setDuplicate: React.Dispatch<SetStateAction<number[] | undefined>>;
+  duplicate: number[] | undefined;
 }) {
   const [hasTypedName, setHasTypedName] = useState(false);
   const [hasTypedAddress, setHasTypedAddress] = useState(false);
@@ -30,24 +30,22 @@ export default function GuardianInput({
     if (guardian.name && !hasTypedName) setHasTypedName(true);
     if (guardian.address && !hasTypedAddress) setHasTypedAddress(true);
 
-    const occurances = addressList.filter((address) => address.toLowerCase() === guardian.address.toLowerCase());
-
-    if (hasTypedAddress && guardian.address) {
-      if (guardian.address.match(/[^A-Za-z0-9]/)) {
-        setErrorMessage('Special characters detected.');
-      } else if (guardian.address.length > 42) {
-        setErrorMessage('This address is too long.');
-      } else if (guardian.address.length < 42) {
-        setErrorMessage('This address is too short.');
-      } else if (occurances.length > 1) {
-        setErrorMessage('Duplicate Address');
-      } else if (errorMessage) {
-        setErrorMessage(undefined);
+    if (hasTypedAddress) {
+      if (guardian.address) {
+        if (guardian.address.match(/[^A-Za-z0-9]/)) {
+          setErrorMessage('Special characters detected.');
+        } else if (guardian.address.length > 42) {
+          setErrorMessage('This address is too long.');
+        } else if (guardian.address.length < 42) {
+          setErrorMessage('This address is too short.');
+        } else if (errorMessage) {
+          setErrorMessage(undefined);
+        }
       }
     } else if (errorMessage) {
       setErrorMessage(undefined);
     }
-  }, [guardian.name, guardian.address]);
+  }, [guardian.name, guardian.address, currentVaultEdits]);
 
   function updateGuardian(val: string, index: number, field: 'name' | 'address') {
     const newGuardians = currentVaultEdits.guardianList;
@@ -55,7 +53,6 @@ export default function GuardianInput({
       newGuardians[index] = { ...newGuardians[index], name: val };
     } else {
       newGuardians[index] = { ...newGuardians[index], address: val };
-      setAddressList([...addressList, val]);
     }
 
     setCurrentVaultEdits({ ...currentVaultEdits, guardianList: { ...newGuardians } });
@@ -95,7 +92,9 @@ export default function GuardianInput({
               //   event.clipboardData.getData("Text")
               //   updateGuardian(event.target.value, index, 'name');
               // }}
-              className={`border rounded-sm p-2 w-full ml-1 ${!!((hasTypedAddress && !guardian.address) || errorMessage)? "border-red-500":""}`}
+              className={`border rounded-sm p-2 w-full ml-1 ${
+                !!((hasTypedAddress && !guardian.address) || errorMessage) ? 'border-red-500' : ''
+              }`}
               value={guardian.address}
               placeholder="address"
             />
@@ -103,8 +102,14 @@ export default function GuardianInput({
         />
 
         <InvalidInputAlert
-          condition={!!((hasTypedAddress && !guardian.address) || errorMessage)}
-          message={errorMessage || 'Guardian must have an address.'}
+          condition={!!((hasTypedAddress && !guardian.address) || errorMessage || duplicate?.includes(index))}
+          message={
+            errorMessage
+              ? errorMessage
+              : duplicate?.includes(index)
+              ? 'Duplicate Address'
+              : 'Guardian must have an address.'
+          }
         />
       </div>
       {index > 0 ? (
@@ -119,8 +124,6 @@ export default function GuardianInput({
               guardianList: newGuardians,
               guardianCount: currentVaultEdits.guardianCount - 1,
             });
-            const newList = [...addressList];
-            setAddressList(addressList.filter((address) => address.toLowerCase() !== guardian.address.toLowerCase()));
           }}
         >
           <BsTrash />

@@ -47,7 +47,7 @@ export default function ImportVault() {
           </tbody>
         </table>
       </div>
-      <BackOrContinueBtns back="/app/welcome" />
+      <BackOrContinueBtns />
     </>
   );
 }

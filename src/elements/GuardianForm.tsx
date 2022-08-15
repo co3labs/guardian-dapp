@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { BsChevronDown } from 'react-icons/bs';
 import OutsideClickHandler from 'react-outside-click-handler';
-import { IGuardianInfo } from '../@types/types';
+import { IGuardianInfo, IGuardianList } from '../@types/types';
 import { GlobalContext } from '../context/GlobalState';
 import BackOrContinueBtns from './BackOrContinueBtns';
 import GuardianInput from './GuardianInput';
@@ -11,32 +11,46 @@ export default function GuardianForm() {
   const [openThresholdSelect, setOpenThresholdSelect] = useState(false);
   const [formIsValid, setFormIsValid] = useState(false);
   const [validating, setValidating] = useState(false);
-  const [addressList, setAddressList] = useState<string[]>([]);
+  const [duplicate, setDuplicate] = useState<number[]>();
   useEffect(() => {
     if (currentVaultEdits.guardianList[0].address === '' && accountId) {
       setCurrentVaultEdits({
         ...currentVaultEdits,
         guardianList: { 0: { ...currentVaultEdits.guardianList[0], address: accountId } },
       });
-
-      setAddressList([...addressList, accountId.toLowerCase()]);
     }
   }, []);
 
   useEffect(() => {
     const culprit = Object.values(currentVaultEdits.guardianList).find(
       (guardian) =>
-        !guardian.name ||
-        !guardian.address ||
-        guardian.address.match(/[^A-Za-z0-9]/) ||
-        guardian.address.length !== 42 ||
-        addressList.includes(guardian.address.toLowerCase())
+        !guardian.name || !guardian.address || guardian.address.match(/[^A-Za-z0-9]/) || guardian.address.length !== 42
     );
 
-    if (!culprit) {
-      setFormIsValid(true);
-    } else {
+    const checked: string[] = [];
+    let duplicateCheck: number[] | undefined;
+    const currentList: IGuardianList = Object.values(currentVaultEdits.guardianList);
+    const currentListValues: IGuardianInfo[] = Object.values(currentList);
+
+    for (let i = 0; i < currentListValues.length; i++) {
+      const checking = currentListValues[i].address;
+      const match = checked.findIndex((address) => address === checking);
+      if (match >= 0) {
+        duplicateCheck = [match, i];
+        setDuplicate([match, i]);
+      } else {
+        checked.push(checking);
+      }
+    }
+
+    if (!duplicateCheck) {
+      setDuplicate(undefined);
+    }
+
+    if (culprit || duplicateCheck) {
       setFormIsValid(false);
+    } else {
+      setFormIsValid(true);
     }
     setValidating(false);
   }, [currentVaultEdits.guardianList, currentVaultEdits.guardianCount]);
@@ -58,9 +72,9 @@ export default function GuardianForm() {
               id={id}
               guardian={guardian}
               index={index}
+              setDuplicate={setDuplicate}
               setIsLoading={setValidating}
-              addressList={addressList}
-              setAddressList={setAddressList}
+              duplicate={duplicate}
             />
           )
         )}
