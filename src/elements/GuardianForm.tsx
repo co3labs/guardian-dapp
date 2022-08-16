@@ -139,7 +139,12 @@ export default function GuardianForm() {
       <BackOrContinueBtns
         exitBtn={true}
         onClick={() => (location ? updateAndGoHome(navigate, location) : () => {})}
-        confirmText="Update Guardians & Threshold"
+        confirmText={
+          <span>
+            Update <span className="hidden md:block">Guardians {'&'} Threshold</span>
+            <span className="md:hidden">Vault</span>{' '}
+          </span>
+        }
         conditionNext={formIsValid}
       />
       {/* {validating ? <MoonLoader /> : <></>}{' '} */}

@@ -28,8 +28,10 @@ export interface IUserVaults {
   [timestampId: number]: IVaultInfo;
 }
 
+export type VoidFunciton = () => void
+
 export interface globalStates {
-  handleConnect: Function;
+  handleConnect: VoidFunciton;
   accountId?: string;
   chainId?: supportedChains;
   provider?: Web3Modal;
@@ -43,10 +45,11 @@ export interface globalStates {
   setCurrentStep: Dispatch<SetStateAction<number>>;
   allVaults: IUserVaults | undefined;
   setAllVaults: Dispatch<SetStateAction<IUserVaults | undefined>>;
-  resetVaultAndSteps: () => void;
+  resetVaultAndSteps: VoidFunciton;
   globalSnackbarQue: string[];
   setGlobalSnackbarQue: Dispatch<SetStateAction<string[]>>;
   location: Location | null;
   setLocation: Dispatch<SetStateAction<Location | null>>;
   updateAndGoHome: (navigate: NavigateFunction, location: Location) => void;
+  switchNetwork: VoidFunciton;
 }

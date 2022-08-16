@@ -4,7 +4,7 @@ import { getShortId, GlobalContext, networks } from '../context/GlobalState';
 import logo from '../assets/logo.png';
 
 export default function Header() {
-  const { handleConnect, accountId, chainId } = useContext(GlobalContext);
+  const { handleConnect, accountId, chainId, switchNetwork } = useContext(GlobalContext);
 
   const location = useLocation();
 
@@ -22,12 +22,12 @@ export default function Header() {
           {accountId ? (
             <span className="border-x border-gray-300 p-3 bg-blue-800 text-white">{getShortId(accountId)}</span>
           ) : (
-            <button className="border-x border-gray-300 p-3 bg-blue-800 text-white" onClick={() => handleConnect()}>
+            <button className="border-x border-gray-300 p-3 bg-blue-800 text-white" onClick={handleConnect}>
               Connect Wallet
             </button>
           )}
-          <button className="m-auto">
-            {chainId === 2828 ? 'Lukso Testnet (L16)' : chainId ? 'Unknown' : 'Network'}
+          <button className="m-auto" onClick={switchNetwork}>
+            {chainId === 2828 ? 'Lukso Testnet (L16)' : chainId ? 'Switch to Lukso Network' : 'Network'}
           </button>
         </div>
       </header>

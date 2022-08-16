@@ -15,8 +15,8 @@ export default function ConnectWallet() {
   return (
     <>
       <div className="m-6">
-        <p className="font-light">In order to create your Safe, you need to connect a wallet</p>
-        <InfoParagraph text="Your vault will be made on the network you are currently connected to." />
+        <p className="font-light">Connect your wallet to manage your Recover Vaults.</p>
+        <InfoParagraph text="You must be connected to the Lukso Testnet (L16)." />
       </div>
       <div className="w-full py-10 bg-gray-50 flex flex-col justify-center items-center">
         <BsShieldLock size={200} color="gray" />

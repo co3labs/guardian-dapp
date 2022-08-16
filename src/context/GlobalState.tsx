@@ -159,12 +159,39 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
       } catch (switchError: any) {
         // This error code indicates that the chain has not been added to MetaMask.
         if (switchError.code === 4902) {
-          alert('Lukso Testnet (L16) needs to be added in your wallet.');
-          // setChainToAdd(String(2828));
+          addNetwork();
         }
       }
     }
   };
+
+  const addNetwork = async () => {
+    try {
+      //@ts-ignore
+      await web3?.currentProvider?.request({
+        method: 'wallet_addEthereumChain',
+        params: [
+          {
+            chainId: '0xB0C',
+            chainName: 'L16',
+            nativeCurrency: {
+              name: 'LYXt',
+              symbol: 'LYXt',
+              decimals: 18,
+            },
+            rpcUrls: ['https://rpc.l16.lukso.network/'],
+            blockExplorerUrls: ['https://explorer.consensus.l16.lukso.network/'],
+          },
+        ],
+      });
+    } catch (error: any) {
+      if (error.code !== 4001)
+        alert(
+          'An error occured when adding the Lukso network to your wallet. Please add it in your wallet to continue.'
+        );
+    }
+  };
+
   useEffect(() => {
     if (chainId !== 2828) {
       switchNetwork();
@@ -215,7 +242,8 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
         setGlobalSnackbarQue,
         location,
         setLocation,
-        updateAndGoHome
+        updateAndGoHome,
+        switchNetwork,
       }}
     >
       <>{children}</>

@@ -11,7 +11,7 @@ export default function ManageVaultConstructor({ steps, title }: { steps: [strin
           <h3>{title}</h3>
         </div>
         <div className="flex flex-col h-full">
-          <div className={`grid grid-flow-col w-full rounded-sm shadow-md bg-white`}>
+          <div className={`grid grid-flow-col text-xs md:text-base w-full rounded-sm shadow-md bg-white`}>
             {steps.map(([title], index) => (
               <div className={`px-2 py-1 relative border-y border-blue-800 overflow-hidden`}>
                 <div

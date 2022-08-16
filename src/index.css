@@ -70,11 +70,11 @@ select {
 }
 
 .welcomeCard > section {
-  @apply py-4 px-6 w-full bg-white rounded-sm flex flex-col justify-between;
+  @apply py-4 px-2 md:px-6 w-full bg-white rounded-sm flex flex-col justify-between;
 }
 
 .welcomeCard {
-  @apply grid grid-flow-col w-full gap-6 rounded-xl;
+  @apply grid grid-flow-row md:grid-flow-col w-full gap-6 rounded-xl;
 }
 
 .vaultListItem {

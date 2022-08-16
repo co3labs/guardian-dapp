@@ -14,14 +14,14 @@ export default function BackOrContinueBtns({
   back?: string;
   skip?: 1 | 2;
   conditionNext?: boolean;
-  confirmText: string;
+  confirmText: string | JSX.Element;
   onClick?: Function;
   exitBtn?: boolean;
 }) {
   const { setCurrentStep, currentStep } = useContext(GlobalContext);
 
   return (
-    <div className="flex m-4 justify-between">
+    <div className="flex  m-4 justify-between">
       <div className='flex'>
         {back && skip !== 1 ? (
           <Link to={back} className="h-full flex items-center btn btnSmall btnSecondary mr-4">
@@ -38,7 +38,7 @@ export default function BackOrContinueBtns({
         )}
 
         {exitBtn ? (
-          <Link to={'/app/welcome'} className="h-full flex items-center btn btnSmall btnSecondary">
+          <Link to={'/app/welcome'} className="flex items-center btn btnSmall btnSecondary">
             Exit
           </Link>
         ) : (
