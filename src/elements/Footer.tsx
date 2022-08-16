@@ -1,8 +1,3 @@
-import { useEffect, useState, useContext } from 'react';
-import { FaDotCircle } from 'react-icons/fa';
-import { getCommitInfo } from '../utils/gitInfo';
-import { GlobalContext } from '../context/GlobalState';
-
 export default function Footer() {
   const links = [
     ['Hashmesh Labs © 2022'],
