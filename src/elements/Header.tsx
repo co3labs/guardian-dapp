@@ -26,7 +26,9 @@ export default function Header() {
               Connect Wallet
             </button>
           )}
-          <button className="m-auto">{chainId ? networks[chainId] : 'Network'}</button>
+          <button className="m-auto">
+            {chainId === 2828 ? 'Lukso Testnet (L16)' : chainId ? 'Unknown' : 'Network'}
+          </button>
         </div>
       </header>
     </>

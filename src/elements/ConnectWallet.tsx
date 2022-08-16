@@ -10,44 +10,23 @@ import InfoParagraph from './InfoParagraph';
 export default function ConnectWallet() {
   const { handleConnect, accountId, web3, chainId } = useContext(GlobalContext);
   const [chainToAdd, setChainToAdd] = useState('');
-  const switchNetwork = async (event: ChangeEvent<HTMLSelectElement>) => {
-    const newChainId = event.target.value;
-
-    console.log(chainId, newChainId);
-
-    if (String(chainId) !== newChainId) {
+  const switchNetwork = async (event:React.MouseEvent<HTMLButtonElement>) => {
+    if (chainId !== 2828) {
       try {
         //@ts-ignore
         await web3?.currentProvider?.request({
           method: 'wallet_switchEthereumChain',
-          params: [{ chainId: web3.utils.toHex(newChainId) }],
+          params: [{ chainId: web3.utils.toHex(2828) }],
         });
       } catch (switchError: any) {
         // This error code indicates that the chain has not been added to MetaMask.
         if (switchError.code === 4902) {
-          setChainToAdd(newChainId);
+          setChainToAdd(String(2828));
         }
       }
     }
   };
 
-  const options: [string, number][] = [
-    ['Ethereum', 1],
-    ['Polygon', 137],
-    ['Rinkeby', 4],
-    ['Energyweb', 246],
-    ['Moonriver', 1285],
-    ['Moonbeam', 1284],
-  ];
-
-  //persists selected option in network select matches current selected network
-  useEffect(() => {
-    console.log(chainId);
-    if (chainId) {
-      const selected = document.getElementById(`network_option_${networks[chainId].toLowerCase()}`);
-      selected?.setAttribute('selected', 'true');
-    }
-  }, [chainId, chainToAdd]);
 
   return (
     <>
@@ -69,39 +48,27 @@ export default function ConnectWallet() {
           </div>
           <div className="relative">
             <ElementWithTitle
-              title="Switch Network"
+              title="Network"
               tailwindColor="bg-gray-50"
               element={
-                <select
-                  name={accountId && chainId ? networks[chainId] : 'Network'}
+                <button
                   className={`btnBig btnSecondary  ${!chainId ? 'cursor-not-allowed' : ''}`}
-                  onChange={switchNetwork}
+                  onClick={switchNetwork}
                 >
-                  <option id="default_network_option" selected disabled hidden>
-                    Network
-                  </option>
-                  {options.map((option) => (
-                    <option
-                      // selected={chainId === option[1] ? true : false}
-                      id={'network_option_' + option[0].toLowerCase()}
-                      value={option[1]}
-                    >
-                      {option[0]}
-                    </option>
-                  ))}
-                </select>
+                 {chainId === 2828 ? "Lukso Testnet (L16)" : 'Switch to Lukso Testnet (L16)'}
+                </button>
               }
             />
             <div className="text-xs flex items-center absolute bottom-0 translate-y-full">
-              <div className={`w-2 h-2 mr-2 rounded-full ${accountId ? 'bg-green-400' : 'bg-red-500'}`} />
-              {accountId ? 'connected' : 'disconnected'}
+              <div className={`w-2 h-2 mr-2 rounded-full ${accountId && chainId === 2828 ? 'bg-green-400' : 'bg-red-500'}`} />
+              {accountId && chainId === 2828 ? 'connected' : 'disconnected'}
             </div>
           </div>
         </div>
       </div>
-      <BackOrContinueBtns back="/app/welcome" conditionNext={!!accountId} />
+      <BackOrContinueBtns back="/app/welcome" conditionNext={!!accountId && chainId === 2828} />
       {chainToAdd ? (
-        <div className="absolute top-0 bottom-0 left-0 right-0 z-40 bg-black bg-opacity-25 flex justify-center items-center">
+        <div className="absolute top-0 bottom-0 left-0 right-0 z-50 bg-black bg-opacity-25 flex justify-center items-center">
           <OutsideClickHandler onOutsideClick={() => setChainToAdd('')}>
             <div className="border-2 border-gray-500 p-24 bg-gray-100 flex flex-col justify-center items-center">
               <BsXCircle className="text-red-500 text-5xl mb-4" />

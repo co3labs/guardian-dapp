@@ -6,12 +6,7 @@
 html,
 body,
 #root {
-  @apply h-full w-full relative flex flex-col overflow-x-hidden;
-}
-
-.orangeGrad {
-  background: rgb(246, 178, 107);
-  background: radial-gradient(circle at 35%, rgba(246, 178, 107, 1) 0%, rgba(246, 178, 107, 0) 75%);
+  @apply h-full w-full relative flex flex-col overflow-x-hidden opacity-100;
 }
 
 .btnPrimary {
@@ -60,6 +55,10 @@ select {
 .web3modal-modal-card,
 .web3modal-modal-card > * > * {
   border-radius: 0.125rem !important/* 2px */;
+}
+
+.web3modal-modal-lightbox{
+  z-index: 60 !important;
 }
 
 .welcomeCard > section > h3 {

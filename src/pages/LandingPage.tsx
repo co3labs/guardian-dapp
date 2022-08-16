@@ -4,14 +4,14 @@ import heros from '../assets/heros.png';
 export default function LandingPage() {
   return (
     <>
-      <div className="flex absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+      <div className="flex w-full h-full justify-center items-center">
         <div className="mr-8">
-          <img src={heros} alt="multiple_users" className="w-96" />
+          <img src={heros} alt="heros" className="w-[32rem]" />
         </div>
         <div>
-          <h2 className="text-5xl mb-4">Guardians of your legacy</h2>
+          <h2 className="text-6xl mb-4">Guardians of Your Legacy</h2>
           <h3 className="text-xl font-light mb-8">Secure your online legacy with guardians.</h3>
-          <Link to="app/welcome" className="btnPrimary btnSmall">
+          <Link to="app/welcome" className="btnPrimary btnBig">
             Enter App
           </Link>
         </div>

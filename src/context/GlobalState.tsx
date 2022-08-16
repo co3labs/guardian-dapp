@@ -3,6 +3,7 @@ import Web3 from 'web3';
 import Web3Modal from 'web3modal';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import { globalStates, IVaultInfo, supportedChains } from '../@types/types';
+import { Location } from 'react-router-dom';
 
 export const INITIAL_VAULT_STATE: IVaultInfo = {
   vaultName: '',
@@ -13,11 +14,7 @@ export const INITIAL_VAULT_STATE: IVaultInfo = {
 };
 
 export const networks = {
-  1: 'Ethereum',
-  56: 'Binance',
-  137: 'Polygon',
-  246: 'Energyweb',
-  1285: 'Moonriver',
+  2828: "Lukso Testnet (L16)"
 };
 
 export const getShortId = (id: string) => {
@@ -41,7 +38,8 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
   const [allVaults, setAllVaults] = useState<IVaultInfo[]>([]);
   const [currentVaultEdits, setCurrentVaultEdits] = useState<IVaultInfo>(INITIAL_VAULT_STATE);
   const [currentStep, setCurrentStep] = useState(0);
-  const [globalSnackbarQue, setGlobalSnackbarQue] = useState<string[]>([])
+  const [globalSnackbarQue, setGlobalSnackbarQue] = useState<string[]>([]);
+  const [location, setLocation] = useState<Location | null>(null);
 
   // intitialize web3modal to use to connect to provider
   useEffect(() => {
@@ -98,6 +96,8 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
 
       const _chainId = String(await web3.eth.getChainId());
       setChainId(_chainId);
+      console.log(_chainId);
+      
 
       setListeners(provider, web3);
 
@@ -121,6 +121,8 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
 
     // Subscribe to chainId change
     provider.on('chainChanged', async (chainId: supportedChains) => {
+      console.log(parseInt(String(chainId)));
+
       setChainId(parseInt(String(chainId)));
     });
 
@@ -171,7 +173,9 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
         setAllVaults,
         resetVaultAndSteps,
         globalSnackbarQue,
-        setGlobalSnackbarQue
+        setGlobalSnackbarQue,
+        location,
+        setLocation,
       }}
     >
       <>{children}</>

@@ -1,8 +1,9 @@
 import React, { Dispatch, SetStateAction } from 'react';
+import { Location } from 'react-router-dom';
 import Web3 from 'web3';
 import Web3Modal from 'web3modal';
 
-export type supportedChains = 1  | 56 | 137 | 246 | 1285;
+export type supportedChains =2828;
 
 export interface IGuardianInfo {
   name: string;
@@ -38,4 +39,6 @@ export interface globalStates {
   resetVaultAndSteps: () => void;
   globalSnackbarQue: string[];
   setGlobalSnackbarQue: Dispatch<SetStateAction<string[]>>;
+  location: Location | null;
+  setLocation: Dispatch<SetStateAction<Location | null>>;
 }
