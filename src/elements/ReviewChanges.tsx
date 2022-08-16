@@ -4,10 +4,9 @@ import { GlobalContext } from '../context/GlobalState';
 import BackOrContinueBtns from './BackOrContinueBtns';
 
 export default function ReviewChanges() {
-  const { currentVaultEdits, setAllVaults, allVaults, setGlobalSnackbarQue, globalSnackbarQue } =
+  const { currentVaultEdits, updateAndGoHome, location } =
     useContext(GlobalContext);
   const navigate = useNavigate();
-  const location = useLocation();
   //? show previous vault here ?
   return (
     <>
@@ -44,20 +43,7 @@ export default function ReviewChanges() {
       </div>
       <BackOrContinueBtns
         confirmText="Confirm"
-        onClick={() => {
-          setAllVaults([
-            ...allVaults.filter((vault) => vault.vaultName !== currentVaultEdits.vaultName),
-            currentVaultEdits,
-          ]);
-          console.log(location.pathname);
-
-          setGlobalSnackbarQue([
-            ...globalSnackbarQue,
-            `Vault succesfully ${location.pathname.includes('load') ? 'updated' : ' created'}`,
-          ]);
-
-          navigate('/app/welcome', { replace: true });
-        }}
+        onClick={() => location ? updateAndGoHome(navigate, location) : () => {}}
       />
     </>
   );

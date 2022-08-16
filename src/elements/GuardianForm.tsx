@@ -1,18 +1,19 @@
 import { useContext, useEffect, useState } from 'react';
 import { BsChevronDown } from 'react-icons/bs';
 import OutsideClickHandler from 'react-outside-click-handler';
+import { useNavigate } from 'react-router-dom';
 import { IGuardianInfo, IGuardianList } from '../@types/types';
 import { GlobalContext } from '../context/GlobalState';
 import BackOrContinueBtns from './BackOrContinueBtns';
 import GuardianInput from './GuardianInput';
 
 export default function GuardianForm() {
-  const { currentVaultEdits, setCurrentVaultEdits, accountId } = useContext(GlobalContext);
+  const { currentVaultEdits, setCurrentVaultEdits, updateAndGoHome, location } = useContext(GlobalContext);
   const [openThresholdSelect, setOpenThresholdSelect] = useState(false);
   const [formIsValid, setFormIsValid] = useState(false);
   const [validating, setValidating] = useState(false);
   const [duplicate, setDuplicate] = useState<number[]>();
-
+  const navigate = useNavigate();
   useEffect(() => {
     const culprit = Object.values(currentVaultEdits.guardianList).find(
       (guardian) =>
@@ -26,7 +27,7 @@ export default function GuardianForm() {
 
     for (let i = 0; i < currentListValues.length; i++) {
       const checking = currentListValues[i].address;
-      const match = checked.findIndex((address) => address === checking && address !== "");
+      const match = checked.findIndex((address) => address === checking && address !== '');
       if (match >= 0) {
         duplicateCheck = [match, i];
         setDuplicate([match, i]);
@@ -135,7 +136,12 @@ export default function GuardianForm() {
           </div>
         </div>
       </div>
-      <BackOrContinueBtns exitBtn={true} confirmText="Update Guardians & Threshold" conditionNext={formIsValid} />
+      <BackOrContinueBtns
+        exitBtn={true}
+        onClick={() => (location ? updateAndGoHome(navigate, location) : () => {})}
+        confirmText="Update Guardians & Threshold"
+        conditionNext={formIsValid}
+      />
       {/* {validating ? <MoonLoader /> : <></>}{' '} */}
     </>
   );

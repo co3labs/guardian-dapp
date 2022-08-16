@@ -2,8 +2,8 @@ import { createContext, PropsWithChildren, useEffect, useState } from 'react';
 import Web3 from 'web3';
 import Web3Modal from 'web3modal';
 import WalletConnectProvider from '@walletconnect/web3-provider';
-import { globalStates, IVaultInfo, supportedChains } from '../@types/types';
-import { Location } from 'react-router-dom';
+import { globalStates, IUserVaults, IVaultInfo, supportedChains } from '../@types/types';
+import { Location, NavigateFunction } from 'react-router-dom';
 
 export const INITIAL_VAULT_STATE: IVaultInfo = {
   vaultName: '',
@@ -11,6 +11,8 @@ export const INITIAL_VAULT_STATE: IVaultInfo = {
   ERC725Address: '',
   guardianCount: 1,
   vaultAddress: '',
+  timestampId: 0,
+  lastUpdated: 0,
   guardianList: { 0: { name: '', address: '' } },
 };
 
@@ -36,7 +38,7 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
   const [web3, setWeb3] = useState<Web3>();
   const [unsupportedNet, setUnsupportedNet] = useState<boolean>(false);
   const [cookiesAllowed, setCookiesAllowed] = useState<boolean | null>(null);
-  const [allVaults, setAllVaults] = useState<IVaultInfo[]>([]);
+  const [allVaults, setAllVaults] = useState<IUserVaults>();
   const [currentVaultEdits, setCurrentVaultEdits] = useState<IVaultInfo>(INITIAL_VAULT_STATE);
   const [currentStep, setCurrentStep] = useState(0);
   const [globalSnackbarQue, setGlobalSnackbarQue] = useState<string[]>([]);
@@ -139,7 +141,7 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
   }
 
   useEffect(() => {
-    if (!allVaults.length) {
+    if (!allVaults) {
       const storage = localStorage.getItem('user_vaults');
       console.log('Storage found:', storage);
       if (storage) setAllVaults(JSON.parse(storage));
@@ -170,12 +172,26 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
   }, [chainId]);
 
   useEffect(() => {
-    if (allVaults.length > 1) localStorage.setItem('user_vaults', JSON.stringify(allVaults));
+    if (allVaults) localStorage.setItem('user_vaults', JSON.stringify(allVaults));
   }, [allVaults]);
 
   const resetVaultAndSteps = () => {
     setCurrentStep(0);
-    setCurrentVaultEdits(INITIAL_VAULT_STATE);
+    setCurrentVaultEdits({ ...INITIAL_VAULT_STATE, timestampId: Date.now() });
+  };
+
+  const updateAndGoHome = (navigate: NavigateFunction, location: Location) => {
+    setAllVaults({
+      ...allVaults,
+      [currentVaultEdits.timestampId]: { ...currentVaultEdits, lastUpdated: Date.now() },
+    });
+
+    setGlobalSnackbarQue([
+      ...globalSnackbarQue,
+      `Vault succesfully ${location.pathname.includes('manage') ? 'updated' : ' created'}`,
+    ]);
+
+    navigate('/app/welcome', { replace: true });
   };
   return (
     <GlobalContext.Provider
@@ -199,6 +215,7 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
         setGlobalSnackbarQue,
         location,
         setLocation,
+        updateAndGoHome
       }}
     >
       <>{children}</>

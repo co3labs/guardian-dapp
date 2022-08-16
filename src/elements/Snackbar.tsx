@@ -3,7 +3,7 @@ import { GlobalContext } from '../context/GlobalState';
 
 export default function Snackbar() {
   const [showSnackbarItem, setShowSnackbarItem] = useState(false);
-  const [currentSnackbarItem, setCurrentSnackbarItem] = useState("'testing123'");
+  const [currentSnackbarItem, setCurrentSnackbarItem] = useState("");
   const { globalSnackbarQue, setGlobalSnackbarQue } = useContext(GlobalContext);
 
   useEffect(() => {

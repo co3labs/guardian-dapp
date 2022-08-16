@@ -3,7 +3,7 @@ import { BsCheckCircleFill } from 'react-icons/bs';
 import { GlobalContext } from '../context/GlobalState';
 
 export default function ManageVaultConstructor({ steps, title }: { steps: [string, JSX.Element][]; title: string }) {
-  const { currentStep, setCurrentStep } = useContext(GlobalContext);
+  const { currentStep } = useContext(GlobalContext);
   return (
     <div className="w-full h-full flex justify-center items-center px-4 md:px-12 lg:px-0 relative z-10">
       <div className="rounded-sm flex flex-col w-full lg:w-2/3 xl:w-1/2 h-full shadow-md bg-white pt-16">

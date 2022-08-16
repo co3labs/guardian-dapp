@@ -26,42 +26,42 @@ export default function SelectOrImport() {
             </tr>
           </thead>
           <tbody>
-            {allVaults.map((vault, index) => (
-              <tr
-                onClick={() => {
-                  setCurrentVaultEdits(vault);
-                }}
-                className="vaultListItem group"
-              >
-                <td
-                  className={
-                    'h-full bg-blue-800 bg-opacity-10 border-l border-y rounded-l-sm group-hover:border-blue-800 ' +
-                    selectedClasses(vault)
-                  }
+            {allVaults ? (
+              Object.entries(allVaults).map(([id, vault], index) => (
+                <tr
+                  onClick={() => {
+                    setCurrentVaultEdits(vault);
+                  }}
+                  className="vaultListItem group"
                 >
-                  {vault.vaultName}
-                </td>
-                <td className={'group-hover:border-blue-800 ' + selectedClasses(vault)}>{vault.guardianCount}</td>
-                <td className={'group-hover:border-blue-800 ' + selectedClasses(vault)}>{vault.threshold}</td>
-                <td className={'border-r rounded-r-sm group-hover:border-blue-800 ' + selectedClasses(vault)}>
-                  {getShortId(vault.ERC725Address)}
-                </td>
-              </tr>
-            ))}
+                  <td
+                    className={
+                      'h-full bg-blue-800 bg-opacity-10 border-l border-y rounded-l-sm group-hover:border-blue-800 ' +
+                      selectedClasses(vault)
+                    }
+                  >
+                    {vault.vaultName}
+                  </td>
+                  <td className={'group-hover:border-blue-800 ' + selectedClasses(vault)}>{vault.guardianCount}</td>
+                  <td className={'group-hover:border-blue-800 ' + selectedClasses(vault)}>{vault.threshold}</td>
+                  <td className={'border-r rounded-r-sm group-hover:border-blue-800 ' + selectedClasses(vault)}>
+                    {getShortId(vault.ERC725Address)}
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <div className="w-full py-2 border border-red-400 rounded-sm text-center">
+                <span>No vaults in memory! Try importing a vault below or </span>
+                <span>
+                  <Link to="/app/create" className="text-blue-800 hover:underline" onClick={resetVaultAndSteps}>
+                    create a new vault.
+                  </Link>
+                </span>
+              </div>
+            )}
           </tbody>
         </table>
-        {allVaults.length === 0 ? (
-          <div className="w-full py-2 border border-red-400 rounded-sm text-center">
-            <span>No vaults in memory! Try importing a vault below or </span>
-            <span>
-              <Link to="/app/create" className="text-blue-800 hover:underline" onClick={resetVaultAndSteps}>
-                create a new vault.
-              </Link>
-            </span>
-          </div>
-        ) : (
-          <></>
-        )}
+
         <div className="mb-6">
           <p className="font-light">Import a vault by entering it's ERC725 address</p>
         </div>
