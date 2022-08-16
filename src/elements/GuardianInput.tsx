@@ -30,7 +30,7 @@ export default function GuardianInput({
     if (guardian.name && !hasTypedName) setHasTypedName(true);
     if (guardian.address && !hasTypedAddress) setHasTypedAddress(true);
 
-    if (hasTypedAddress) {
+    if (hasTypedAddress && guardian.address.length > 0) {
       if (guardian.address) {
         if (guardian.address.match(/[^A-Za-z0-9]/)) {
           setErrorMessage('Special characters detected.');
@@ -70,8 +70,9 @@ export default function GuardianInput({
               onChange={(event) => {
                 updateGuardian(event.target.value, index, 'name');
               }}
-              className="border rounded-sm p-2 w-full mr-1"
-              value={guardian.name}
+              className={`border rounded-sm p-2 w-full mr-1 ${
+                !!((hasTypedAddress && !guardian.address) || errorMessage) ? 'border-red-500' : ''
+              }`}              value={guardian.name}
               placeholder="name"
             />
           }

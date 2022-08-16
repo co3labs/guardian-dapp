@@ -15,14 +15,7 @@ export default function SelectOrImport() {
   return (
     <>
       <div className="m-6 font-light">
-        <div className="mb-6">
-          <p className="font-light">Import a vault by entering it's ERC725 address</p>
-          <InfoParagraph text="Make sure you are connected to the same chain your vault is on." />
-        </div>
-        <ElementWithTitle title="Import Vault" element={<input type="text" className="md:w-full" />} />
-        <div className="mt-6">
-          <p>Or select from your vaults below</p>
-        </div>
+        <p>Your Recovery Vaults</p>
         <table className="w-full border-separate border-spacing-y-6">
           <thead className="text-left text-xs text-gray-400 table-header-group">
             <tr>
@@ -59,7 +52,7 @@ export default function SelectOrImport() {
         </table>
         {allVaults.length === 0 ? (
           <div className="w-full py-2 border border-red-400 rounded-sm text-center">
-            <span>No vaults in memory! Try importing a vault above or </span>
+            <span>No vaults in memory! Try importing a vault below or </span>
             <span>
               <Link to="/app/create" className="text-blue-800 hover:underline" onClick={resetVaultAndSteps}>
                 create a new vault.
@@ -69,8 +62,17 @@ export default function SelectOrImport() {
         ) : (
           <></>
         )}
+        <div className="mb-6">
+          <p className="font-light">Import a vault by entering it's ERC725 address</p>
+        </div>
+        <div className="flex items-center">
+          <ElementWithTitle title="Import Vault" element={<input type="text" className="md:w-full flex-grow" />} />
+          <button className="h-full py-[.9rem] flex justify-center items-center px-3 btnSecondary ml-2">
+            <span className="cursor-pointer">Import</span>
+          </button>
+        </div>
       </div>
-      <BackOrContinueBtns confirmText='Continue' />
+      <BackOrContinueBtns confirmText="Continue" />
     </>
   );
 }

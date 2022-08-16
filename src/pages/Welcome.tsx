@@ -28,12 +28,12 @@ export default function Welcome() {
             </Link>
           </section>{' '}
           <section className="shadow-lg">
-            <h3>Load An Existing Vault</h3>
+            <h3>My Vaults</h3>
             <p>
-              Already have a Vault or want to access it from a different device? Easily load your Vault using your Vault
-              address.
+              Edit or import your existing vaults. 
+              Easily manage your vaults, guardians, and thresholds. 
             </p>
-            <Link className="btnSmall btnSecondary w-fit my-6" to="/app/load" onClick={resetVaultAndSteps}>
+            <Link className="btnSmall btnSecondary w-fit my-6" to="/app/manage" onClick={resetVaultAndSteps}>
               Load Vault
             </Link>
           </section>

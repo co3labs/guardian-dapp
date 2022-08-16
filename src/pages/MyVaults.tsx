@@ -5,7 +5,7 @@ import ManageVaultConstructor from '../elements/ManageVaultConstructor';
 import NameVault from '../elements/NameVault';
 import ReviewChanges from '../elements/ReviewChanges';
 
-export default function LoadVault() {
+export default function MyVaults() {
   return (
     <ManageVaultConstructor
       steps={[
@@ -13,7 +13,6 @@ export default function LoadVault() {
         ['Vault', <SelectOrImport />],
         ['Name', <NameVault />],
         ['Guardians', <GuardianForm />],
-        ['Review', <ReviewChanges />],
       ]}
       title="Load an Existing Vault"
     />

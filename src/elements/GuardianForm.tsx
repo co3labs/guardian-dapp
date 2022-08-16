@@ -26,7 +26,7 @@ export default function GuardianForm() {
 
     for (let i = 0; i < currentListValues.length; i++) {
       const checking = currentListValues[i].address;
-      const match = checked.findIndex((address) => address === checking);
+      const match = checked.findIndex((address) => address === checking && address !== "");
       if (match >= 0) {
         duplicateCheck = [match, i];
         setDuplicate([match, i]);

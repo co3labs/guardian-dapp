@@ -157,7 +157,7 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
       } catch (switchError: any) {
         // This error code indicates that the chain has not been added to MetaMask.
         if (switchError.code === 4902) {
-          alert('Lukso testnet (L16) needs to be added to your wallet.');
+          alert('Lukso Testnet (L16) needs to be added in your wallet.');
           // setChainToAdd(String(2828));
         }
       }

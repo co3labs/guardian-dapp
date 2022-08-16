@@ -5,7 +5,7 @@ import Header from './elements/Header';
 import Footer from './elements/Footer';
 import Welcome from './pages/Welcome';
 import CreateVault from './pages/CreateVault';
-import LoadVault from './pages/LoadVault';
+import MyVaults from './pages/MyVaults';
 import NotFound from './elements/NotFound';
 import Snackbar from './elements/Snackbar';
 import logo from './assets/grayscale.png';
@@ -20,7 +20,7 @@ export default function App() {
       <Header />
       <Snackbar />
       <WatchLocation />
-      <div className="flex-grow overflow-hidden">
+      <div className="flex-grow">
         <img
           src={logo}
           className={`absolute z-0 -translate-x-1/3  translate-y-1/2 select-none pointer-events-none transition-opacity duration-200 ${
@@ -39,7 +39,7 @@ export default function App() {
           <Route path="app">
             <Route path="welcome" element={<Welcome />} />
             <Route path="create" element={<CreateVault />} />
-            <Route path="load" element={<LoadVault />} />
+            <Route path="manage" element={<MyVaults />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
