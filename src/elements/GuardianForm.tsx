@@ -12,14 +12,6 @@ export default function GuardianForm() {
   const [formIsValid, setFormIsValid] = useState(false);
   const [validating, setValidating] = useState(false);
   const [duplicate, setDuplicate] = useState<number[]>();
-  useEffect(() => {
-    if (currentVaultEdits.guardianList[0].address === '' && accountId) {
-      setCurrentVaultEdits({
-        ...currentVaultEdits,
-        guardianList: { 0: { ...currentVaultEdits.guardianList[0], address: accountId } },
-      });
-    }
-  }, []);
 
   useEffect(() => {
     const culprit = Object.values(currentVaultEdits.guardianList).find(
@@ -143,7 +135,7 @@ export default function GuardianForm() {
           </div>
         </div>
       </div>
-      <BackOrContinueBtns conditionNext={formIsValid} />
+      <BackOrContinueBtns exitBtn={true} confirmText="Update Guardians & Threshold" conditionNext={formIsValid} />
       {/* {validating ? <MoonLoader /> : <></>}{' '} */}
     </>
   );

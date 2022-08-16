@@ -17,11 +17,11 @@ body,
   @apply rounded-sm shadow-md border-2 border-blue-800 bg-white hover:bg-blue-800 hover:bg-opacity-10;
 }
 .btnBig {
-  @apply px-12 py-3;
+  @apply px-12 py-3 w-max ;
 }
 
 .btnSmall {
-  @apply px-6 py-1 mx-2;
+  @apply px-6 py-1 mx-2 w-max ;
 }
 
 html,

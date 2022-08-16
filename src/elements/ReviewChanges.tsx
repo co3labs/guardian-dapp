@@ -43,6 +43,7 @@ export default function ReviewChanges() {
         )}
       </div>
       <BackOrContinueBtns
+        confirmText="Confirm"
         onClick={() => {
           setAllVaults([
             ...allVaults.filter((vault) => vault.vaultName !== currentVaultEdits.vaultName),

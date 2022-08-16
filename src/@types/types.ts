@@ -18,7 +18,8 @@ export interface IVaultInfo {
   guardianList: IGuardianList;
   threshold: number;
   guardianCount: number;
-  address: string;
+  ERC725Address: string;
+  vaultAddress: string;
 }
 
 export interface globalStates {

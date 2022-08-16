@@ -8,13 +8,14 @@ import { Location } from 'react-router-dom';
 export const INITIAL_VAULT_STATE: IVaultInfo = {
   vaultName: '',
   threshold: 1,
-  address: '',
+  ERC725Address: '',
   guardianCount: 1,
+  vaultAddress: '',
   guardianList: { 0: { name: '', address: '' } },
 };
 
 export const networks = {
-  2828: "Lukso Testnet (L16)"
+  2828: 'Lukso Testnet (L16)',
 };
 
 export const getShortId = (id: string) => {
@@ -94,10 +95,9 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
       const account = accounts[0] ? accounts[0].toLowerCase() : null;
       setAccountId(accounts[0]);
 
-      const _chainId = String(await web3.eth.getChainId());
+      const _chainId = await web3.eth.getChainId();
       setChainId(_chainId);
       console.log(_chainId);
-      
 
       setListeners(provider, web3);
 
@@ -122,7 +122,6 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
     // Subscribe to chainId change
     provider.on('chainChanged', async (chainId: supportedChains) => {
       console.log(parseInt(String(chainId)));
-
       setChainId(parseInt(String(chainId)));
     });
 

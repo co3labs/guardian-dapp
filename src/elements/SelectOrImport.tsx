@@ -51,7 +51,7 @@ export default function SelectOrImport() {
                 <td className={'group-hover:border-blue-800 ' + selectedClasses(vault)}>{vault.guardianCount}</td>
                 <td className={'group-hover:border-blue-800 ' + selectedClasses(vault)}>{vault.threshold}</td>
                 <td className={'border-r rounded-r-sm group-hover:border-blue-800 ' + selectedClasses(vault)}>
-                  {getShortId(vault.address)}
+                  {getShortId(vault.ERC725Address)}
                 </td>
               </tr>
             ))}
@@ -70,7 +70,7 @@ export default function SelectOrImport() {
           <></>
         )}
       </div>
-      <BackOrContinueBtns />
+      <BackOrContinueBtns confirmText='Continue' />
     </>
   );
 }

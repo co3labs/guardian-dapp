@@ -10,7 +10,7 @@ import InfoParagraph from './InfoParagraph';
 export default function ConnectWallet() {
   const { handleConnect, accountId, web3, chainId } = useContext(GlobalContext);
   const [chainToAdd, setChainToAdd] = useState('');
-  const switchNetwork = async (event:React.MouseEvent<HTMLButtonElement>) => {
+  const switchNetwork = async () => {
     if (chainId !== 2828) {
       try {
         //@ts-ignore
@@ -26,7 +26,6 @@ export default function ConnectWallet() {
       }
     }
   };
-
 
   return (
     <>
@@ -55,18 +54,20 @@ export default function ConnectWallet() {
                   className={`btnBig btnSecondary  ${!chainId ? 'cursor-not-allowed' : ''}`}
                   onClick={switchNetwork}
                 >
-                 {chainId === 2828 ? "Lukso Testnet (L16)" : 'Switch to Lukso Testnet (L16)'}
+                  {!accountId ? 'Network' : chainId === 2828 ? 'Lukso Testnet (L16)' : 'Switch to Lukso Testnet (L16)'}
                 </button>
               }
             />
             <div className="text-xs flex items-center absolute bottom-0 translate-y-full">
-              <div className={`w-2 h-2 mr-2 rounded-full ${accountId && chainId === 2828 ? 'bg-green-400' : 'bg-red-500'}`} />
+              <div
+                className={`w-2 h-2 mr-2 rounded-full ${accountId && chainId === 2828 ? 'bg-green-400' : 'bg-red-500'}`}
+              />
               {accountId && chainId === 2828 ? 'connected' : 'disconnected'}
             </div>
           </div>
         </div>
       </div>
-      <BackOrContinueBtns back="/app/welcome" conditionNext={!!accountId && chainId === 2828} />
+      <BackOrContinueBtns back="/app/welcome" confirmText='Continue' conditionNext={!!accountId && chainId === 2828} />
       {chainToAdd ? (
         <div className="absolute top-0 bottom-0 left-0 right-0 z-50 bg-black bg-opacity-25 flex justify-center items-center">
           <OutsideClickHandler onOutsideClick={() => setChainToAdd('')}>

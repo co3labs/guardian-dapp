@@ -14,9 +14,8 @@ export default function CreateVault() {
     <ManageVaultConstructor
       steps={[
         ['Connect Wallet', <ConnectWallet />],
-        ['Name', <NameVault />],
-        ['Guardians', <GuardianForm />],
-        ['Review', <ReviewChanges />],
+        ['Name & Address', <NameVault />],
+        ['Guardians & Threshold', <GuardianForm />],
       ]}
       title="Create a New Recovery Vault"
     />
