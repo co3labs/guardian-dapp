@@ -97,6 +97,7 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
 
       const _chainId = await web3.eth.getChainId();
       setChainId(_chainId);
+
       console.log(_chainId);
 
       setListeners(provider, web3);
@@ -144,6 +145,29 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
       if (storage) setAllVaults(JSON.parse(storage));
     }
   }, []);
+
+  const switchNetwork = async () => {
+    if (chainId !== 2828) {
+      try {
+        //@ts-ignore
+        await web3?.currentProvider?.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: web3.utils.toHex(2828) }],
+        });
+      } catch (switchError: any) {
+        // This error code indicates that the chain has not been added to MetaMask.
+        if (switchError.code === 4902) {
+          alert('Lukso testnet (L16) needs to be added to your wallet.');
+          // setChainToAdd(String(2828));
+        }
+      }
+    }
+  };
+  useEffect(() => {
+    if (chainId !== 2828) {
+      switchNetwork();
+    }
+  }, [chainId]);
 
   useEffect(() => {
     if (allVaults.length > 1) localStorage.setItem('user_vaults', JSON.stringify(allVaults));
