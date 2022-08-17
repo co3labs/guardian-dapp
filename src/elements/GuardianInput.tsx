@@ -116,7 +116,7 @@ export default function GuardianInput({
       {index > 0 ? (
         <button
           type="button"
-          className="transition-colors ml-2 hover:bg-red-500 hover:text-white w-10 h-full rounded-sm bg-gray-100 flex justify-center items-center"
+          className="transition-colors ml-2 hover:bg-red-500 hover:text-white w-10 rounded-sm bg-gray-100 flex justify-center items-center"
           onClick={() => {
             const newGuardians = currentVaultEdits.guardianList;
             delete newGuardians[Number(id)];

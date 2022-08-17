@@ -22,7 +22,7 @@ export default function BackOrContinueBtns({
 
   return (
     <div className="flex  m-4 justify-between">
-      <div className='flex'>
+      <div className='flex w-min'>
         {back && skip !== 1 ? (
           <Link to={back} className="h-full flex items-center btn btnSmall btnSecondary mr-4">
             Cancel

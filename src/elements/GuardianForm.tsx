@@ -140,8 +140,8 @@ export default function GuardianForm() {
         exitBtn={true}
         onClick={() => (location ? updateAndGoHome(navigate, location) : () => {})}
         confirmText={
-          <span>
-            Update <span className="hidden md:block">Guardians {'&'} Threshold</span>
+          <span className='flex'>
+            Update <span className="hidden md:block ml-1">Guardians {'&'} Threshold</span>
             <span className="md:hidden">Vault</span>{' '}
           </span>
         }
