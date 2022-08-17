@@ -1,3 +1,4 @@
+import { Recovery } from 'guardians.js';
 import React, { Dispatch, SetStateAction } from 'react';
 import { Location, NavigateFunction } from 'react-router-dom';
 import Web3 from 'web3';
@@ -13,6 +14,11 @@ export interface IGuardianInfo {
 export interface IGuardianList {
   [id: number]: IGuardianInfo;
 }
+
+// Local storage should NOT store the vault secret because it will 
+// be vulnerable to XSS attacks. It might be possible to store it 
+// encrypted with the account signature. Storing raw vault secret 
+// development.
 export interface IVaultInfo {
   vaultName: string;
   guardianList: IGuardianList;
@@ -22,13 +28,15 @@ export interface IVaultInfo {
   vaultAddress: string;
   timestampId: number;
   lastUpdated: number;
+  ownerSecret: string
 }
+
 
 export interface IUserVaults {
   [timestampId: number]: IVaultInfo;
 }
 
-export type VoidFunciton = () => void
+export type VoidFunciton = () => void;
 
 export interface globalStates {
   handleConnect: VoidFunciton;
@@ -52,4 +60,7 @@ export interface globalStates {
   setLocation: Dispatch<SetStateAction<Location | null>>;
   updateAndGoHome: (navigate: NavigateFunction, location: Location) => void;
   switchNetwork: VoidFunciton;
+  recovery: Recovery | undefined;
+  setRecovery: Dispatch<SetStateAction<Recovery | undefined>>;
+  addToGlobalSnackbarQue: (message:string) => void
 }

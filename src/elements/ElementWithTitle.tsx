@@ -1,11 +1,16 @@
+import { Dispatch, SetStateAction } from 'react';
+import { BsEye, BsEyeSlash } from 'react-icons/bs';
+
 export default function ElementWithTitle({
   title,
   element,
   tailwindColor = 'bg-white',
+  passStates,
 }: {
   title: string;
   element: JSX.Element;
   tailwindColor?: string;
+  passStates?: { show: boolean; setShow: Dispatch<SetStateAction<boolean>> };
 }) {
   return (
     <div className="relative flex-grow">
@@ -14,6 +19,18 @@ export default function ElementWithTitle({
         <span className="relative z-20">{title}</span>
       </div>
       {element}
+      {passStates ? (
+        <button
+          className="btnSecondary text-black p-2 absolute right-2 top-1/2 -translate-y-1/2"
+          onClick={() => {
+            passStates.setShow(!passStates.show);
+          }}
+        >
+          {passStates.show ? <BsEye /> : <BsEyeSlash />}
+        </button>
+      ) : (
+        <></>
+      )}
     </div>
   );
 }

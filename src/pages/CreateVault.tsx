@@ -1,12 +1,7 @@
-import { useContext, useEffect, useState } from 'react';
-import { GlobalContext } from '../context/GlobalState';
-import { BsChevronDown, BsTrash } from 'react-icons/bs';
-import OutsideClickHandler from 'react-outside-click-handler';
-import { IGuardianInfo, IVaultInfo } from '../@types/types';
 import GuardianForm from '../elements/GuardianForm';
 import ManageVaultConstructor from '../elements/ManageVaultConstructor';
 import ConnectWallet from '../elements/ConnectWallet';
-import NameVault from '../elements/NameVault';
+import Setup from '../elements/Setup';
 import ReviewChanges from '../elements/ReviewChanges';
 
 export default function CreateVault() {
@@ -14,8 +9,9 @@ export default function CreateVault() {
     <ManageVaultConstructor
       steps={[
         ['Connect Wallet', <ConnectWallet />],
-        ['Name & Address', <NameVault />],
-        ['Guardians & Threshold', <GuardianForm />],
+        ['Setup Vault', <Setup />],
+        ['Add Guardians', <GuardianForm />],
+        ['Review & Deploy', <ReviewChanges />],
       ]}
       title="Create a New Recovery Vault"
     />

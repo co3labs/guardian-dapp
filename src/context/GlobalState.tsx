@@ -4,6 +4,7 @@ import Web3Modal from 'web3modal';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import { globalStates, IUserVaults, IVaultInfo, supportedChains } from '../@types/types';
 import { Location, NavigateFunction } from 'react-router-dom';
+import { Recovery } from 'guardians.js';
 
 export const INITIAL_VAULT_STATE: IVaultInfo = {
   vaultName: '',
@@ -13,6 +14,7 @@ export const INITIAL_VAULT_STATE: IVaultInfo = {
   vaultAddress: '',
   timestampId: 0,
   lastUpdated: 0,
+  ownerSecret: '',
   guardianList: { 0: { name: '', address: '' } },
 };
 
@@ -43,6 +45,7 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
   const [currentStep, setCurrentStep] = useState(0);
   const [globalSnackbarQue, setGlobalSnackbarQue] = useState<string[]>([]);
   const [location, setLocation] = useState<Location | null>(null);
+  const [recovery, setRecovery] = useState<Recovery>();
 
   // intitialize web3modal to use to connect to provider
   useEffect(() => {
@@ -57,7 +60,6 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
               package: WalletConnectProvider, // required
               options: {
                 infuraId: process.env.REACT_APP_INFURA_ID, // required
-                rpc: { 137: 'https://matic-mainnet.chainstacklabs.com' },
               },
             },
           }, // required
@@ -100,7 +102,8 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
       const _chainId = await web3.eth.getChainId();
       setChainId(_chainId);
 
-      console.log(_chainId);
+      const _recovery = new Recovery(web3);
+      setRecovery(_recovery);
 
       setListeners(provider, web3);
 
@@ -220,6 +223,11 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
 
     navigate('/app/welcome', { replace: true });
   };
+
+  const addToGlobalSnackbarQue = (message: string) => {
+    setGlobalSnackbarQue([...globalSnackbarQue, message]);
+  };
+
   return (
     <GlobalContext.Provider
       value={{
@@ -244,6 +252,9 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
         setLocation,
         updateAndGoHome,
         switchNetwork,
+        recovery,
+        setRecovery,
+        addToGlobalSnackbarQue,
       }}
     >
       <>{children}</>
