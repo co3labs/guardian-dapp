@@ -1,16 +1,15 @@
 import { useEffect, useState } from 'react';
 import { ChangeEvent, useContext } from 'react';
-import { BsInfoCircle, BsShieldLock, BsXCircle } from 'react-icons/bs';
+import { BsChevronLeft, BsInfoCircle, BsShieldLock, BsXCircle } from 'react-icons/bs';
 import OutsideClickHandler from 'react-outside-click-handler';
 import { getShortId, GlobalContext, networks } from '../context/GlobalState';
 import BackOrContinueBtns from './BackOrContinueBtns';
 import ElementWithTitle from './ElementWithTitle';
 import InfoParagraph from './InfoParagraph';
 
-export default function ConnectWallet() {
+export default function ConnectWallet({ back }: { back?: string }) {
   const { handleConnect, accountId, web3, chainId } = useContext(GlobalContext);
   // const [chainToAdd, setChainToAdd] = useState('');
-
 
   return (
     <>
@@ -32,8 +31,13 @@ export default function ConnectWallet() {
           </div>
         </div>
       </div>
-      <BackOrContinueBtns back="/app/welcome" confirmText='Continue' conditionNext={!!accountId && chainId === 2828} />
-      
+      <BackOrContinueBtns
+        back={back || '/app/welcome'}
+        backText={back ? <BsChevronLeft /> : undefined}
+        exitBtn={!!back}
+        confirmText="Continue"
+        conditionNext={!!accountId && chainId === 2828}
+      />
     </>
   );
 }

@@ -12,6 +12,9 @@ import WatchLocation from './elements/WatchLocation';
 import { GlobalContext } from './context/GlobalState';
 import { useContext } from 'react';
 import EditVault from './pages/EditVault';
+import Recover from './pages/Recover';
+import VoteWithId from './elements/VoteWithId';
+import Vote from './pages/Vote';
 export default function App() {
   return (
     <Router>
@@ -27,6 +30,8 @@ export default function App() {
               <Route path="create" element={<CreateVault />} />
               <Route path="edit" element={<EditVault />} />
               <Route path="manage" element={<MyVaults />} />
+              <Route path="recover" element={<Recover />} />
+              <Route path="vote" element={<Vote/>}/>
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>

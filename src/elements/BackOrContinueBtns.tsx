@@ -5,7 +5,7 @@ import { GlobalContext } from '../context/GlobalState';
 
 export default function BackOrContinueBtns({
   back,
-  skip,
+  skip = [],
   conditionNext = true,
   confirmText,
   onClick,
@@ -13,7 +13,7 @@ export default function BackOrContinueBtns({
   backText
 }: {
   back?: string;
-  skip?: 1 | 2;
+  skip?: number[];
   conditionNext?: boolean;
   confirmText?: string | JSX.Element;
   backText?:string | JSX.Element
@@ -25,7 +25,7 @@ export default function BackOrContinueBtns({
   return (
     <div className="flex  m-4 justify-between">
       <div className='flex w-min'>
-        {back && skip !== 1 ? (
+        {back && skip && !skip.includes(1) ? (
           <Link to={back} className="h-full flex items-center btn btnSmall btnSecondary mr-4">
             {backText || "Cancel"}
           </Link>
@@ -48,7 +48,7 @@ export default function BackOrContinueBtns({
         )}
       </div>
 
-      {skip !== 2 ? (
+      {skip && !skip.includes(2) ? (
         <button
           type="button"
           onClick={() => {

@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { BsCheckCircleFill } from 'react-icons/bs';
 import { GlobalContext } from '../context/GlobalState';
 
-export default function ComponentWrapper({ steps, title }: { steps: [string, JSX.Element][]; title: string }) {
+export default function ComponentWrapper({ steps, title }: { steps: [string, JSX.Element][]; title: string | JSX.Element }) {
   const { currentStep } = useContext(GlobalContext);
   return (
     <div className="w-full h-full flex justify-center items-center px-4 md:px-12 lg:px-0 relative z-10">

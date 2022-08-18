@@ -21,7 +21,7 @@ export default function Welcome() {
           <section className="shadow-lg">
             <h3>Create A New Vault</h3>
             <p>Create a new vault that is controlled by one or multiple owners.</p>
-            <Link className="btnSmall btnPrimary w-fit my-6" onClick={resetVaultAndSteps} to="/app/create">
+            <Link className="btnSmall btnPrimary w-fit my-6" onClick={() => resetVaultAndSteps()} to="/app/create">
               Create Vault
             </Link>
           </section>{' '}

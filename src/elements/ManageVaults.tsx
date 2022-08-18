@@ -1,5 +1,11 @@
 import { useContext, useEffect, useState } from 'react';
-import { blockExplorer, getShortId, GlobalContext, INITIAL_VAULT_STATE } from '../context/GlobalState';
+import {
+  blockExplorer,
+  getShortId,
+  GlobalContext,
+  INITIAL_RECOVERY_INFO,
+  INITIAL_VAULT_STATE,
+} from '../context/GlobalState';
 import BackOrContinueBtns from './BackOrContinueBtns';
 import ElementWithTitle from './ElementWithTitle';
 import InfoParagraph from './InfoParagraph';
@@ -8,7 +14,8 @@ import { IVaultInfo } from '../@types/types';
 import { BsChevronDown, BsPen, BsPenFill } from 'react-icons/bs';
 
 export default function ManageVaults() {
-  const { allVaults, resetVaultAndSteps, setCurrentVaultEdits, currentVaultEdits } = useContext(GlobalContext);
+  const { allVaults, resetVaultAndSteps, setCurrentVaultEdits, currentVaultEdits, setRecoverInfo,  } =
+    useContext(GlobalContext);
 
   useEffect(() => {
     setCurrentVaultEdits(INITIAL_VAULT_STATE);
@@ -70,8 +77,26 @@ export default function ManageVaults() {
                       >
                         <BsPen className="mr-1" size={12} />
                         Edit
-                      </Link>{' '}
-                      <button className="text-xs btnSecondary flex items-center mx-4 py-1 px-2">Recover</button>
+                      </Link>
+                      <Link
+                        onClick={() => {
+                          resetVaultAndSteps(vault)
+                        }}
+                        to="/app/recover"
+                        className="text-xs btnSecondary flex items-center ml-4 mr-1 py-1 px-2"
+                      >
+                        Recover
+                      </Link>
+                      <Link
+                        onClick={() => {
+                          resetVaultAndSteps(vault)
+
+                        }}
+                        to="/app/vote"
+                        className="text-xs btnPrimary flex items-center mr-4 ml-1 py-1 px-2"
+                      >
+                        Vote
+                      </Link>
                       <BsChevronDown
                         className={`transition-transform ${
                           currentVaultEdits.vaultName === vault.vaultName ? 'rotate-180' : ''
@@ -105,7 +130,14 @@ export default function ManageVaults() {
                             <div className="my-6 mr-6">
                               <ElementWithTitle
                                 title={item[0]}
-                                element={<a href={`${blockExplorer}${item[1]}`} className="vaultInfo hover:text-blue-800 px-12">{item[1]}</a>}
+                                element={
+                                  <a
+                                    href={`${blockExplorer}${item[1]}`}
+                                    className="vaultInfo hover:text-blue-800 px-12"
+                                  >
+                                    {item[1]}
+                                  </a>
+                                }
                               />
                             </div>
                           ))}
@@ -141,7 +173,7 @@ export default function ManageVaults() {
           <div className="w-full my-4 py-2 border border-red-400 rounded-sm text-center">
             <span>No vaults in memory! Try importing a vault below or </span>
             <span>
-              <Link to="/app/create" className="text-blue-800 hover:underline" onClick={resetVaultAndSteps}>
+              <Link to="/app/create" className="text-blue-800 hover:underline" onClick={() => resetVaultAndSteps()}>
                 create a new vault.
               </Link>
             </span>
@@ -158,7 +190,7 @@ export default function ManageVaults() {
           </button>
         </div>
       </div>
-      <BackOrContinueBtns skip={2} back="/app/welcome" backText={'Exit'} />
+      <BackOrContinueBtns skip={[2]} back="/app/welcome" backText={'Exit'} />
     </>
   );
 }

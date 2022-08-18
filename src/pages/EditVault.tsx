@@ -5,10 +5,11 @@ import ReviewChanges from '../elements/ReviewChanges';
 import VaultSetup from '../elements/VaultSetup';
 
 export default function EditVault() {
-  const fieldsToRender = { name: true, profile: false, secret: true, old:true };
+  const fieldsToRender = { name: true, profile: false, secret: true, old: true, processId:false};
   return (
     <ComponentWrapper
       steps={[
+        ['Connect Wallet', <ConnectWallet />],
         ['Name & Secret', <VaultSetup renderFields={fieldsToRender} />],
         ['Guardians', <GuardianForm />],
         ['Review & Update', <ReviewChanges />],

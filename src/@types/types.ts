@@ -32,6 +32,11 @@ export interface IVaultInfoEdits extends IVaultInfo {
   oldSecret: string;
 }
 
+export interface IRecoveryProcessInfo {
+  recoveryProcessId: string;
+  newOwner: string;
+}
+
 export interface IUserVaults {
   [timestampId: number]: IVaultInfo;
 }
@@ -53,7 +58,7 @@ export interface globalStates {
   setCurrentStep: Dispatch<SetStateAction<number>>;
   allVaults: IUserVaults | undefined;
   setAllVaults: Dispatch<SetStateAction<IUserVaults | undefined>>;
-  resetVaultAndSteps: VoidFunciton;
+  resetVaultAndSteps: (vault?:IVaultInfoEdits) => void;
   globalSnackbarQue: string[];
   setGlobalSnackbarQue: Dispatch<SetStateAction<string[]>>;
   location: Location | null;
@@ -63,4 +68,6 @@ export interface globalStates {
   recovery: Recovery | undefined;
   setRecovery: Dispatch<SetStateAction<Recovery | undefined>>;
   addToGlobalSnackbarQue: (message: string) => void;
+  recoverInfo: IRecoveryProcessInfo
+  setRecoverInfo: Dispatch<SetStateAction<IRecoveryProcessInfo>>
 }

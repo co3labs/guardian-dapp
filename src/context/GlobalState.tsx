@@ -2,10 +2,17 @@ import { createContext, PropsWithChildren, useEffect, useState } from 'react';
 import Web3 from 'web3';
 import Web3Modal from 'web3modal';
 import WalletConnectProvider from '@walletconnect/web3-provider';
-import { globalStates, IUserVaults, IVaultInfo, IVaultInfoEdits, supportedChains } from '../@types/types';
+import {
+  globalStates,
+  IRecoveryProcessInfo,
+  IUserVaults,
+  IVaultInfo,
+  IVaultInfoEdits,
+  supportedChains,
+} from '../@types/types';
 import { Location, NavigateFunction } from 'react-router-dom';
 import { Recovery } from 'guardians.js';
-export const blockExplorer = "https://explorer.execution.l16.lukso.network/address/"
+export const blockExplorer = 'https://explorer.execution.l16.lukso.network/address/';
 export const INITIAL_VAULT_STATE: IVaultInfoEdits = {
   vaultName: '',
   threshold: 1,
@@ -18,6 +25,11 @@ export const INITIAL_VAULT_STATE: IVaultInfoEdits = {
   oldSecret: '',
   newSecret: '',
   vaultOwner: '',
+};
+
+export const INITIAL_RECOVERY_INFO: IRecoveryProcessInfo = {
+  recoveryProcessId: '',
+  newOwner: '',
 };
 
 export const networks = {
@@ -47,6 +59,7 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
   const [globalSnackbarQue, setGlobalSnackbarQue] = useState<string[]>([]);
   const [location, setLocation] = useState<Location | null>(null);
   const [recovery, setRecovery] = useState<Recovery>();
+  const [recoverInfo, setRecoverInfo] = useState<IRecoveryProcessInfo>(INITIAL_RECOVERY_INFO);
 
   // intitialize web3modal to use to connect to provider
   useEffect(() => {
@@ -206,9 +219,19 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
     if (allVaults) localStorage.setItem('user_vaults', JSON.stringify(allVaults));
   }, [allVaults]);
 
-  const resetVaultAndSteps = () => {
-    setCurrentStep(0);
-    setCurrentVaultEdits({ ...INITIAL_VAULT_STATE, timestampId: Date.now() });
+  const resetVaultAndSteps = (vault?: IVaultInfoEdits) => {
+    if (accountId) {
+      setCurrentStep(1);
+    } else {
+      setCurrentStep(0);
+    }
+
+    if (vault) {
+      setCurrentVaultEdits({ ...vault});
+    } else {
+      setCurrentVaultEdits({ ...INITIAL_VAULT_STATE, timestampId: Date.now() });
+    }
+    setRecoverInfo({ ...INITIAL_RECOVERY_INFO });
   };
 
   const updateAndGoHome = (navigate: NavigateFunction, location: Location) => {
@@ -256,6 +279,8 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
         recovery,
         setRecovery,
         addToGlobalSnackbarQue,
+        recoverInfo,
+        setRecoverInfo,
       }}
     >
       <>{children}</>
