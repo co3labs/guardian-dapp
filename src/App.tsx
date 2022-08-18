@@ -15,7 +15,10 @@ import EditVault from './pages/EditVault';
 import Recover from './pages/Recover';
 import VoteWithId from './elements/VoteWithId';
 import Vote from './pages/Vote';
+import TxApprovalModal from './elements/TxApprovalModal';
 export default function App() {
+  const { txState } = useContext(GlobalContext);
+
   return (
     <Router>
       <Header />
@@ -31,7 +34,7 @@ export default function App() {
               <Route path="edit" element={<EditVault />} />
               <Route path="manage" element={<MyVaults />} />
               <Route path="recover" element={<Recover />} />
-              <Route path="vote" element={<Vote/>}/>
+              <Route path="vote" element={<Vote />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
@@ -39,6 +42,7 @@ export default function App() {
       </div>
 
       <Footer />
+      {txState.showModal ? <TxApprovalModal /> : <></>}
     </Router>
   );
 }

@@ -4,7 +4,9 @@ import Web3Modal from 'web3modal';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import {
   globalStates,
+  IGuardianList,
   IRecoveryProcessInfo,
+  ITxState,
   IUserVaults,
   IVaultInfo,
   IVaultInfoEdits,
@@ -30,6 +32,22 @@ export const INITIAL_VAULT_STATE: IVaultInfoEdits = {
 export const INITIAL_RECOVERY_INFO: IRecoveryProcessInfo = {
   recoveryProcessId: '',
   newOwner: '',
+};
+
+export const INITIAL_TX_STATE: ITxState = {
+  showModal: false,
+  vaultCreated: false,
+  secretSet: false,
+  thresholdSet: false,
+  guardiansAdded: {},
+};
+
+export const getInitialGuardiansAdded = (guardians: IGuardianList) => {
+  const initialList: {[name:string]: boolean} = {};
+  Object.entries(guardians).forEach(([id, guardian]) => {
+    initialList[guardian.name] = false;
+  });
+  return initialList
 };
 
 export const networks = {
@@ -60,7 +78,9 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
   const [location, setLocation] = useState<Location | null>(null);
   const [recovery, setRecovery] = useState<Recovery>();
   const [recoverInfo, setRecoverInfo] = useState<IRecoveryProcessInfo>(INITIAL_RECOVERY_INFO);
-  const currentVault = useRef<IVaultInfo>()
+  const [txState, setTxState] = useState<ITxState>(INITIAL_TX_STATE);
+
+  const currentVault = useRef<IVaultInfo>();
   // intitialize web3modal to use to connect to provider
   useEffect(() => {
     async function init() {
@@ -227,8 +247,8 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
     }
 
     if (vault) {
-      currentVault.current = vault
-      setCurrentVaultEdits({ ...vault});
+      currentVault.current = vault;
+      setCurrentVaultEdits({ ...vault });
     } else {
       setCurrentVaultEdits({ ...INITIAL_VAULT_STATE, timestampId: Date.now() });
     }
@@ -282,7 +302,9 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
         addToGlobalSnackbarQue,
         recoverInfo,
         setRecoverInfo,
-        currentVault
+        currentVault,
+        txState,
+        setTxState,
       }}
     >
       <>{children}</>

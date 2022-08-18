@@ -41,6 +41,16 @@ export interface IUserVaults {
   [timestampId: number]: IVaultInfo;
 }
 
+export interface ITxState {
+  showModal:boolean
+  vaultCreated: boolean;
+  secretSet: boolean;
+  thresholdSet: boolean;
+  guardiansAdded: {
+    [name: string]: boolean;
+  };
+}
+
 export type VoidFunciton = () => void;
 
 export interface globalStates {
@@ -58,7 +68,7 @@ export interface globalStates {
   setCurrentStep: Dispatch<SetStateAction<number>>;
   allVaults: IUserVaults | undefined;
   setAllVaults: Dispatch<SetStateAction<IUserVaults | undefined>>;
-  resetVaultAndSteps: (vault?:IVaultInfoEdits) => void;
+  resetVaultAndSteps: (vault?: IVaultInfoEdits) => void;
   globalSnackbarQue: string[];
   setGlobalSnackbarQue: Dispatch<SetStateAction<string[]>>;
   location: Location | null;
@@ -68,7 +78,9 @@ export interface globalStates {
   recovery: Recovery | undefined;
   setRecovery: Dispatch<SetStateAction<Recovery | undefined>>;
   addToGlobalSnackbarQue: (message: string) => void;
-  recoverInfo: IRecoveryProcessInfo
-  setRecoverInfo: Dispatch<SetStateAction<IRecoveryProcessInfo>>
-  currentVault: MutableRefObject<IVaultInfo | undefined>
+  recoverInfo: IRecoveryProcessInfo;
+  setRecoverInfo: Dispatch<SetStateAction<IRecoveryProcessInfo>>;
+  currentVault: MutableRefObject<IVaultInfo | undefined>;
+  txState: ITxState;
+  setTxState: Dispatch<SetStateAction<ITxState>>;
 }

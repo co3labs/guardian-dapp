@@ -8,6 +8,7 @@ import { IVaultInfo } from '../@types/types';
 import StandardInput from './StandardInput';
 import RecoverOwnerShip from './RecoverOwnership';
 import UpdateSecretFields from './UpdateSecretFields';
+import { useNavigate } from 'react-router-dom';
 
 export default function VaultSetup({
   renderFields,
@@ -15,10 +16,22 @@ export default function VaultSetup({
   renderFields: { name: boolean; profile: boolean; secret: boolean; old: boolean; processId: boolean };
 }) {
   const maxLength = 42;
-  const { currentVaultEdits, web3, location, recovery, addToGlobalSnackbarQue, accountId } = useContext(GlobalContext);
-
+  const { currentVaultEdits, web3, location, currentStep, setCurrentStep } = useContext(GlobalContext);
   const [updateSecret, setUpdateSecret] = useState(false);
+  const [isEthAddress, setIsEthAddress] = useState<boolean>(true);
   const { name, profile, secret, old, processId } = renderFields;
+
+  useEffect(() => {
+    if (profile && web3 && currentVaultEdits.ERC725Address.length === 42) {
+      const isAddress = web3.utils.isAddress(currentVaultEdits.ERC725Address);
+      if (isAddress) {
+        setIsEthAddress(true)
+        return
+      }
+    } 
+    setIsEthAddress(false);
+  }, [currentVaultEdits.ERC725Address]);
+
   return (
     <>
       <div className="flex flex-col w-full">
@@ -50,6 +63,7 @@ export default function VaultSetup({
             paramName="ERC725Address"
             maxLength={maxLength}
             className="w-[32rem]"
+            isEthAddress={isEthAddress}
           />
         ) : (
           <></>
@@ -76,25 +90,19 @@ export default function VaultSetup({
           <></>
         )}
 
-        {secret  ? <UpdateSecretFields renderFields={{ old, secret, updateSecret }} /> : <></>}
+        {secret ? <UpdateSecretFields renderFields={{ old, secret, updateSecret }} /> : <></>}
       </div>
 
       {location?.pathname === '/app/create' ? (
         <BackOrContinueBtns
           confirmText="Continue"
           exitBtn={true}
-          conditionNext={!!currentVaultEdits.vaultName || !!currentVaultEdits.ERC725Address}
-          // onClick={async () => {
-          //   try {
-          //     if(!accountId) throw new Error("No account id.")
-          //     const txReceipt = await recovery?.createRecoveryVault(currentVaultEdits.ERC725Address, accountId);
-          //     console.log(txReceipt)
-          //     addToGlobalSnackbarQue("You vault has been successfully created. You can proceed to adding guardians.")
-          //   } catch (error) {
-          //     console.error(error)
-          //     addToGlobalSnackbarQue("An error occured when attempting to create a vault. Please try again.")
-          //   }
-          // }}
+          conditionNext={
+            !!currentVaultEdits.vaultName &&
+            !!currentVaultEdits.ERC725Address &&
+            !!currentVaultEdits.newSecret &&
+            isEthAddress
+          }
         />
       ) : (
         <BackOrContinueBtns

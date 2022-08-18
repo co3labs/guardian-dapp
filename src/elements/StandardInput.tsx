@@ -15,6 +15,7 @@ export default function StandardInput({
   type = 'text',
   passStates,
   recover,
+  isEthAddress,
 }: {
   paramName: string;
   elementTitle: string;
@@ -28,6 +29,7 @@ export default function StandardInput({
   type?: string;
   passStates?: { show: boolean; setShow: Dispatch<SetStateAction<boolean>> };
   recover?: boolean;
+  isEthAddress?: boolean;
 }) {
   const { currentVaultEdits, setCurrentVaultEdits, recoverInfo, setRecoverInfo } = useContext(GlobalContext);
 

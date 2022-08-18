@@ -1,11 +1,13 @@
 import { useContext, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { GlobalContext } from '../context/GlobalState';
+import { ITxState } from '../@types/types';
+import { getInitialGuardiansAdded, GlobalContext, INITIAL_TX_STATE } from '../context/GlobalState';
 import BackOrContinueBtns from './BackOrContinueBtns';
 import ElementWithTitle from './ElementWithTitle';
+import TxApprovalModal from './TxApprovalModal';
 
 export default function ReviewChanges() {
-  const { currentVaultEdits, updateAndGoHome, location } = useContext(GlobalContext);
+  const { currentVaultEdits, updateAndGoHome, location, setTxState } = useContext(GlobalContext);
   const [showSecret, setShowSecret] = useState(false);
   const navigate = useNavigate();
   const fields: [string, string, boolean, string][] = [
@@ -35,12 +37,12 @@ export default function ReviewChanges() {
                       }`}
                     >
                       <span className={'text-' + params[3]}>
-                        {params[2] && !showSecret? (
+                        {params[2] && !showSecret ? (
                           <span className="flex p-2">
                             {' '}
-                            {/* {Array((currentVaultEdits[params[1] as keyof typeof currentVaultEdits] as string).length)
+                            {Array((currentVaultEdits[params[1] as keyof typeof currentVaultEdits] as string).length)
                               .fill(<div className="w-1 h-1 mr-1 mt-1 rounded-full bg-black" />)
-                              .map((div) => div)} */}
+                              .map((div) => div)}
                           </span>
                         ) : (
                           (currentVaultEdits[params[1] as keyof typeof currentVaultEdits] as string)
@@ -56,8 +58,7 @@ export default function ReviewChanges() {
               <div className="w-full grid grid-flow-row ">
                 {Object.entries(currentVaultEdits?.guardianList).map(([_, { name, address }], index) => (
                   <div className="my-4 border p-4 rounded-sm grid grid-flow-col text-left">
-                    <span className="text-gray-300 mr-3">{index + 1}</span> <span>{name}</span>{' '}
-                    <span>{address}</span>
+                    <span className="text-gray-300 mr-3">{index + 1}</span> <span>{name}</span> <span>{address}</span>
                   </div>
                 ))}
               </div>
@@ -69,8 +70,26 @@ export default function ReviewChanges() {
       </div>
       <BackOrContinueBtns
         confirmText="Confirm"
-        onNextClick={() => (location ? updateAndGoHome(navigate, location) : () => {})}
+        onNextClick={() => {
+          setTxState({
+            ...INITIAL_TX_STATE,
+            showModal: true,
+            guardiansAdded: getInitialGuardiansAdded(currentVaultEdits.guardianList),
+          });
+        }}
       />
     </>
   );
 }
+
+// onNextClick={async () => {
+//   try {
+//     if(!accountId) throw new Error("No account id.")
+//     const txReceipt = await recovery?.createRecoveryVault(currentVaultEdits.ERC725Address, accountId);
+//     console.log(txReceipt)
+//     addToGlobalSnackbarQue("You vault has been successfully created. You can proceed to adding guardians.")
+//   } catch (error) {
+//     console.error(error)
+//     addToGlobalSnackbarQue("An error occured when attempting to create a vault. Please try again.")
+//   }
+// }}

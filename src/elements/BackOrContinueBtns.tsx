@@ -54,13 +54,16 @@ export default function BackOrContinueBtns({
         <button
           type="button"
           onClick={() => {
+            console.log(onNextClick, conditionNext);
+            
             if (onNextClick) {
               onNextClick();
             } else if (conditionNext) {
               setCurrentStep(currentStep + 1);
             }
           }}
-          className={`btn btnSmall ${conditionNext ? 'btnPrimary' : 'bg-gray-200 opacity-25'} w-min transition-colors`}
+          disabled={!conditionNext}
+          className={`btn btnSmall ${conditionNext ? 'btnPrimary' : 'bg-gray-200 opacity-25 cursor-not-allowed'} w-min transition-colors`}
         >
           {confirmText}
         </button>

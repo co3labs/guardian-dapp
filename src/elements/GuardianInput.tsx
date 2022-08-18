@@ -24,7 +24,7 @@ export default function GuardianInput({
   const [hasTypedName, setHasTypedName] = useState(false);
   const [hasTypedAddress, setHasTypedAddress] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
-  const { currentVaultEdits, setCurrentVaultEdits, currentVault } = useContext(GlobalContext);
+  const { currentVaultEdits, setCurrentVaultEdits, currentVault, web3 } = useContext(GlobalContext);
 
   useEffect(() => {
     if (guardian.name && !hasTypedName) setHasTypedName(true);
@@ -32,14 +32,11 @@ export default function GuardianInput({
 
     if (hasTypedAddress && guardian.address.length > 0) {
       if (guardian.address) {
-        if (guardian.address.match(/[^A-Za-z0-9]/)) {
-          setErrorMessage('Special characters detected.');
-        } else if (guardian.address.length > 42) {
-          setErrorMessage('This address is too long.');
-        } else if (guardian.address.length < 42) {
-          setErrorMessage('This address is too short.');
-        } else if (errorMessage) {
-          setErrorMessage(undefined);
+        const isValidAddress = web3?.utils.isAddress(guardian.address);
+        if (!isValidAddress) {
+          setErrorMessage('Invalid Eth Address');
+        } else {
+          setErrorMessage(undefined)
         }
       }
     } else if (errorMessage) {
