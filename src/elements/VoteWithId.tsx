@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { GlobalContext } from '../context/GlobalState';
 import BackOrContinueBtns from './BackOrContinueBtns';
 import RecoverIdInput from './RecoveryIdInput';
-import SetupInput from './SetupInput';
+import StandardInput from './StandardInput';
 
 export default function VoteWithId() {
   const { recoverInfo, currentVaultEdits } = useContext(GlobalContext);
@@ -12,7 +12,7 @@ export default function VoteWithId() {
       <div>
         {' '}
         <RecoverIdInput />
-        <SetupInput
+        <StandardInput
           id="new_owner"
           title="New Vault Owner"
           info="Propose a new owner for the vault. The new owner must be an existing guardian."

@@ -1,9 +1,14 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { GlobalContext,  } from '../context/GlobalState';
+import { GlobalContext } from '../context/GlobalState';
 export default function Welcome() {
   const { resetVaultAndSteps } = useContext(GlobalContext);
-//style={{filter:"contrast(0%) drop-shadow(30px 30px 10px #545454)"}}
+  //style={{filter:"contrast(0%) drop-shadow(30px 30px 10px #545454)"}}
+
+  useEffect(() => {
+    resetVaultAndSteps();
+  }, []);
+
   return (
     <div className="flex m-auto h-full justify-center items-center px-2 md:px-4 w-full my-12 md:w-3/4 lg:w-2/3 relative z-0">
       <main className="border rounded-sm px-4 md:px-12 pb-12 shadow-lg bg-gray-50 relative z-10">
@@ -27,10 +32,7 @@ export default function Welcome() {
           </section>{' '}
           <section className="shadow-lg">
             <h3>Manage Existing Vaults</h3>
-            <p>
-              Edit or import your existing vaults. 
-              Easily manage your vaults, guardians, and thresholds. 
-            </p>
+            <p>Edit or import your existing vaults. Easily manage your vaults, guardians, and thresholds.</p>
             <Link className="btnSmall btnSecondary w-fit my-6" to="/app/manage">
               My Vaults
             </Link>

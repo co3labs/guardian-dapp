@@ -1,12 +1,12 @@
 import { useContext } from 'react';
 import { GlobalContext } from '../context/GlobalState';
-import SetupInput from './SetupInput';
+import StandardInput from './StandardInput';
 
 export default function RecoverIdInput() {
   const { recoverInfo } = useContext(GlobalContext);
 
   return (
-    <SetupInput
+    <StandardInput
       id="recover_process_id"
       title="Recovery Process ID"
       info="The identifies the specific recovery process you are voting for, effectively grouping potentially concurrent processes."

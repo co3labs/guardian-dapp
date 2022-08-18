@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction, useContext } from 'react';
 import { GlobalContext } from '../context/GlobalState';
 import ElementWithTitle from './ElementWithTitle';
 
-export default function SetupInput({
+export default function StandardInput({
   paramName,
   title,
   info,
@@ -53,6 +53,7 @@ export default function SetupInput({
                 }
               }
             }}
+            autoComplete="off"
             className={className}
             id={id}
             value={value}

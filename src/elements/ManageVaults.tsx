@@ -28,6 +28,7 @@ export default function ManageVaults() {
     const lastUpdated = new Date(currentVaultEdits.lastUpdated);
     return `${lastUpdated.getMonth()}-${lastUpdated.getDate()}-${lastUpdated.getFullYear()}`;
   };
+
   return (
     <>
       <div className="m-6 font-light flex flex-col">
@@ -70,7 +71,7 @@ export default function ManageVaults() {
                     <td className={'flex items-center border-r rounded-r-sm ' + selectedClasses(vault)}>
                       <Link
                         onClick={() => {
-                          setCurrentVaultEdits({ ...vault });
+                          resetVaultAndSteps(vault)
                         }}
                         to="/app/edit"
                         className="text-xs hover:text-blue-800 flex items-center  py-1 px-2"

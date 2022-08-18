@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { GlobalContext } from '../context/GlobalState';
 import BackOrContinueBtns from './BackOrContinueBtns';
 import RecoverIdInput from './RecoveryIdInput';
-import SetupInput from './SetupInput';
+import StandardInput from './StandardInput';
 import UpdateSecretFields from './UpdateSecretFields';
 
 export default function RecoverOwnerShip() {
@@ -18,9 +18,10 @@ export default function RecoverOwnerShip() {
         back="/app/manage"
         backText={'My Vaults'}
         exitBtn={true}
-        conditionNext={!!(recoverInfo)}
+        conditionNext={!!recoverInfo}
         confirmText="Recover Ownership"
         onNextClick={() => {}}
-      />    </>
+      />{' '}
+    </>
   );
 }

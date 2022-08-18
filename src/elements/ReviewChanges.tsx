@@ -38,9 +38,9 @@ export default function ReviewChanges() {
                         {params[2] && !showSecret? (
                           <span className="flex p-2">
                             {' '}
-                            {Array((currentVaultEdits[params[1] as keyof typeof currentVaultEdits] as string).length)
+                            {/* {Array((currentVaultEdits[params[1] as keyof typeof currentVaultEdits] as string).length)
                               .fill(<div className="w-1 h-1 mr-1 mt-1 rounded-full bg-black" />)
-                              .map((div) => div)}
+                              .map((div) => div)} */}
                           </span>
                         ) : (
                           (currentVaultEdits[params[1] as keyof typeof currentVaultEdits] as string)

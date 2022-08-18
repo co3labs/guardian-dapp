@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
 import { GlobalContext } from '../context/GlobalState';
-import SetupInput from './SetupInput';
+import StandardInput from './StandardInput';
 
 export default function UpdateSecretFields({
   renderFields,
@@ -16,7 +16,7 @@ export default function UpdateSecretFields({
       {' '}
       <div>
         {old && updateSecret ? (
-          <SetupInput
+          <StandardInput
             title="Old Recovery Secret"
             elementTitle="Secret"
             value={currentVaultEdits.oldSecret}
@@ -34,7 +34,7 @@ export default function UpdateSecretFields({
         )}
       </div>
       {(secret && !old) || (secret && old && updateSecret) ? (
-        <SetupInput
+        <StandardInput
           title={`${location?.pathname === '/app/create' ? '' : 'New'} Recovery Secret`}
           elementTitle="Secret"
           value={currentVaultEdits.newSecret}

@@ -5,7 +5,7 @@ import BackOrContinueBtns from './BackOrContinueBtns';
 import InfoParagraph from './InfoParagraph';
 import ElementWithTitle from './ElementWithTitle';
 import { IVaultInfo } from '../@types/types';
-import SetupInput from './SetupInput';
+import StandardInput from './StandardInput';
 import RecoverOwnerShip from './RecoverOwnership';
 import UpdateSecretFields from './UpdateSecretFields';
 
@@ -23,7 +23,7 @@ export default function VaultSetup({
     <>
       <div className="flex flex-col w-full">
         {name ? (
-          <SetupInput
+          <StandardInput
             title="Recovery Vault Name"
             elementTitle="Vault Name"
             value={currentVaultEdits.vaultName}
@@ -40,7 +40,7 @@ export default function VaultSetup({
         )}
 
         {profile ? (
-          <SetupInput
+          <StandardInput
             title="Universal Profile"
             elementTitle="ERC725 Address"
             value={currentVaultEdits.ERC725Address}

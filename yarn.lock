@@ -2843,9 +2843,9 @@
   integrity sha512-RbzJvlNzmRq5c3O09UipeuXno4tA1FE6ikOjxZK0tuxVv3412l64l5t1W5pj4+rJq9vpkm/kwiR07aZXnsKPxw==
 
 "@truffle/hdwallet-provider@latest":
-  version "2.0.13"
-  resolved "https://registry.yarnpkg.com/@truffle/hdwallet-provider/-/hdwallet-provider-2.0.13.tgz#b7d9660985d7f32dc35dd5672c0156e3b9b39d32"
-  integrity sha512-5sGsi9sScB4VkKEuD6itqkrvtpJUNVv0NhI07Nn1JAMDvkJmAAuh2GtoBElDq54y+0JCD8SI0T9BLVZ9IWj6AQ==
+  version "2.0.14"
+  resolved "https://registry.yarnpkg.com/@truffle/hdwallet-provider/-/hdwallet-provider-2.0.14.tgz#b345bc9f9432e5a0a1e1469a19433c2d4ce295d4"
+  integrity sha512-SO/T4qImJk7Nrerh2H9pGphIJTVgskmbnQ4n/2h/OcieLr63ZULWetjwdyHoUJzprDieXx6NZuWEUeEn0f4dTQ==
   dependencies:
     "@ethereumjs/common" "^2.4.0"
     "@ethereumjs/tx" "^3.3.0"
@@ -6854,9 +6854,9 @@ electron-fetch@^1.7.2:
     encoding "^0.1.13"
 
 electron-to-chromium@^1.3.47, electron-to-chromium@^1.4.202:
-  version "1.4.222"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.222.tgz#2ba24bef613fc1985dbffea85df8f62f2dec6448"
-  integrity sha512-gEM2awN5HZknWdLbngk4uQCVfhucFAfFzuchP3wM3NN6eow1eDU0dFy2kts43FB20ZfhVFF0jmFSTb1h5OhyIg==
+  version "1.4.224"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.224.tgz#ecf2eed395cfedcbbe634658ccc4b457f7b254c3"
+  integrity sha512-dOujC5Yzj0nOVE23iD5HKqrRSDj2SD7RazpZS/b/WX85MtO6/LzKDF4TlYZTBteB+7fvSg5JpWh0sN7fImNF8w==
 
 elliptic@6.5.4, elliptic@^6.4.0, elliptic@^6.5.2, elliptic@^6.5.3, elliptic@^6.5.4:
   version "6.5.4"
@@ -8755,9 +8755,9 @@ grapheme-splitter@^1.0.4:
   resolved "https://registry.yarnpkg.com/grapheme-splitter/-/grapheme-splitter-1.0.4.tgz#9cf3a665c6247479896834af35cf1dbb4400767e"
   integrity sha512-bzh50DW9kTPM00T8y4o8vQg89Di9oLJVLW/KaOGIXJWP/iqCN6WKYkbNOF04vFLJhwcpYUh9ydh/+5vpOqV4YQ==
 
-"guardians.js@file:../guardians.js/guardians.js-0.1.1.tgz":
+"guardians.js@file:../../../../Desktop/guardians.js-0.1.1.tgz":
   version "0.1.1"
-  resolved "file:../guardians.js/guardians.js-0.1.1.tgz#d31d81e5225f75c21f78ddf882ea60991c0816de"
+  resolved "file:../../../../Desktop/guardians.js-0.1.1.tgz#8724f9a4133e6dc76532ae0bb3edd866bc41db34"
   dependencies:
     "@erc725/erc725.js" "^0.14.4"
     "@lukso/lsp-factory.js" "^2.3.3"
