@@ -1,15 +1,16 @@
 import GuardianForm from '../elements/GuardianForm';
-import ManageVaultConstructor from '../elements/ManageVaultConstructor';
+import ComponentWrapper from '../elements/ComponentWrapper';
 import ConnectWallet from '../elements/ConnectWallet';
-import Setup from '../elements/Setup';
+import VaultSetup from '../elements/VaultSetup';
 import ReviewChanges from '../elements/ReviewChanges';
 
 export default function CreateVault() {
+  const fieldsToRender = { name: true, profile: true, secret: true, old:false };
   return (
-    <ManageVaultConstructor
+    <ComponentWrapper
       steps={[
         ['Connect Wallet', <ConnectWallet />],
-        ['Setup Vault', <Setup />],
+        ['Setup Vault', <VaultSetup renderFields={fieldsToRender} />],
         ['Add Guardians', <GuardianForm />],
         ['Review & Deploy', <ReviewChanges />],
       ]}

@@ -11,19 +11,21 @@ import Snackbar from './elements/Snackbar';
 import WatchLocation from './elements/WatchLocation';
 import { GlobalContext } from './context/GlobalState';
 import { useContext } from 'react';
+import EditVault from './pages/EditVault';
 export default function App() {
   return (
     <Router>
       <Header />
       <Snackbar />
       <WatchLocation />
-      <div className='flex-grow relative z-10 overflow-scroll no-scrollbar flex flex-col'>
-        <div className='flex-grow'>
+      <div className="flex-grow relative z-10 overflow-scroll no-scrollbar flex flex-col">
+        <div className="flex-grow">
           <Routes>
             <Route path="" element={<LandingPage />} />
             <Route path="app">
               <Route path="welcome" element={<Welcome />} />
               <Route path="create" element={<CreateVault />} />
+              <Route path="edit" element={<EditVault />} />
               <Route path="manage" element={<MyVaults />} />
             </Route>
             <Route path="*" element={<NotFound />} />

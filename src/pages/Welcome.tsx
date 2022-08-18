@@ -21,19 +21,18 @@ export default function Welcome() {
           <section className="shadow-lg">
             <h3>Create A New Vault</h3>
             <p>Create a new vault that is controlled by one or multiple owners.</p>
-            <p>You will be required to pay a network fee for creating your new vault.</p>
             <Link className="btnSmall btnPrimary w-fit my-6" onClick={resetVaultAndSteps} to="/app/create">
               Create Vault
             </Link>
           </section>{' '}
           <section className="shadow-lg">
-            <h3>My Vaults</h3>
+            <h3>Manage Existing Vaults</h3>
             <p>
               Edit or import your existing vaults. 
               Easily manage your vaults, guardians, and thresholds. 
             </p>
-            <Link className="btnSmall btnSecondary w-fit my-6" to="/app/manage" onClick={resetVaultAndSteps}>
-              Load Vault
+            <Link className="btnSmall btnSecondary w-fit my-6" to="/app/manage">
+              My Vaults
             </Link>
           </section>
         </div>

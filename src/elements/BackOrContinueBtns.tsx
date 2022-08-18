@@ -10,11 +10,13 @@ export default function BackOrContinueBtns({
   confirmText,
   onClick,
   exitBtn,
+  backText
 }: {
   back?: string;
   skip?: 1 | 2;
   conditionNext?: boolean;
-  confirmText: string | JSX.Element;
+  confirmText?: string | JSX.Element;
+  backText?:string | JSX.Element
   onClick?: Function;
   exitBtn?: boolean;
 }) {
@@ -25,7 +27,7 @@ export default function BackOrContinueBtns({
       <div className='flex w-min'>
         {back && skip !== 1 ? (
           <Link to={back} className="h-full flex items-center btn btnSmall btnSecondary mr-4">
-            Cancel
+            {backText || "Cancel"}
           </Link>
         ) : (
           <button

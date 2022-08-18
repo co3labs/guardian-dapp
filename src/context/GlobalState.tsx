@@ -2,11 +2,11 @@ import { createContext, PropsWithChildren, useEffect, useState } from 'react';
 import Web3 from 'web3';
 import Web3Modal from 'web3modal';
 import WalletConnectProvider from '@walletconnect/web3-provider';
-import { globalStates, IUserVaults, IVaultInfo, supportedChains } from '../@types/types';
+import { globalStates, IUserVaults, IVaultInfo, IVaultInfoEdits, supportedChains } from '../@types/types';
 import { Location, NavigateFunction } from 'react-router-dom';
 import { Recovery } from 'guardians.js';
-
-export const INITIAL_VAULT_STATE: IVaultInfo = {
+export const blockExplorer = "https://explorer.execution.l16.lukso.network/address/"
+export const INITIAL_VAULT_STATE: IVaultInfoEdits = {
   vaultName: '',
   threshold: 1,
   ERC725Address: '',
@@ -14,8 +14,10 @@ export const INITIAL_VAULT_STATE: IVaultInfo = {
   vaultAddress: '',
   timestampId: 0,
   lastUpdated: 0,
-  ownerSecret: '',
   guardianList: { 0: { name: '', address: '' } },
+  oldSecret: '',
+  newSecret: '',
+  vaultOwner: '',
 };
 
 export const networks = {
@@ -23,7 +25,6 @@ export const networks = {
 };
 
 export const getShortId = (id: string) => {
-  if (!id) return;
   const split = id.split('');
   split.splice(5, 33, '...');
   return split.join('');
@@ -41,7 +42,7 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
   const [unsupportedNet, setUnsupportedNet] = useState<boolean>(false);
   const [cookiesAllowed, setCookiesAllowed] = useState<boolean | null>(null);
   const [allVaults, setAllVaults] = useState<IUserVaults>();
-  const [currentVaultEdits, setCurrentVaultEdits] = useState<IVaultInfo>(INITIAL_VAULT_STATE);
+  const [currentVaultEdits, setCurrentVaultEdits] = useState<IVaultInfoEdits>(INITIAL_VAULT_STATE);
   const [currentStep, setCurrentStep] = useState(0);
   const [globalSnackbarQue, setGlobalSnackbarQue] = useState<string[]>([]);
   const [location, setLocation] = useState<Location | null>(null);

@@ -15,10 +15,6 @@ export interface IGuardianList {
   [id: number]: IGuardianInfo;
 }
 
-// Local storage should NOT store the vault secret because it will 
-// be vulnerable to XSS attacks. It might be possible to store it 
-// encrypted with the account signature. Storing raw vault secret 
-// development.
 export interface IVaultInfo {
   vaultName: string;
   guardianList: IGuardianList;
@@ -28,9 +24,13 @@ export interface IVaultInfo {
   vaultAddress: string;
   timestampId: number;
   lastUpdated: number;
-  ownerSecret: string
+  vaultOwner: string;
 }
 
+export interface IVaultInfoEdits extends IVaultInfo {
+  newSecret: string;
+  oldSecret: string;
+}
 
 export interface IUserVaults {
   [timestampId: number]: IVaultInfo;
@@ -47,8 +47,8 @@ export interface globalStates {
   unsupportedNet: boolean;
   cookiesAllowed: boolean | null;
   setCookiesAllowed: Dispatch<SetStateAction<boolean | null>>;
-  currentVaultEdits: IVaultInfo;
-  setCurrentVaultEdits: Dispatch<SetStateAction<IVaultInfo>>;
+  currentVaultEdits: IVaultInfoEdits;
+  setCurrentVaultEdits: Dispatch<SetStateAction<IVaultInfoEdits>>;
   currentStep: number;
   setCurrentStep: Dispatch<SetStateAction<number>>;
   allVaults: IUserVaults | undefined;
@@ -62,5 +62,5 @@ export interface globalStates {
   switchNetwork: VoidFunciton;
   recovery: Recovery | undefined;
   setRecovery: Dispatch<SetStateAction<Recovery | undefined>>;
-  addToGlobalSnackbarQue: (message:string) => void
+  addToGlobalSnackbarQue: (message: string) => void;
 }
