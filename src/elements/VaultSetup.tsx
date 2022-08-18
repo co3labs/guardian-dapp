@@ -24,7 +24,7 @@ export default function VaultSetup({
       <div className="flex flex-col w-full">
         {name ? (
           <SetupInput
-            title="Name Your Recovery Vault"
+            title="Recovery Vault Name"
             elementTitle="Vault Name"
             value={currentVaultEdits.vaultName}
             id="recovery_vault_name"
@@ -41,7 +41,7 @@ export default function VaultSetup({
 
         {profile ? (
           <SetupInput
-            title="What profile will this Recovery Vault be for?"
+            title="Universal Profile"
             elementTitle="ERC725 Address"
             value={currentVaultEdits.ERC725Address}
             id="recovery_vault_address"
@@ -76,7 +76,7 @@ export default function VaultSetup({
           <></>
         )}
 
-        {updateSecret ? <UpdateSecretFields renderFields={{ old, secret, updateSecret }} /> : <></>}
+        {secret  ? <UpdateSecretFields renderFields={{ old, secret, updateSecret }} /> : <></>}
       </div>
 
       {location?.pathname === '/app/create' ? (

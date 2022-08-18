@@ -9,7 +9,7 @@ export default function EditVault() {
   return (
     <ComponentWrapper
       steps={[
-        ['Connect Wallet', <ConnectWallet />],
+        ['Connect Wallet', <ConnectWallet back='/app/manage' />],
         ['Name & Secret', <VaultSetup renderFields={fieldsToRender} />],
         ['Guardians', <GuardianForm />],
         ['Review & Update', <ReviewChanges />],

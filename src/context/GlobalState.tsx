@@ -1,4 +1,4 @@
-import { createContext, PropsWithChildren, useEffect, useState } from 'react';
+import { createContext, PropsWithChildren, useEffect, useRef, useState } from 'react';
 import Web3 from 'web3';
 import Web3Modal from 'web3modal';
 import WalletConnectProvider from '@walletconnect/web3-provider';
@@ -60,7 +60,7 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
   const [location, setLocation] = useState<Location | null>(null);
   const [recovery, setRecovery] = useState<Recovery>();
   const [recoverInfo, setRecoverInfo] = useState<IRecoveryProcessInfo>(INITIAL_RECOVERY_INFO);
-
+  const currentVault = useRef<IVaultInfo>()
   // intitialize web3modal to use to connect to provider
   useEffect(() => {
     async function init() {
@@ -227,6 +227,7 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
     }
 
     if (vault) {
+      currentVault.current = vault
       setCurrentVaultEdits({ ...vault});
     } else {
       setCurrentVaultEdits({ ...INITIAL_VAULT_STATE, timestampId: Date.now() });
@@ -281,6 +282,7 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
         addToGlobalSnackbarQue,
         recoverInfo,
         setRecoverInfo,
+        currentVault
       }}
     >
       <>{children}</>

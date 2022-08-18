@@ -12,7 +12,7 @@ export default function ReviewChanges() {
     ['Vault Name', 'vaultName', false, '2xl'],
     ['Transaction Approval Threshold', 'threshold', false, '2xl'],
     ['ERC725 Address', 'ERC725Address', false, 'base'],
-    ['Secret', 'ownerSecret', true, 'base'],
+    ['Secret', 'newSecret', true, 'base'],
   ];
 
   //? show previous vault here ?
@@ -69,7 +69,7 @@ export default function ReviewChanges() {
       </div>
       <BackOrContinueBtns
         confirmText="Confirm"
-        onClick={() => (location ? updateAndGoHome(navigate, location) : () => {})}
+        onNextClick={() => (location ? updateAndGoHome(navigate, location) : () => {})}
       />
     </>
   );

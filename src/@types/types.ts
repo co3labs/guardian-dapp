@@ -1,5 +1,5 @@
 import { Recovery } from 'guardians.js';
-import React, { Dispatch, SetStateAction } from 'react';
+import React, { Dispatch, MutableRefObject, SetStateAction } from 'react';
 import { Location, NavigateFunction } from 'react-router-dom';
 import Web3 from 'web3';
 import Web3Modal from 'web3modal';
@@ -70,4 +70,5 @@ export interface globalStates {
   addToGlobalSnackbarQue: (message: string) => void;
   recoverInfo: IRecoveryProcessInfo
   setRecoverInfo: Dispatch<SetStateAction<IRecoveryProcessInfo>>
+  currentVault: MutableRefObject<IVaultInfo | undefined>
 }

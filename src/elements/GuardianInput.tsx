@@ -24,7 +24,7 @@ export default function GuardianInput({
   const [hasTypedName, setHasTypedName] = useState(false);
   const [hasTypedAddress, setHasTypedAddress] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
-  const { currentVaultEdits, setCurrentVaultEdits } = useContext(GlobalContext);
+  const { currentVaultEdits, setCurrentVaultEdits, currentVault } = useContext(GlobalContext);
 
   useEffect(() => {
     if (guardian.name && !hasTypedName) setHasTypedName(true);
@@ -72,7 +72,8 @@ export default function GuardianInput({
               }}
               className={`border rounded-sm p-2 w-full mr-1 ${
                 !!((hasTypedAddress && !guardian.address) || errorMessage) ? 'border-red-500' : ''
-              }`}              value={guardian.name}
+              }`}
+              value={guardian.name}
               placeholder="name"
             />
           }
@@ -119,12 +120,16 @@ export default function GuardianInput({
           className="transition-colors ml-2 hover:bg-red-500 hover:text-white w-10 rounded-sm bg-gray-100 flex justify-center items-center"
           onClick={() => {
             const newGuardians = currentVaultEdits.guardianList;
-            delete newGuardians[Number(id)];
-            setCurrentVaultEdits({
-              ...currentVaultEdits,
-              guardianList: newGuardians,
-              guardianCount: currentVaultEdits.guardianCount - 1,
-            });
+            if (currentVault.current && Object.keys(currentVault.current.guardianList)) {
+              //strikethrough for guardians that already exits
+            } else {
+              delete newGuardians[Number(id)];
+              setCurrentVaultEdits({
+                ...currentVaultEdits,
+                guardianList: newGuardians,
+                guardianCount: currentVaultEdits.guardianCount - 1,
+              });
+            }
           }}
         >
           <BsTrash />

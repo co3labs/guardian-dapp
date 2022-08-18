@@ -7,7 +7,7 @@ export default function UpdateSecretFields({
 }: {
   renderFields: { old: boolean; secret: boolean; updateSecret: boolean };
 }) {
-  const { currentVaultEdits } = useContext(GlobalContext);
+  const { currentVaultEdits, location } = useContext(GlobalContext);
   const [showSecret, setShowSecret] = useState(false);
   const [showOldSecret, setShowOldSecret] = useState(false);
   const { old, updateSecret, secret } = renderFields;
@@ -17,7 +17,7 @@ export default function UpdateSecretFields({
       <div>
         {old && updateSecret ? (
           <SetupInput
-            title="Old Secret"
+            title="Old Recovery Secret"
             elementTitle="Secret"
             value={currentVaultEdits.oldSecret}
             id="recovery_vault_secret"
@@ -35,7 +35,7 @@ export default function UpdateSecretFields({
       </div>
       {(secret && !old) || (secret && old && updateSecret) ? (
         <SetupInput
-          title=" Vault Recovery Secret"
+          title={`${location?.pathname === '/app/create' ? '' : 'New'} Recovery Secret`}
           elementTitle="Secret"
           value={currentVaultEdits.newSecret}
           id="recovery_vault_secret"
