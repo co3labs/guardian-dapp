@@ -4,7 +4,7 @@ import { getShortId, GlobalContext, networks } from '../context/GlobalState';
 import logo from '../assets/logo.png';
 
 export default function Header() {
-  const { handleConnect, accountId, chainId, switchNetwork } = useContext(GlobalContext);
+  const { handleConnect, walletAddress, chainId, switchNetwork } = useContext(GlobalContext);
 
   const location = useLocation();
 
@@ -19,8 +19,8 @@ export default function Header() {
         }`}
       >
         <div className="text-xs grid grid-flow-col gap-4 mr-4 ">
-          {accountId ? (
-            <span className="border-x border-gray-300 p-3 bg-blue-800 text-white">{getShortId(accountId)}</span>
+          {walletAddress ? (
+            <span className="border-x border-gray-300 p-3 bg-blue-800 text-white">{getShortId(walletAddress)}</span>
           ) : (
             <button className="border-x border-gray-300 p-3 bg-blue-800 text-white" onClick={handleConnect}>
               Connect Wallet

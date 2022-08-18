@@ -1,14 +1,9 @@
-import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react';
-import { BsCheck, BsChevronLeft, BsEye, BsEyeSlash, BsInfoCircle, BsX } from 'react-icons/bs';
+import { useContext, useEffect, useState } from 'react';
+import { BsCheck, BsChevronLeft, BsX } from 'react-icons/bs';
 import { GlobalContext } from '../context/GlobalState';
 import BackOrContinueBtns from './BackOrContinueBtns';
-import InfoParagraph from './InfoParagraph';
-import ElementWithTitle from './ElementWithTitle';
-import { IVaultInfo } from '../@types/types';
 import StandardInput from './StandardInput';
-import RecoverOwnerShip from './RecoverOwnership';
 import UpdateSecretFields from './UpdateSecretFields';
-import { useNavigate } from 'react-router-dom';
 
 export default function VaultSetup({
   renderFields,
@@ -25,10 +20,10 @@ export default function VaultSetup({
     if (profile && web3 && currentVaultEdits.ERC725Address.length === 42) {
       const isAddress = web3.utils.isAddress(currentVaultEdits.ERC725Address);
       if (isAddress) {
-        setIsEthAddress(true)
-        return
+        setIsEthAddress(true);
+        return;
       }
-    } 
+    }
     setIsEthAddress(false);
   }, [currentVaultEdits.ERC725Address]);
 

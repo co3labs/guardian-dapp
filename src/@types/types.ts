@@ -1,4 +1,4 @@
-import { Recovery } from 'guardians.js';
+import { ERC725Utils, Recovery } from 'guardians.js';
 import React, { Dispatch, MutableRefObject, SetStateAction } from 'react';
 import { Location, NavigateFunction } from 'react-router-dom';
 import Web3 from 'web3';
@@ -42,12 +42,42 @@ export interface IUserVaults {
 }
 
 export interface ITxState {
-  showModal:boolean
-  vaultCreated: boolean;
-  secretSet: boolean;
-  thresholdSet: boolean;
-  guardiansAdded: {
-    [name: string]: boolean;
+  showModal: boolean;
+  "Deploy Vault": boolean;
+  "Add Permissions": boolean;
+  "Set Secret": boolean;
+  "Set Threshold": boolean;
+  "Add Guardians": number;
+}
+
+export interface IVaultDeployReceipt {
+  blockHash: string;
+  blockNumber: number;
+  contractAddress: string | null;
+  cumulativeGasUsed: number;
+  effectiveGasPrice: number;
+  from: string;
+  gasUsed: number;
+  logsBloom: string;
+  status: true;
+  to: string;
+  transactionHash: string;
+  transactionIndex: number;
+  type: string;
+  events: {
+    [id: string]: {
+      address: string;
+      blockNumber: number;
+      transactionHash: string;
+      transactionIndex: number;
+      blockHash: string;
+      logIndex: number;
+      removed: false;
+      id: string;
+      returnValues: { [id: string]: string };
+      signature: null;
+      raw: { [id: string]: string };
+    };
   };
 }
 
@@ -55,7 +85,7 @@ export type VoidFunciton = () => void;
 
 export interface globalStates {
   handleConnect: VoidFunciton;
-  accountId?: string;
+  walletAddress?: string;
   chainId?: supportedChains;
   provider?: Web3Modal;
   web3?: Web3;
@@ -76,11 +106,21 @@ export interface globalStates {
   updateAndGoHome: (navigate: NavigateFunction, location: Location) => void;
   switchNetwork: VoidFunciton;
   recovery: Recovery | undefined;
-  setRecovery: Dispatch<SetStateAction<Recovery | undefined>>;
   addToGlobalSnackbarQue: (message: string) => void;
   recoverInfo: IRecoveryProcessInfo;
   setRecoverInfo: Dispatch<SetStateAction<IRecoveryProcessInfo>>;
   currentVault: MutableRefObject<IVaultInfo | undefined>;
   txState: ITxState;
   setTxState: Dispatch<SetStateAction<ITxState>>;
+  erc725Utils: ERC725Utils | undefined;
+  vaultDeploying: boolean;
+  setVaultDeploying: Dispatch<SetStateAction<boolean>>;
+  secretUpdating: boolean;
+  setSecretUpdating: Dispatch<SetStateAction<boolean>>;
+  thresholdUpdating: boolean;
+  setThresholdUpdating: Dispatch<SetStateAction<boolean>>;
+  permissionsUpdating: boolean;
+  setPermissionsUpdating: Dispatch<SetStateAction<boolean>>;
+  guardiansLoading: boolean;
+  setGuardiangsLoading: Dispatch<SetStateAction<boolean>>;
 }

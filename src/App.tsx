@@ -42,6 +42,7 @@ export default function App() {
       </div>
 
       <Footer />
+      {/* <TxApprovalModal /> */}
       {txState.showModal ? <TxApprovalModal /> : <></>}
     </Router>
   );

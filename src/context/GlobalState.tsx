@@ -13,7 +13,7 @@ import {
   supportedChains,
 } from '../@types/types';
 import { Location, NavigateFunction } from 'react-router-dom';
-import { Recovery } from 'guardians.js';
+import { ERC725Utils, Recovery } from 'guardians.js';
 export const blockExplorer = 'https://explorer.execution.l16.lukso.network/address/';
 export const INITIAL_VAULT_STATE: IVaultInfoEdits = {
   vaultName: '',
@@ -36,18 +36,21 @@ export const INITIAL_RECOVERY_INFO: IRecoveryProcessInfo = {
 
 export const INITIAL_TX_STATE: ITxState = {
   showModal: false,
-  vaultCreated: false,
-  secretSet: false,
-  thresholdSet: false,
-  guardiansAdded: {},
+  'Deploy Vault': false,
+  'Add Permissions': false,
+  'Set Secret': false,
+  'Set Threshold': false,
+  'Add Guardians': 0,
 };
 
+export const vaultCreatedTopic = '0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0';
+
 export const getInitialGuardiansAdded = (guardians: IGuardianList) => {
-  const initialList: {[name:string]: boolean} = {};
+  const initialList: { [name: string]: boolean } = {};
   Object.entries(guardians).forEach(([id, guardian]) => {
     initialList[guardian.name] = false;
   });
-  return initialList
+  return initialList;
 };
 
 export const networks = {
@@ -65,7 +68,7 @@ export const GlobalContext = createContext({} as globalStates);
 export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }) => {
   // essential states for connection to web3, user wallet, ocean operations, and DataX configurations
   const [web3Modal, setWeb3Modal] = useState<Web3Modal>();
-  const [accountId, setAccountId] = useState<string>();
+  const [walletAddress, setWalletAddress] = useState<string>();
   const [chainId, setChainId] = useState<any>();
   const [provider, setProvider] = useState<Web3Modal>();
   const [web3, setWeb3] = useState<Web3>();
@@ -78,7 +81,14 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
   const [location, setLocation] = useState<Location | null>(null);
   const [recovery, setRecovery] = useState<Recovery>();
   const [recoverInfo, setRecoverInfo] = useState<IRecoveryProcessInfo>(INITIAL_RECOVERY_INFO);
+  const [erc725Utils, setErc725Utils] = useState<ERC725Utils>();
+
   const [txState, setTxState] = useState<ITxState>(INITIAL_TX_STATE);
+  const [vaultDeploying, setVaultDeploying] = useState<boolean>(false);
+  const [secretUpdating, setSecretUpdating] = useState<boolean>(false);
+  const [thresholdUpdating, setThresholdUpdating] = useState<boolean>(false);
+  const [permissionsUpdating, setPermissionsUpdating] = useState<boolean>(false);
+  const [guardiansLoading, setGuardiangsLoading] = useState<boolean>(false);
 
   const currentVault = useRef<IVaultInfo>();
   // intitialize web3modal to use to connect to provider
@@ -131,13 +141,16 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
 
       const accounts = await web3.eth.getAccounts();
       const account = accounts[0] ? accounts[0].toLowerCase() : null;
-      setAccountId(accounts[0]);
+      setWalletAddress(accounts[0]);
 
       const _chainId = await web3.eth.getChainId();
       setChainId(_chainId);
 
       const _recovery = new Recovery(web3);
       setRecovery(_recovery);
+
+      const _erc725Utils = new ERC725Utils(web3);
+      setErc725Utils(_erc725Utils);
 
       setListeners(provider, web3);
 
@@ -148,7 +161,7 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
   }
 
   /**
-   * Sets listeners events on: accountId, chainId, provider connection, provider disconnection.
+   * Sets listeners events on: walletAddress, chainId, provider connection, provider disconnection.
    *
    * @param provider
    * @param web3
@@ -156,7 +169,7 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
 
   function setListeners(provider: any, web3: Web3) {
     provider.on('accountsChanged', async (accounts: string[]) => {
-      setAccountId(accounts[0]);
+      setWalletAddress(accounts[0]);
     });
 
     // Subscribe to chainId change
@@ -240,7 +253,7 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
   }, [allVaults]);
 
   const resetVaultAndSteps = (vault?: IVaultInfoEdits) => {
-    if (accountId) {
+    if (walletAddress) {
       setCurrentStep(1);
     } else {
       setCurrentStep(0);
@@ -250,7 +263,7 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
       currentVault.current = vault;
       setCurrentVaultEdits({ ...vault });
     } else {
-      setCurrentVaultEdits({ ...INITIAL_VAULT_STATE, timestampId: Date.now() });
+      setCurrentVaultEdits({ ...INITIAL_VAULT_STATE });
     }
     setRecoverInfo({ ...INITIAL_RECOVERY_INFO });
   };
@@ -277,7 +290,7 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
     <GlobalContext.Provider
       value={{
         handleConnect,
-        accountId,
+        walletAddress,
         chainId,
         provider,
         web3,
@@ -298,11 +311,21 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
         updateAndGoHome,
         switchNetwork,
         recovery,
-        setRecovery,
         addToGlobalSnackbarQue,
         recoverInfo,
         setRecoverInfo,
         currentVault,
+        erc725Utils,
+        vaultDeploying,
+        setVaultDeploying,
+        secretUpdating,
+        setSecretUpdating,
+        thresholdUpdating,
+        setThresholdUpdating,
+        permissionsUpdating,
+        setPermissionsUpdating,
+        guardiansLoading,
+        setGuardiangsLoading,
         txState,
         setTxState,
       }}

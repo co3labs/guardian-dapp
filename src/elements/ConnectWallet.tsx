@@ -8,7 +8,7 @@ import ElementWithTitle from './ElementWithTitle';
 import InfoParagraph from './InfoParagraph';
 
 export default function ConnectWallet({ back }: { back?: string }) {
-  const { handleConnect, accountId, web3, chainId } = useContext(GlobalContext);
+  const { handleConnect, walletAddress, web3, chainId } = useContext(GlobalContext);
   // const [chainToAdd, setChainToAdd] = useState('');
 
   return (
@@ -23,10 +23,10 @@ export default function ConnectWallet({ back }: { back?: string }) {
           <div>
             {' '}
             <button
-              onClick={() => (!accountId ? handleConnect() : () => null)}
+              onClick={() => (!walletAddress ? handleConnect() : () => null)}
               className="btn btnBig w-min btnPrimary "
             >
-              {accountId ? getShortId(accountId) : 'Connect'}
+              {walletAddress ? getShortId(walletAddress) : 'Connect'}
             </button>
           </div>
         </div>
@@ -36,7 +36,7 @@ export default function ConnectWallet({ back }: { back?: string }) {
         backText={back ? <BsChevronLeft /> : undefined}
         exitBtn={!!back}
         confirmText="Continue"
-        conditionNext={!!accountId && chainId === 2828}
+        conditionNext={!!walletAddress && chainId === 2828}
       />
     </>
   );

@@ -1,15 +1,15 @@
 import { useContext, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ITxState } from '../@types/types';
-import { getInitialGuardiansAdded, GlobalContext, INITIAL_TX_STATE } from '../context/GlobalState';
+import { ITxState, IVaultDeployReceipt, IVaultInfo, IVaultInfoEdits } from '../@types/types';
+import { getInitialGuardiansAdded, GlobalContext, INITIAL_TX_STATE, vaultCreatedTopic } from '../context/GlobalState';
 import BackOrContinueBtns from './BackOrContinueBtns';
 import ElementWithTitle from './ElementWithTitle';
 import TxApprovalModal from './TxApprovalModal';
+import { useGuardians, usePermissions, useSecret, useThreshold, useVault } from '../hooks';
 
 export default function ReviewChanges() {
-  const { currentVaultEdits, updateAndGoHome, location, setTxState } = useContext(GlobalContext);
+  const { currentVaultEdits, walletAddress, setTxState, setAllVaults, allVaults } = useContext(GlobalContext);
   const [showSecret, setShowSecret] = useState(false);
-  const navigate = useNavigate();
   const fields: [string, string, boolean, string][] = [
     ['Vault Name', 'vaultName', false, '2xl'],
     ['Transaction Approval Threshold', 'threshold', false, '2xl'],
@@ -17,7 +17,12 @@ export default function ReviewChanges() {
     ['Secret', 'newSecret', true, 'base'],
   ];
 
-  //? show previous vault here ?
+  const { updateGuardians } = useGuardians();
+  const { addPermissions, checkPermissions } = usePermissions();
+  const { setSecret } = useSecret();
+  const { setThreshold } = useThreshold();
+  const { deployVault } = useVault();
+
   return (
     <>
       <div className="m-6">
@@ -70,12 +75,38 @@ export default function ReviewChanges() {
       </div>
       <BackOrContinueBtns
         confirmText="Confirm"
-        onNextClick={() => {
+        onNextClick={async () => {
           setTxState({
-            ...INITIAL_TX_STATE,
             showModal: true,
-            guardiansAdded: getInitialGuardiansAdded(currentVaultEdits.guardianList),
+            'Deploy Vault': true,
+            'Add Permissions': true,
+            'Set Secret': true,
+            'Set Threshold': true,
+            'Add Guardians': currentVaultEdits.guardianCount,
           });
+
+          try {
+            if (!walletAddress) throw new Error('No account id.');
+
+            const account = currentVaultEdits.ERC725Address;
+
+            const [newVaultAddress] = await deployVault(account, walletAddress);
+            await addPermissions(walletAddress, newVaultAddress, account);
+            const isPermitted = await checkPermissions(newVaultAddress, account);
+
+            // if (isPermitted) {
+            setSecret(newVaultAddress, account, walletAddress);
+            setThreshold(newVaultAddress, account, walletAddress);
+            updateGuardians(newVaultAddress, account, walletAddress)
+            // }
+
+            const timestampId = Date.now();
+            const newVaultInfo: IVaultInfoEdits = { ...currentVaultEdits, vaultAddress: newVaultAddress, timestampId };
+            setAllVaults({ ...allVaults, [timestampId]: newVaultInfo });
+          } catch (error) {
+            console.error(error);
+            // addToGlobalSnackbarQue('An error occured when attempting to create a vault. Please try again.');
+          }
         }}
       />
     </>
@@ -83,13 +114,5 @@ export default function ReviewChanges() {
 }
 
 // onNextClick={async () => {
-//   try {
-//     if(!accountId) throw new Error("No account id.")
-//     const txReceipt = await recovery?.createRecoveryVault(currentVaultEdits.ERC725Address, accountId);
-//     console.log(txReceipt)
-//     addToGlobalSnackbarQue("You vault has been successfully created. You can proceed to adding guardians.")
-//   } catch (error) {
-//     console.error(error)
-//     addToGlobalSnackbarQue("An error occured when attempting to create a vault. Please try again.")
-//   }
+
 // }}
