@@ -81,6 +81,8 @@ export interface IVaultDeployReceipt {
   };
 }
 
+export type ITxProgress = "loading" | "failed" | "success" | ""
+
 export type VoidFunciton = () => void;
 
 export interface globalStates {
@@ -113,14 +115,14 @@ export interface globalStates {
   txState: ITxState;
   setTxState: Dispatch<SetStateAction<ITxState>>;
   erc725Utils: ERC725Utils | undefined;
-  vaultDeploying: boolean;
-  setVaultDeploying: Dispatch<SetStateAction<boolean>>;
-  secretUpdating: boolean;
-  setSecretUpdating: Dispatch<SetStateAction<boolean>>;
-  thresholdUpdating: boolean;
-  setThresholdUpdating: Dispatch<SetStateAction<boolean>>;
-  permissionsUpdating: boolean;
-  setPermissionsUpdating: Dispatch<SetStateAction<boolean>>;
-  guardiansLoading: boolean;
-  setGuardiangsLoading: Dispatch<SetStateAction<boolean>>;
+  vaultDeploying: ITxProgress;
+  setVaultDeploying: Dispatch<SetStateAction<ITxProgress>>;
+  secretUpdating: ITxProgress;
+  setSecretUpdating: Dispatch<SetStateAction<ITxProgress>>;
+  thresholdUpdating: ITxProgress;
+  setThresholdUpdating: Dispatch<SetStateAction<ITxProgress>>;
+  permissionsUpdating: ITxProgress;
+  setPermissionsUpdating: Dispatch<SetStateAction<ITxProgress>>;
+  guardiansLoading: ITxProgress;
+  setGuardiangsLoading: Dispatch<SetStateAction<ITxProgress>>;
 }

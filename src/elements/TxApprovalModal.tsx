@@ -1,8 +1,9 @@
 import { useContext } from 'react';
 import { BsCheck, BsX } from 'react-icons/bs';
 import { MoonLoader } from 'react-spinners';
-import { ITxState } from '../@types/types';
+import { ITxProgress, ITxState } from '../@types/types';
 import { GlobalContext } from '../context/GlobalState';
+import InfoParagraph from './InfoParagraph';
 
 export default function TxApprovalModal() {
   const {
@@ -30,13 +31,16 @@ export default function TxApprovalModal() {
               <BsX />
             </button>
           </div>
-          <p className="max-w-xs">
-            You will need to sign a transaction for each item in this list. Each guardian will be a seperate
-            transaction.
-          </p>
+          Sign these transactions in your wallet.
+          <InfoParagraph
+            tailwindMaxW="max-w-sm"
+            text={`You will need to sign a transaction for each 
+            item in this list. Each guardian will be a seperate
+            transaction`}
+          />
           <>
             {Object.entries(txState).map(([title, value], index) => {
-              let state: boolean;
+              let state: ITxProgress;
               switch (title) {
                 case 'Deploy Vault':
                   state = vaultDeploying;
@@ -58,7 +62,7 @@ export default function TxApprovalModal() {
               if (index === 0 || !value) return <></>;
 
               return (
-                <div className={`p-2 my-2 border  ${state ? 'border-blue-800' : 'border-gray-200'}`}>
+                <div className={`p-2 my-2 border ${state === 'loading' ? 'border-blue-800 bg-blue-800 bg-opacity-10' : 'border-gray-200 text-gray-400'}`}>
                   <p className="flex  items-center">
                     {state ? <MoonLoader size={16} /> : index + '.'}
                     <span className="ml-3">{title}</span>

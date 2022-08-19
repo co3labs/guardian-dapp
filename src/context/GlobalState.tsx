@@ -6,6 +6,7 @@ import {
   globalStates,
   IGuardianList,
   IRecoveryProcessInfo,
+  ITxProgress,
   ITxState,
   IUserVaults,
   IVaultInfo,
@@ -84,11 +85,11 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
   const [erc725Utils, setErc725Utils] = useState<ERC725Utils>();
 
   const [txState, setTxState] = useState<ITxState>(INITIAL_TX_STATE);
-  const [vaultDeploying, setVaultDeploying] = useState<boolean>(false);
-  const [secretUpdating, setSecretUpdating] = useState<boolean>(false);
-  const [thresholdUpdating, setThresholdUpdating] = useState<boolean>(false);
-  const [permissionsUpdating, setPermissionsUpdating] = useState<boolean>(false);
-  const [guardiansLoading, setGuardiangsLoading] = useState<boolean>(false);
+  const [vaultDeploying, setVaultDeploying] = useState<ITxProgress>("");
+  const [secretUpdating, setSecretUpdating] = useState<ITxProgress>("");
+  const [thresholdUpdating, setThresholdUpdating] = useState<ITxProgress>("");
+  const [permissionsUpdating, setPermissionsUpdating] = useState<ITxProgress>("");
+  const [guardiansLoading, setGuardiangsLoading] = useState<ITxProgress>("");
 
   const currentVault = useRef<IVaultInfo>();
   // intitialize web3modal to use to connect to provider
