@@ -5,7 +5,7 @@ import ReviewChanges from '../elements/ReviewChanges';
 import VaultSetup from '../elements/VaultSetup';
 
 export default function EditVault() {
-  const fieldsToRender = { name: true, profile: false, secret: true, old: true, processId:false};
+  const fieldsToRender = { name: true, profile: false, secret: true, old: false, processId:false, secretToggle:true};
   return (
     <ComponentWrapper
       steps={[

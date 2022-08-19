@@ -8,13 +8,20 @@ import UpdateSecretFields from './UpdateSecretFields';
 export default function VaultSetup({
   renderFields,
 }: {
-  renderFields: { name: boolean; profile: boolean; secret: boolean; old: boolean; processId: boolean };
+  renderFields: {
+    name: boolean;
+    profile: boolean;
+    secret: boolean;
+    old: boolean;
+    processId: boolean;
+    secretToggle: boolean;
+  };
 }) {
   const maxLength = 42;
   const { currentVaultEdits, web3, location, currentStep, setCurrentStep } = useContext(GlobalContext);
   const [updateSecret, setUpdateSecret] = useState(false);
   const [isEthAddress, setIsEthAddress] = useState<boolean>(true);
-  const { name, profile, secret, old, processId } = renderFields;
+  const { name, profile, secret, old, processId,secretToggle } = renderFields;
 
   useEffect(() => {
     if (profile && web3 && currentVaultEdits.ERC725Address.length === 42) {
@@ -64,7 +71,7 @@ export default function VaultSetup({
           <></>
         )}
 
-        {old && secret ? (
+        {secretToggle ? (
           <div className="w-full font-light px-6 mt-6 flex items-center">
             <span className="mr-2">Update Secret</span>
             <button onClick={() => setUpdateSecret(!updateSecret)} className="relative z-10 flex border rounded-sm">
@@ -85,7 +92,7 @@ export default function VaultSetup({
           <></>
         )}
 
-        {secret ? <UpdateSecretFields renderFields={{ old, secret, updateSecret }} /> : <></>}
+        {updateSecret ? <UpdateSecretFields renderFields={{ old, secret, updateSecret }} /> : <></>}
       </div>
 
       {location?.pathname === '/app/create' ? (

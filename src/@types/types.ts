@@ -43,11 +43,11 @@ export interface IUserVaults {
 
 export interface ITxState {
   showModal: boolean;
-  "Deploy Vault": boolean;
-  "Add Permissions": boolean;
-  "Set Secret": boolean;
-  "Set Threshold": boolean;
-  "Add Guardians": number;
+  'Deploy Vault': boolean;
+  'Add Permissions': boolean;
+  'Set Secret': boolean;
+  'Set Threshold': boolean;
+  'Add Guardians': number;
 }
 
 export interface IVaultDeployReceipt {
@@ -81,7 +81,7 @@ export interface IVaultDeployReceipt {
   };
 }
 
-export type ITxProgress = "loading" | "failed" | "success" | ""
+export type ITxProgress = 'loading' | 'failed' | 'success' | '';
 
 export type VoidFunciton = () => void;
 
@@ -111,7 +111,7 @@ export interface globalStates {
   addToGlobalSnackbarQue: (message: string) => void;
   recoverInfo: IRecoveryProcessInfo;
   setRecoverInfo: Dispatch<SetStateAction<IRecoveryProcessInfo>>;
-  currentVault: MutableRefObject<IVaultInfo | undefined>;
+  currentVault: MutableRefObject<IVaultInfo>;
   txState: ITxState;
   setTxState: Dispatch<SetStateAction<ITxState>>;
   erc725Utils: ERC725Utils | undefined;
@@ -125,4 +125,5 @@ export interface globalStates {
   setPermissionsUpdating: Dispatch<SetStateAction<ITxProgress>>;
   guardiansLoading: ITxProgress;
   setGuardiangsLoading: Dispatch<SetStateAction<ITxProgress>>;
+  resetAllLoaderStates: VoidFunciton;
 }

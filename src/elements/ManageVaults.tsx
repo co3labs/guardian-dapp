@@ -4,7 +4,7 @@ import {
   getShortId,
   GlobalContext,
   INITIAL_RECOVERY_INFO,
-  INITIAL_VAULT_STATE,
+  INITIAL_VAULT_EDITS,
 } from '../context/GlobalState';
 import BackOrContinueBtns from './BackOrContinueBtns';
 import ElementWithTitle from './ElementWithTitle';
@@ -14,11 +14,11 @@ import { IVaultInfo } from '../@types/types';
 import { BsChevronDown, BsPen, BsPenFill } from 'react-icons/bs';
 
 export default function ManageVaults() {
-  const { allVaults, resetVaultAndSteps, setCurrentVaultEdits, currentVaultEdits, setRecoverInfo,  } =
+  const { allVaults, resetVaultAndSteps, setCurrentVaultEdits, currentVaultEdits, currentVault } =
     useContext(GlobalContext);
 
   useEffect(() => {
-    setCurrentVaultEdits(INITIAL_VAULT_STATE);
+    setCurrentVaultEdits(INITIAL_VAULT_EDITS);
   }, []);
 
   const selectedClasses = (vault: IVaultInfo) =>
@@ -50,9 +50,10 @@ export default function ManageVaults() {
                   <tr
                     onClick={() => {
                       if (currentVaultEdits.vaultName === vault.vaultName) {
-                        setCurrentVaultEdits(INITIAL_VAULT_STATE);
+                        setCurrentVaultEdits(INITIAL_VAULT_EDITS);
                       } else {
                         setCurrentVaultEdits(vault);
+                        currentVault.current = vault;
                       }
                     }}
                     className="vaultListItem group"
@@ -67,11 +68,12 @@ export default function ManageVaults() {
                     </td>
                     <td className={selectedClasses(vault)}>{vault.guardianCount}</td>
                     <td className={selectedClasses(vault)}>{vault.threshold}</td>
-                    <td className={selectedClasses(vault)}>{getShortId(vault.ERC725Address)}</td>
+                    <td className={selectedClasses(vault)}>{getShortId(vault.vaultAddress)}</td>
                     <td className={'flex items-center border-r rounded-r-sm ' + selectedClasses(vault)}>
                       <Link
                         onClick={() => {
-                          resetVaultAndSteps(vault)
+                          resetVaultAndSteps(vault);
+                          currentVault.current = vault;
                         }}
                         to="/app/edit"
                         className="text-xs hover:text-blue-800 flex items-center  py-1 px-2"
@@ -81,7 +83,8 @@ export default function ManageVaults() {
                       </Link>
                       <Link
                         onClick={() => {
-                          resetVaultAndSteps(vault)
+                          resetVaultAndSteps(vault);
+                          currentVault.current = vault;
                         }}
                         to="/app/recover"
                         className="text-xs btnSecondary flex items-center ml-4 mr-1 py-1 px-2"
@@ -90,8 +93,8 @@ export default function ManageVaults() {
                       </Link>
                       <Link
                         onClick={() => {
-                          resetVaultAndSteps(vault)
-
+                          resetVaultAndSteps(vault);
+                          currentVault.current = vault;
                         }}
                         to="/app/vote"
                         className="text-xs btnPrimary flex items-center mr-4 ml-1 py-1 px-2"

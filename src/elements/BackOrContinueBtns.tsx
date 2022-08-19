@@ -53,9 +53,7 @@ export default function BackOrContinueBtns({
       {skip && !skip.includes(2) ? (
         <button
           type="button"
-          onClick={() => {
-            console.log(onNextClick, conditionNext);
-            
+          onClick={() => {            
             if (onNextClick) {
               onNextClick();
             } else if (conditionNext) {

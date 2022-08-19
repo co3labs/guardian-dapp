@@ -16,7 +16,8 @@ import {
 import { Location, NavigateFunction } from 'react-router-dom';
 import { ERC725Utils, Recovery } from 'guardians.js';
 export const blockExplorer = 'https://explorer.execution.l16.lukso.network/address/';
-export const INITIAL_VAULT_STATE: IVaultInfoEdits = {
+
+export const INITIAL_CURR_VAULT: IVaultInfo = {
   vaultName: '',
   threshold: 1,
   ERC725Address: '',
@@ -25,9 +26,13 @@ export const INITIAL_VAULT_STATE: IVaultInfoEdits = {
   timestampId: 0,
   lastUpdated: 0,
   guardianList: { 0: { name: '', address: '' } },
+  vaultOwner: '',
+};
+
+export const INITIAL_VAULT_EDITS: IVaultInfoEdits = {
+  ...INITIAL_CURR_VAULT,
   oldSecret: '',
   newSecret: '',
-  vaultOwner: '',
 };
 
 export const INITIAL_RECOVERY_INFO: IRecoveryProcessInfo = {
@@ -76,7 +81,7 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
   const [unsupportedNet, setUnsupportedNet] = useState<boolean>(false);
   const [cookiesAllowed, setCookiesAllowed] = useState<boolean | null>(null);
   const [allVaults, setAllVaults] = useState<IUserVaults>();
-  const [currentVaultEdits, setCurrentVaultEdits] = useState<IVaultInfoEdits>(INITIAL_VAULT_STATE);
+  const [currentVaultEdits, setCurrentVaultEdits] = useState<IVaultInfoEdits>(INITIAL_VAULT_EDITS);
   const [currentStep, setCurrentStep] = useState(0);
   const [globalSnackbarQue, setGlobalSnackbarQue] = useState<string[]>([]);
   const [location, setLocation] = useState<Location | null>(null);
@@ -85,13 +90,21 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
   const [erc725Utils, setErc725Utils] = useState<ERC725Utils>();
 
   const [txState, setTxState] = useState<ITxState>(INITIAL_TX_STATE);
-  const [vaultDeploying, setVaultDeploying] = useState<ITxProgress>("");
-  const [secretUpdating, setSecretUpdating] = useState<ITxProgress>("");
-  const [thresholdUpdating, setThresholdUpdating] = useState<ITxProgress>("");
-  const [permissionsUpdating, setPermissionsUpdating] = useState<ITxProgress>("");
-  const [guardiansLoading, setGuardiangsLoading] = useState<ITxProgress>("");
+  const [vaultDeploying, setVaultDeploying] = useState<ITxProgress>('');
+  const [secretUpdating, setSecretUpdating] = useState<ITxProgress>('');
+  const [thresholdUpdating, setThresholdUpdating] = useState<ITxProgress>('');
+  const [permissionsUpdating, setPermissionsUpdating] = useState<ITxProgress>('');
+  const [guardiansLoading, setGuardiangsLoading] = useState<ITxProgress>('');
 
-  const currentVault = useRef<IVaultInfo>();
+  const resetAllLoaderStates = () => {
+    setVaultDeploying('');
+    setSecretUpdating('');
+    setThresholdUpdating('');
+    setPermissionsUpdating('');
+    setGuardiangsLoading('');
+  };
+
+  const currentVault = useRef<IVaultInfo>(INITIAL_CURR_VAULT);
   // intitialize web3modal to use to connect to provider
   useEffect(() => {
     async function init() {
@@ -254,6 +267,8 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
   }, [allVaults]);
 
   const resetVaultAndSteps = (vault?: IVaultInfoEdits) => {
+    resetAllLoaderStates();
+
     if (walletAddress) {
       setCurrentStep(1);
     } else {
@@ -264,7 +279,7 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
       currentVault.current = vault;
       setCurrentVaultEdits({ ...vault });
     } else {
-      setCurrentVaultEdits({ ...INITIAL_VAULT_STATE });
+      setCurrentVaultEdits({ ...INITIAL_VAULT_EDITS });
     }
     setRecoverInfo({ ...INITIAL_RECOVERY_INFO });
   };
@@ -329,6 +344,7 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
         setGuardiangsLoading,
         txState,
         setTxState,
+        resetAllLoaderStates,
       }}
     >
       <>{children}</>

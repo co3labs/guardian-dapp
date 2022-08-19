@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ITxState, IVaultDeployReceipt, IVaultInfo, IVaultInfoEdits } from '../@types/types';
 import { getInitialGuardiansAdded, GlobalContext, INITIAL_TX_STATE, vaultCreatedTopic } from '../context/GlobalState';
@@ -8,7 +8,8 @@ import TxApprovalModal from './TxApprovalModal';
 import { useGuardians, usePermissions, useSecret, useThreshold, useVault } from '../hooks';
 
 export default function ReviewChanges() {
-  const { currentVaultEdits, walletAddress, setTxState, setAllVaults, allVaults } = useContext(GlobalContext);
+  const { currentVaultEdits, walletAddress, location, setTxState, txState, setAllVaults, allVaults, currentVault } =
+    useContext(GlobalContext);
   const [showSecret, setShowSecret] = useState(false);
   const fields: [string, string, boolean, string][] = [
     ['Vault Name', 'vaultName', false, '2xl'],
@@ -22,6 +23,7 @@ export default function ReviewChanges() {
   const { setSecret } = useSecret();
   const { setThreshold } = useThreshold();
   const { deployVault } = useVault();
+  const txModalHasOpened = useRef(false);
 
   return (
     <>
@@ -30,33 +32,36 @@ export default function ReviewChanges() {
 
         {currentVaultEdits ? (
           <div className="flex flex-col mt-6">
-            <div className="grid grid-flow-row grid-cols-2 w-full border-x border-t rounded-sm">
-              {fields.map((params: [string, string, boolean, string], index) => (
-                <ElementWithTitle
-                  title={params[0]}
-                  passStates={params[2] ? { show: showSecret, setShow: setShowSecret } : undefined}
-                  element={
-                    <div
-                      className={`flex flex-col rounded-sm border-b p-4 overflow-x-scroll no-scrollbar ${
-                        index % 2 !== 0 ? 'border-l' : ''
-                      }`}
-                    >
-                      <span className={'text-' + params[3]}>
-                        {params[2] && !showSecret ? (
-                          <span className="flex p-2">
-                            {' '}
-                            {Array((currentVaultEdits[params[1] as keyof typeof currentVaultEdits] as string).length)
-                              .fill(<div className="w-1 h-1 mr-1 mt-1 rounded-full bg-black" />)
-                              .map((div) => div)}
-                          </span>
-                        ) : (
-                          (currentVaultEdits[params[1] as keyof typeof currentVaultEdits] as string)
-                        )}
-                      </span>
-                    </div>
-                  }
-                />
-              ))}
+            <div className="grid grid-flow-row grid-cols-2 gap-2 w-full">
+              {fields.map((params: [string, string, boolean, string], index) => {
+                if (index === 3 && !currentVaultEdits.newSecret) return <></>;
+                return (
+                  <ElementWithTitle
+                    title={params[0]}
+                    passStates={params[2] ? { show: showSecret, setShow: setShowSecret } : undefined}
+                    element={
+                      <div
+                        className={`flex flex-col rounded-sm border p-4 overflow-x-scroll no-scrollbar ${
+                          index % 2 !== 0 ? 'border-l' : ''
+                        }`}
+                      >
+                        <span className={'text-' + params[3]}>
+                          {params[2] && !showSecret ? (
+                            <span className="flex p-2">
+                              {' '}
+                              {Array((currentVaultEdits[params[1] as keyof typeof currentVaultEdits] as string).length)
+                                .fill(<div className="w-1 h-1 mr-1 mt-1 rounded-full bg-black" />)
+                                .map((div) => div)}
+                            </span>
+                          ) : (
+                            (currentVaultEdits[params[1] as keyof typeof currentVaultEdits] as string)
+                          )}
+                        </span>
+                      </div>
+                    }
+                  />
+                );
+              })}
             </div>
             <div className="mt-6">
               <span className="text-xs text-gray-400">Guardian List {`(${currentVaultEdits.guardianCount})`}</span>
@@ -74,38 +79,70 @@ export default function ReviewChanges() {
         )}
       </div>
       <BackOrContinueBtns
-        confirmText="Confirm"
+        confirmText={txModalHasOpened.current ? 'View Transactions' : 'Confirm'}
+        exitBtn={txModalHasOpened.current}
         onNextClick={async () => {
-          setTxState({
-            showModal: true,
-            'Deploy Vault': true,
-            'Add Permissions': true,
-            'Set Secret': true,
-            'Set Threshold': true,
-            'Add Guardians': currentVaultEdits.guardianCount,
-          });
+          if (txModalHasOpened.current) {
+            setTxState({ ...txState, showModal: true });
+          } else {
+            txModalHasOpened.current = true;
 
-          try {
-            if (!walletAddress) throw new Error('No account id.');
-
+            let vaultAddress;
+            const shouldDeploy = !!!currentVault.current.vaultAddress;
+            const shouldAddPermissions = location?.pathname === '/app/create'; //this should actually check permissions
+            const shouldSetSecret = !!currentVaultEdits.newSecret;
+            const shoudlSetThreshold = currentVault.current.threshold !== currentVaultEdits.threshold;
+            const shouldAddGuardians = Math.abs(currentVault.current.guardianCount - currentVaultEdits.guardianCount);
             const account = currentVaultEdits.ERC725Address;
+            if (!walletAddress) throw new Error('No account id.');
+            setTxState({
+              showModal: true,
+              'Deploy Vault': shouldDeploy,
+              'Add Permissions': shouldAddPermissions,
+              'Set Secret': shouldSetSecret,
+              'Set Threshold': shoudlSetThreshold,
+              'Add Guardians': shouldAddGuardians,
+            });
+            try {
+              if (shouldDeploy) {
+                const [newVault] = await deployVault(account, walletAddress);
+                vaultAddress = newVault;
+              } else {
+                vaultAddress = currentVaultEdits.vaultAddress;
+              }
 
-            const [newVaultAddress] = await deployVault(account, walletAddress);
-            await addPermissions(walletAddress, newVaultAddress, account);
-            const isPermitted = await checkPermissions(newVaultAddress, account);
+              if (shouldAddPermissions) await addPermissions(walletAddress, vaultAddress, account);
 
-            // if (isPermitted) {
-            setSecret(newVaultAddress, account, walletAddress);
-            setThreshold(newVaultAddress, account, walletAddress);
-            updateGuardians(newVaultAddress, account, walletAddress)
-            // }
+              const isPermitted = await checkPermissions(vaultAddress, account);
 
-            const timestampId = Date.now();
-            const newVaultInfo: IVaultInfoEdits = { ...currentVaultEdits, vaultAddress: newVaultAddress, timestampId };
-            setAllVaults({ ...allVaults, [timestampId]: newVaultInfo });
-          } catch (error) {
-            console.error(error);
-            // addToGlobalSnackbarQue('An error occured when attempting to create a vault. Please try again.');
+              // if (isPermitted) {
+              if (shouldSetSecret) setSecret(vaultAddress, account, walletAddress);
+              if (shoudlSetThreshold) setThreshold(vaultAddress, account, walletAddress);
+              if (shouldAddGuardians) updateGuardians(vaultAddress, account, walletAddress);
+              // }
+
+              const now = Date.now();
+              const { ERC725Address, guardianCount, guardianList, threshold, vaultName, vaultOwner, timestampId } =
+                currentVaultEdits;
+
+              const newVaultInfo: IVaultInfo = {
+                ERC725Address,
+                guardianCount,
+                guardianList,
+                lastUpdated: now,
+                threshold,
+                vaultName,
+                vaultOwner,
+                vaultAddress: vaultAddress,
+                timestampId: timestampId || now,
+              };
+
+              currentVault.current = newVaultInfo;
+              setAllVaults({ ...allVaults, [timestampId]: newVaultInfo });
+            } catch (error) {
+              console.error(error);
+              // addToGlobalSnackbarQue('An error occured when attempting to create a vault. Please try again.');
+            }
           }
         }}
       />

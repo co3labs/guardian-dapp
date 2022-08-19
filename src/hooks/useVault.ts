@@ -5,7 +5,7 @@ import { GlobalContext, vaultCreatedTopic } from '../context/GlobalState';
 export default function useVault() {
   const { setVaultDeploying, recovery } = useContext(GlobalContext);
 
-  const deployVault = async (account: string, walletAddress: string): Promise<[string, IVaultDeployReceipt] | void> => {
+  const deployVault = async (account: string, walletAddress: string): Promise<[string, IVaultDeployReceipt]> => {
     try {
       setVaultDeploying('loading');
       const vaultDeployReceipt: IVaultDeployReceipt = await recovery?.createRecoveryVault(account, walletAddress);
@@ -21,8 +21,9 @@ export default function useVault() {
       setVaultDeploying('success');
       return [newVaultAddress, vaultDeployReceipt];
     } catch (error) {
-      console.error(error);
       setVaultDeploying('failed');
+      console.error(error);
+      throw(error)
     }
   };
 

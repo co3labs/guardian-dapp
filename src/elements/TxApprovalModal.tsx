@@ -1,5 +1,5 @@
-import { useContext } from 'react';
-import { BsCheck, BsX } from 'react-icons/bs';
+import { useContext, useEffect } from 'react';
+import { BsCheck, BsCheckCircleFill, BsX } from 'react-icons/bs';
 import { MoonLoader } from 'react-spinners';
 import { ITxProgress, ITxState } from '../@types/types';
 import { GlobalContext } from '../context/GlobalState';
@@ -16,7 +16,7 @@ export default function TxApprovalModal() {
     guardiansLoading,
   } = useContext(GlobalContext);
 
-  const loadingAtIndex = [secretUpdating, thresholdUpdating, permissionsUpdating, vaultDeploying, guardiansLoading];
+  console.log(Object.values(txState).filter((value) => !!value).length > 1);
 
   if (txState) {
     return (
@@ -31,46 +31,73 @@ export default function TxApprovalModal() {
               <BsX />
             </button>
           </div>
-          Sign these transactions in your wallet.
-          <InfoParagraph
-            tailwindMaxW="max-w-sm"
-            text={`You will need to sign a transaction for each 
+          {Object.values(txState).filter((value) => !!value).length > 1 ? (
+            <>
+              Sign these transactions in your wallet.
+              <InfoParagraph
+                tailwindMaxW="max-w-sm"
+                text={`You will need to sign a transaction for each 
             item in this list. Each guardian will be a seperate
             transaction`}
-          />
-          <>
-            {Object.entries(txState).map(([title, value], index) => {
-              let state: ITxProgress;
-              switch (title) {
-                case 'Deploy Vault':
-                  state = vaultDeploying;
-                  break;
-                case 'Add Guardians':
-                  state = guardiansLoading;
-                  break;
-                case 'Set Secret':
-                  state = secretUpdating;
-                  break;
-                case 'Set Threshold':
-                  state = thresholdUpdating;
-                  break;
-                default:
-                  state = permissionsUpdating;
-                  break;
-              }
+              />
+              <>
+                {Object.entries(txState).map(([title, value], index) => {
+                  let state: ITxProgress;
+                  let alldone = true;
 
-              if (index === 0 || !value) return <></>;
+                  switch (title) {
+                    case 'Deploy Vault':
+                      state = vaultDeploying;
+                      break;
+                    case 'Add Guardians':
+                      state = guardiansLoading;
+                      break;
+                    case 'Set Secret':
+                      state = secretUpdating;
+                      break;
+                    case 'Set Threshold':
+                      state = thresholdUpdating;
+                      break;
+                    default:
+                      state = permissionsUpdating;
+                      break;
+                  }
 
-              return (
-                <div className={`p-2 my-2 border ${state === 'loading' ? 'border-blue-800 bg-blue-800 bg-opacity-10' : 'border-gray-200 text-gray-400'}`}>
-                  <p className="flex  items-center">
-                    {state ? <MoonLoader size={16} /> : index + '.'}
-                    <span className="ml-3">{title}</span>
-                  </p>
-                </div>
-              );
-            })}
-          </>{' '}
+                  if (index === 0 || !value) return <></>;
+
+                  return (
+                    <div
+                      className={`p-2 my-2 border ${
+                        state === 'loading'
+                          ? 'border-blue-800 bg-blue-800 bg-opacity-10'
+                          : 'border-gray-200 text-gray-400'
+                      }`}
+                    >
+                      <p className="flex items-center">
+                        {state === 'loading' ? (
+                          <MoonLoader size={16} />
+                        ) : state === 'success' ? (
+                          <BsCheckCircleFill className="text-green-500" />
+                        ) : state === 'failed' ? (
+                          <BsX className="text-red-500" />
+                        ) : (
+                          index + '.'
+                        )}
+                        <span className="ml-3">{title}</span>
+                        {state === 'failed' ? (
+                          <span className="italic text-xs text-gray-400 ml-3">An error occured</span>
+                        ) : (
+                          <></>
+                        )}
+                      </p>
+                    </div>
+                  );
+                })}
+              </>
+            </>
+          ) : (
+            <div>No changes have been made!</div>
+          )}
         </div>
       </div>
     );
