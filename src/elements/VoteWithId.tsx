@@ -5,7 +5,7 @@ import RecoverIdInput from './RecoveryIdInput';
 import StandardInput from './StandardInput';
 
 export default function VoteWithId() {
-  const { recoverInfo, currentVaultEdits } = useContext(GlobalContext);
+  const { recoverInfo, currentVaultEdits, recovery, walletAddress } = useContext(GlobalContext);
 
   return (
     <>
@@ -31,7 +31,16 @@ export default function VoteWithId() {
         exitBtn={true}
         conditionNext={!!(recoverInfo && currentVaultEdits)}
         confirmText="Vote"
-        onNextClick={() => {}}
+        onNextClick={() => {
+          if (walletAddress)
+            recovery?.voteToRecover(
+              recoverInfo.recoveryProcessId,
+              recoverInfo.newOwner,
+              currentVaultEdits.vaultAddress,
+              currentVaultEdits.ERC725Address,
+              walletAddress
+            );
+        }}
       />
     </>
   );

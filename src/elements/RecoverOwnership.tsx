@@ -6,7 +6,7 @@ import StandardInput from './StandardInput';
 import UpdateSecretFields from './UpdateSecretFields';
 
 export default function RecoverOwnerShip() {
-  const { recoverInfo } = useContext(GlobalContext);
+  const { recoverInfo, recovery, currentVaultEdits, walletAddress } = useContext(GlobalContext);
 
   return (
     <>
@@ -20,7 +20,17 @@ export default function RecoverOwnerShip() {
         exitBtn={true}
         conditionNext={!!recoverInfo}
         confirmText="Recover Ownership"
-        onNextClick={() => {}}
+        onNextClick={() => {
+          if (walletAddress)
+            recovery?.recoverOwnership(
+              currentVaultEdits.vaultAddress,
+              currentVaultEdits.ERC725Address,
+              recoverInfo.recoveryProcessId,
+              currentVaultEdits.oldSecret,
+              currentVaultEdits.newSecret,
+              walletAddress
+            );
+        }}
       />{' '}
     </>
   );
