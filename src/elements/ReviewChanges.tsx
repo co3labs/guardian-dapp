@@ -91,8 +91,10 @@ export default function ReviewChanges() {
             const shouldDeploy = !!!currentVault.current.vaultAddress;
             const shouldAddPermissions = location?.pathname === '/app/create'; //this should actually check permissions
             const shouldSetSecret = !!currentVaultEdits.newSecret;
-            const shoudlSetThreshold = currentVault.current.threshold !== currentVaultEdits.threshold;
-            const shouldAddGuardians = Math.abs(currentVault.current.guardianCount - currentVaultEdits.guardianCount);
+            // currentVault.current.threshold !== currentVaultEdits.threshold;
+            const shoudlSetThreshold = true
+            // Math.abs(currentVault.current.guardianCount - currentVaultEdits.guardianCount);
+            const shouldAddGuardians = currentVaultEdits.guardianCount
             const account = currentVaultEdits.ERC725Address;
             if (!walletAddress) throw new Error('No account id.');
             setTxState({
@@ -100,8 +102,8 @@ export default function ReviewChanges() {
               'Deploy Vault': shouldDeploy,
               'Add Permissions': shouldAddPermissions,
               'Set Secret': shouldSetSecret,
-              'Set Threshold': shoudlSetThreshold,
               'Add Guardians': shouldAddGuardians,
+              'Set Threshold': shoudlSetThreshold,
             });
             try {
               if (shouldDeploy) {
@@ -116,9 +118,9 @@ export default function ReviewChanges() {
               const isPermitted = await checkPermissions(vaultAddress, account);
 
               // if (isPermitted) {
-              if (shouldSetSecret) setSecret(vaultAddress, account, walletAddress);
-              if (shoudlSetThreshold) setThreshold(vaultAddress, account, walletAddress);
-              if (shouldAddGuardians) updateGuardians(vaultAddress, account, walletAddress);
+              if (shouldSetSecret) await setSecret(vaultAddress, account, walletAddress);
+              if (shouldAddGuardians) await updateGuardians(vaultAddress, account, walletAddress);
+              if (shoudlSetThreshold) await setThreshold(vaultAddress, account, walletAddress);
               // }
 
               const now = Date.now();

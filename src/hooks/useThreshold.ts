@@ -7,6 +7,8 @@ export default function useThreshold() {
   const setThreshold = async (vaultAddress: string, account: string, walletAddress: string) => {
     try {
       setThresholdUpdating('loading');
+      console.log(currentVaultEdits.threshold, vaultAddress, account, walletAddress);
+
       const setThresholdReceipt = await recovery?.setThreshold(
         currentVaultEdits.threshold,
         vaultAddress,

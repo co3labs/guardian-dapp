@@ -9,11 +9,11 @@ body {
 }
 
 .btnPrimary {
-  @apply rounded-sm shadow-md border-2 border-blue-800 bg-blue-800 text-white hover:bg-opacity-75;
+  @apply rounded-sm shadow-md border border-blue-800 bg-blue-800 text-white hover:bg-opacity-75;
 }
 
 .btnSecondary {
-  @apply rounded-sm shadow-md border-2 border-blue-800 bg-white hover:bg-blue-800 hover:bg-opacity-10;
+  @apply rounded-sm shadow-md border border-blue-800 bg-white hover:bg-blue-800 hover:bg-opacity-10;
 }
 .btnBig {
   @apply px-12 py-3 w-max ;
