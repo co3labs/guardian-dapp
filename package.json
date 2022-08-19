@@ -14,6 +14,7 @@
     "guardians.js": "0.1.2",
     "https-browserify": "^1.0.0",
     "os-browserify": "^0.3.0",
+    "path-browserify": "^1.0.1",
     "react": "^18.0.0",
     "react-debounce-input": "^3.3.0",
     "react-dom": "^18.0.0",
