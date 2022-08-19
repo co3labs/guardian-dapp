@@ -1,5 +1,6 @@
 import { useContext, useEffect } from 'react';
 import { BsCheck, BsCheckCircleFill, BsX } from 'react-icons/bs';
+import { useNavigate } from 'react-router-dom';
 import { MoonLoader } from 'react-spinners';
 import { ITxProgress, ITxState } from '../@types/types';
 import { GlobalContext } from '../context/GlobalState';
@@ -13,11 +14,12 @@ export default function TxApprovalModal() {
     thresholdUpdating,
     permissionsUpdating,
     vaultDeploying,
-    guardiansLoading,
+    addGuardiansLoading,
+    removeGuardiansLoading,
   } = useContext(GlobalContext);
 
   console.log(Object.values(txState).filter((value) => !!value).length > 1);
-
+  const navigate = useNavigate()
   if (txState) {
     return (
       <div className="absolute top-0 right-0 left-0 bottom-0 bg-black z-20 bg-opacity-25">
@@ -26,6 +28,7 @@ export default function TxApprovalModal() {
             <button
               onClick={() => {
                 setTxState({ ...txState, showModal: false });
+                navigate("/app/welcome")
               }}
             >
               <BsX />
@@ -50,13 +53,16 @@ export default function TxApprovalModal() {
                       state = vaultDeploying;
                       break;
                     case 'Add Guardians':
-                      state = guardiansLoading;
+                      state = addGuardiansLoading;
                       break;
                     case 'Set Secret':
                       state = secretUpdating;
                       break;
                     case 'Set Threshold':
                       state = thresholdUpdating;
+                      break;
+                    case 'Remove Guardians':
+                      state = removeGuardiansLoading;
                       break;
                     default:
                       state = permissionsUpdating;
@@ -84,6 +90,7 @@ export default function TxApprovalModal() {
                           index + '.'
                         )}
                         <span className="ml-3">{title}</span>
+                        <span className='mx-1'>{title === "Add Guardians" || title === "Remove Guardians"?`(x${value})`:""}</span>
                         {state === 'failed' ? (
                           <span className="italic text-xs text-gray-400 ml-3">An error occured</span>
                         ) : (

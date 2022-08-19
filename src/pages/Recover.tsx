@@ -14,7 +14,7 @@ export default function Recover() {
       title={
         <p>
           Recover {currentVaultEdits.vaultName}
-          <span className="text-gray-400 ml-4">
+          <span className="text-gray-400 ml-4 text-sm">
             {'('}
             {getShortId(currentVaultEdits.vaultAddress)}
             {')'}

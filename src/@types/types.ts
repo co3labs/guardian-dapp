@@ -15,6 +15,10 @@ export interface IGuardianList {
   [id: number]: IGuardianInfo;
 }
 
+export interface IGuardianListEdits {
+  [id: number]: IGuardianInfoEdits;
+}
+
 export interface IVaultInfo {
   vaultName: string;
   guardianList: IGuardianList;
@@ -30,6 +34,11 @@ export interface IVaultInfo {
 export interface IVaultInfoEdits extends IVaultInfo {
   newSecret: string;
   oldSecret: string;
+  guardianList: IGuardianListEdits;
+}
+
+export interface IGuardianInfoEdits extends IGuardianInfo {
+  action?: 'add' | 'remove';
 }
 
 export interface IRecoveryProcessInfo {
@@ -38,7 +47,7 @@ export interface IRecoveryProcessInfo {
 }
 
 export interface IUserVaults {
-  [timestampId: number]: IVaultInfo;
+  [vaultAddress: string]: IVaultInfo;
 }
 
 export interface ITxState {
@@ -48,6 +57,7 @@ export interface ITxState {
   'Set Secret': boolean;
   'Set Threshold': boolean;
   'Add Guardians': number;
+  'Remove Guardians': number;
 }
 
 export interface IVaultDeployReceipt {
@@ -100,7 +110,7 @@ export interface globalStates {
   setCurrentStep: Dispatch<SetStateAction<number>>;
   allVaults: IUserVaults | undefined;
   setAllVaults: Dispatch<SetStateAction<IUserVaults | undefined>>;
-  resetVaultAndSteps: (vault?: IVaultInfoEdits) => void;
+  resetVaultAndSteps: (vault?: IVaultInfo) => void;
   globalSnackbarQue: string[];
   setGlobalSnackbarQue: Dispatch<SetStateAction<string[]>>;
   location: Location | null;
@@ -111,7 +121,7 @@ export interface globalStates {
   addToGlobalSnackbarQue: (message: string) => void;
   recoverInfo: IRecoveryProcessInfo;
   setRecoverInfo: Dispatch<SetStateAction<IRecoveryProcessInfo>>;
-  currentVault: MutableRefObject<IVaultInfo>;
+  selectedVault: MutableRefObject<IVaultInfo>;
   txState: ITxState;
   setTxState: Dispatch<SetStateAction<ITxState>>;
   erc725Utils: ERC725Utils | undefined;
@@ -123,7 +133,11 @@ export interface globalStates {
   setThresholdUpdating: Dispatch<SetStateAction<ITxProgress>>;
   permissionsUpdating: ITxProgress;
   setPermissionsUpdating: Dispatch<SetStateAction<ITxProgress>>;
-  guardiansLoading: ITxProgress;
-  setGuardiangsLoading: Dispatch<SetStateAction<ITxProgress>>;
+  addGuardiansLoading: ITxProgress;
+  setAddGuardiansLoading: Dispatch<SetStateAction<ITxProgress>>;
+  removeGuardiansLoading: ITxProgress;
+  setRemoveGuardiansLoading: Dispatch<SetStateAction<ITxProgress>>;
   resetAllLoaderStates: VoidFunciton;
+  guardiansToRemove: IGuardianList;
+  setGuardiansToRemove: Dispatch<SetStateAction<IGuardianList>>;
 }

@@ -18,6 +18,8 @@ export default function useSecret() {
     } catch (error) {
       console.error(error);
       setSecretUpdating('failed');
+      throw(error)
+
     }
   };
 

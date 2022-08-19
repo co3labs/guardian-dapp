@@ -10,9 +10,14 @@ export default function RecoverOwnerShip() {
 
   return (
     <>
-      <div className="w-full flex flex-col">
-        <RecoverIdInput />
-        <UpdateSecretFields renderFields={{ old: true, secret: true, updateSecret: true }} />
+      <div className="w-full flex">
+        <div className='w-1/2'>
+
+        </div>
+        <div className='w-1/2'>
+          <RecoverIdInput />
+          <UpdateSecretFields renderFields={{ old: true, secret: true, updateSecret: true }} />
+        </div>
       </div>
       <BackOrContinueBtns
         back="/app/manage"

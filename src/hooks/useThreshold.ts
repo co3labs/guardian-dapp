@@ -21,6 +21,7 @@ export default function useThreshold() {
     } catch (error) {
       console.error(error);
       setThresholdUpdating('failed');
+      throw error;
     }
   };
 

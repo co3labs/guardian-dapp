@@ -14,7 +14,7 @@ import { IVaultInfo } from '../@types/types';
 import { BsChevronDown, BsPen, BsPenFill } from 'react-icons/bs';
 
 export default function ManageVaults() {
-  const { allVaults, resetVaultAndSteps, setCurrentVaultEdits, currentVaultEdits, currentVault } =
+  const { allVaults, resetVaultAndSteps, setCurrentVaultEdits, currentVaultEdits, selectedVault } =
     useContext(GlobalContext);
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export default function ManageVaults() {
   }, []);
 
   const selectedClasses = (vault: IVaultInfo) =>
-    `${currentVaultEdits.vaultName === vault.vaultName ? 'border-blue-800' : ''} group-hover:border-blue-800 `;
+    `${currentVaultEdits.vaultAddress === vault.vaultAddress ? 'border-blue-800' : ''} group-hover:border-blue-800 `;
 
   const getLastUpdated = () => {
     const lastUpdated = new Date(currentVaultEdits.lastUpdated);
@@ -48,12 +48,16 @@ export default function ManageVaults() {
               {Object.entries(allVaults).map(([_, vault]) => (
                 <>
                   <tr
-                    onClick={() => {
-                      if (currentVaultEdits.vaultName === vault.vaultName) {
-                        setCurrentVaultEdits(INITIAL_VAULT_EDITS);
-                      } else {
-                        setCurrentVaultEdits(vault);
-                        currentVault.current = vault;
+                    id="vaultRow"
+                    onClick={(e) => {
+                      //@ts-ignore
+                      if (e.target.id !== 'edit_vault_' + vault.vaultAddress) {
+                        if (currentVaultEdits.vaultAddress === vault.vaultAddress) {
+                          setCurrentVaultEdits(INITIAL_VAULT_EDITS);
+                        } else {
+                          setCurrentVaultEdits({ ...vault, newSecret: '', oldSecret: '' });
+                          selectedVault.current = vault;
+                        }
                       }
                     }}
                     className="vaultListItem group"
@@ -71,73 +75,60 @@ export default function ManageVaults() {
                     <td className={selectedClasses(vault)}>{getShortId(vault.vaultAddress)}</td>
                     <td className={'flex items-center border-r rounded-r-sm ' + selectedClasses(vault)}>
                       <Link
+                        id={'edit_vault_' + vault.vaultAddress}
                         onClick={() => {
                           resetVaultAndSteps(vault);
-                          currentVault.current = vault;
+                          selectedVault.current = vault;
                         }}
                         to="/app/edit"
-                        className="text-xs hover:text-blue-800 flex items-center  py-1 px-2"
+                        className="text-xs btnSecondary py-1 px-2"
                       >
-                        <BsPen className="mr-1" size={12} />
                         Edit
                       </Link>
                       <Link
-                        onClick={() => {
+                        onClick={(e) => {
                           resetVaultAndSteps(vault);
-                          currentVault.current = vault;
+                          selectedVault.current = vault;
                         }}
                         to="/app/recover"
-                        className="text-xs btnSecondary flex items-center ml-4 mr-1 py-1 px-2"
+                        className="text-xs btnSecondary flex items-center mx-2 py-1 px-2"
                       >
                         Recover
                       </Link>
                       <Link
                         onClick={() => {
                           resetVaultAndSteps(vault);
-                          currentVault.current = vault;
+                          selectedVault.current = vault;
                         }}
                         to="/app/vote"
-                        className="text-xs btnPrimary flex items-center mr-4 ml-1 py-1 px-2"
+                        className="text-xs btnPrimary flex items-center mr-2 py-1 px-2"
                       >
                         Vote
                       </Link>
                       <BsChevronDown
                         className={`transition-transform ${
-                          currentVaultEdits.vaultName === vault.vaultName ? 'rotate-180' : ''
+                          currentVaultEdits.vaultAddress === vault.vaultAddress ? 'rotate-180' : ''
                         }`}
                       />
                     </td>
                   </tr>
-                  <tr className={`${currentVaultEdits.vaultName === vault.vaultName ? 'visible' : 'hidden'}`}>
+                  <tr className={`${currentVaultEdits.vaultAddress === vault.vaultAddress ? 'visible' : 'hidden'}`}>
                     <td colSpan={5}>
                       <div className="inline-flex">
-                        <div>
+                        <div className="flex-grow">
                           {[
-                            [
-                              'Vault Address',
-                              getShortId(
-                                currentVaultEdits.vaultAddress || '0x5a2BB322D6425e1CDEa1ce5d3f17F035C1f73022'
-                              ),
-                            ],
-                            [
-                              'Profile Address',
-                              getShortId(
-                                currentVaultEdits.ERC725Address || '0x5a2BB322D6425e1CDEa1ce5d3f17F035C1f73022'
-                              ),
-                            ],
-                            [
-                              'Vault Owner',
-                              getShortId(currentVaultEdits.vaultOwner || '0x5a2BB322D6425e1CDEa1ce5d3f17F035C1f73022'),
-                            ],
+                            ['Vault Address', getShortId(currentVaultEdits.vaultAddress)],
+                            ['Profile Address', getShortId(currentVaultEdits.ERC725Address)],
+                            // ['Vault Owner', getShortId(currentVaultEdits.vaultOwner)],
                             ['Last Updated', getLastUpdated()],
                           ].map((item: string[]) => (
-                            <div className="my-6 mr-6">
+                            <div className="my-6 mr-6 ">
                               <ElementWithTitle
                                 title={item[0]}
                                 element={
                                   <a
                                     href={`${blockExplorer}${item[1]}`}
-                                    className="vaultInfo hover:text-blue-800 px-12"
+                                    className="vaultInfo hover:text-blue-800 px-12 w-96"
                                   >
                                     {item[1]}
                                   </a>
@@ -189,7 +180,7 @@ export default function ManageVaults() {
         </div>
         <div className="flex flex-col md:flex-row items-center w-full py-1 px-6 md:px-0">
           <ElementWithTitle title="Import Vault" element={<input type="text" className="w-full flex-grow" />} />
-          <button className="w-full md:w-auto rounded-sm md:py-[.9rem] flex justify-center items-center px-3 border-2 mt-2 md:mt-0 border-blue-800 md:ml-2">
+          <button className="w-full md:w-auto rounded-sm md:py-[.9rem] flex justify-center hover:bg-blue-800 hover:bg-opacity-10 items-center px-3 border mt-2 md:mt-0 border-blue-800 md:ml-2">
             <span className="cursor-pointer">Import</span>
           </button>
         </div>

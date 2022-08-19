@@ -1,7 +1,7 @@
 import React, { PropsWithChildren, SetStateAction, useContext, useEffect, useState } from 'react';
 import { DebounceInput, PropConstraints } from 'react-debounce-input';
 import { BsTrash } from 'react-icons/bs';
-import { IGuardianInfo, IGuardianList } from '../@types/types';
+import { IGuardianInfo, IGuardianInfoEdits, IGuardianList } from '../@types/types';
 import { GlobalContext } from '../context/GlobalState';
 import ElementWithTitle from './ElementWithTitle';
 import InvalidInputAlert from './InvalidInputAlert';
@@ -15,7 +15,7 @@ export default function GuardianInput({
   duplicate,
 }: {
   index: number;
-  guardian: IGuardianInfo;
+  guardian: IGuardianInfoEdits;
   id: string;
   setIsLoading: React.Dispatch<SetStateAction<boolean>>;
   setDuplicate: React.Dispatch<SetStateAction<number[] | undefined>>;
@@ -24,7 +24,15 @@ export default function GuardianInput({
   const [hasTypedName, setHasTypedName] = useState(false);
   const [hasTypedAddress, setHasTypedAddress] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
-  const { currentVaultEdits, setCurrentVaultEdits, currentVault, web3 } = useContext(GlobalContext);
+  const {
+    currentVaultEdits,
+    setCurrentVaultEdits,
+    selectedVault,
+    web3,
+    location,
+    setGuardiansToRemove,
+    guardiansToRemove,
+  } = useContext(GlobalContext);
 
   useEffect(() => {
     if (guardian.name && !hasTypedName) setHasTypedName(true);
@@ -36,7 +44,7 @@ export default function GuardianInput({
         if (!isValidAddress) {
           setErrorMessage('Invalid Eth Address');
         } else {
-          setErrorMessage(undefined)
+          setErrorMessage(undefined);
         }
       }
     } else if (errorMessage) {
@@ -53,6 +61,30 @@ export default function GuardianInput({
     }
 
     setCurrentVaultEdits({ ...currentVaultEdits, guardianList: { ...newGuardians } });
+  }
+
+  function removeGuardian() {
+    const newGuardians = currentVaultEdits.guardianList;
+    let newCount = currentVaultEdits.guardianCount;
+
+    if (guardian.action === 'remove') {
+      const updatedGuardian: IGuardianInfoEdits = { ...guardian, action: 'add' };
+      newGuardians[Number(id)] = updatedGuardian;
+      newCount++;
+    } else {
+      if (location?.pathname === '/app/create') {
+        delete newGuardians[Number(id)];
+      } else {
+        const updatedGuardian: IGuardianInfoEdits = { ...guardian, action: 'remove' };
+        newGuardians[Number(id)] = updatedGuardian;
+      }
+      newCount--;
+    }
+    setCurrentVaultEdits({
+      ...currentVaultEdits,
+      guardianList: newGuardians,
+      guardianCount: newCount,
+    });
   }
 
   return (
@@ -83,14 +115,9 @@ export default function GuardianInput({
           element={
             <input
               type="text"
-              //   debounceTimeout={500}
               onChange={(event) => {
                 updateGuardian(event.target.value, index, 'address');
               }}
-              // onPaste={(event) => {
-              //   event.clipboardData.getData("Text")
-              //   updateGuardian(event.target.value, index, 'name');
-              // }}
               className={`border rounded-sm p-2 w-full ml-1 ${
                 !!((hasTypedAddress && !guardian.address) || errorMessage) ? 'border-red-500' : ''
               }`}
@@ -114,43 +141,14 @@ export default function GuardianInput({
       {index > 0 ? (
         <button
           type="button"
-          className="transition-colors ml-2 hover:bg-red-500 hover:text-white w-10 rounded-sm bg-gray-100 flex justify-center items-center"
-          onClick={() => {
-            const newGuardians = currentVaultEdits.guardianList;
-            if (currentVault.current && Object.keys(currentVault.current.guardianList)) {
-              //strikethrough for guardians that already exits
-            } else {
-              delete newGuardians[Number(id)];
-              setCurrentVaultEdits({
-                ...currentVaultEdits,
-                guardianList: newGuardians,
-                guardianCount: currentVaultEdits.guardianCount - 1,
-              });
-            }
-          }}
+          className={`transition-colors ml-2 ${guardian.action !== "remove"?"hover:bg-red-500": "hover:bg-blue-800"}  hover:text-white w-10 rounded-sm bg-gray-100 flex justify-center items-center`}
+          onClick={removeGuardian}
         >
-          <BsTrash />
+          {guardian.action !== 'remove' ? <BsTrash /> : '+'}
         </button>
       ) : (
         <></>
       )}
     </div>
-  );
-}
-
-interface InputProps extends PropsWithChildren {
-  setIsLoading: React.Dispatch<SetStateAction<boolean>>;
-  onChange: Function;
-}
-
-function ImmediateChangeWrapper(props: InputProps) {
-  return (
-    <input
-      {...props}
-      onChange={(e) => {
-        props.setIsLoading(true);
-        props.onChange(e);
-      }}
-    />
   );
 }

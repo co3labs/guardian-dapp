@@ -14,6 +14,7 @@ export default function usePermissions() {
     } catch (error) {
       console.error(error);
       setPermissionsUpdating('failed');
+      throw(error)
     }
   };
 

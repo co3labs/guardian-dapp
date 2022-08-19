@@ -2,13 +2,13 @@ import { useContext, useEffect, useState } from 'react';
 import { BsChevronDown } from 'react-icons/bs';
 import OutsideClickHandler from 'react-outside-click-handler';
 import { useNavigate } from 'react-router-dom';
-import { IGuardianInfo, IGuardianList } from '../@types/types';
+import { IGuardianInfo, IGuardianInfoEdits, IGuardianList } from '../@types/types';
 import { GlobalContext } from '../context/GlobalState';
 import BackOrContinueBtns from './BackOrContinueBtns';
 import GuardianInput from './GuardianInput';
 
 export default function GuardianForm() {
-  const { currentVaultEdits, setCurrentVaultEdits, updateAndGoHome, location } = useContext(GlobalContext);
+  const { currentVaultEdits, setCurrentVaultEdits, selectedVault } = useContext(GlobalContext);
   const [openThresholdSelect, setOpenThresholdSelect] = useState(false);
   const [formIsValid, setFormIsValid] = useState(false);
   const [validating, setValidating] = useState(false);
@@ -60,18 +60,43 @@ export default function GuardianForm() {
         <p className="font-light">Add Guardians</p>
 
         {Object.entries(currentVaultEdits.guardianList).map(
-          ([id, guardian]: [string, IGuardianInfo], index: number) => (
-            <GuardianInput
-              id={id}
-              guardian={guardian}
-              index={index}
-              setDuplicate={setDuplicate}
-              setIsLoading={setValidating}
-              duplicate={duplicate}
-            />
-          )
+          ([id, guardian]: [string, IGuardianInfoEdits], index: number) => {
+            if (guardian.action !== 'remove')
+              return (
+                <GuardianInput
+                  id={id}
+                  guardian={guardian}
+                  index={index}
+                  setDuplicate={setDuplicate}
+                  setIsLoading={setValidating}
+                  duplicate={duplicate}
+                />
+              );
+          }
         )}
       </div>
+      {currentVaultEdits.guardianCount < selectedVault.current.guardianCount && location.pathname !== "/app/create" ? (
+        <div className="flex flex-col h-full m-6">
+          <p className="font-light">Remove Guardians</p>
+          {Object.entries(currentVaultEdits.guardianList).map(
+            ([id, guardian]: [string, IGuardianInfoEdits], index: number) => {
+              if (guardian.action === 'remove')
+                return (
+                  <GuardianInput
+                    id={id}
+                    guardian={guardian}
+                    index={index}
+                    setDuplicate={setDuplicate}
+                    setIsLoading={setValidating}
+                    duplicate={duplicate}
+                  />
+                );
+            }
+          )}
+        </div>
+      ) : (
+        <></>
+      )}
 
       <div className="mx-6">
         <div className="w-full flex justify-end">
@@ -87,6 +112,7 @@ export default function GuardianForm() {
                   [currentVaultEdits.guardianCount]: {
                     name: '',
                     address: '',
+                    action: 'add',
                   },
                 },
               });
@@ -139,9 +165,7 @@ export default function GuardianForm() {
       <BackOrContinueBtns
         exitBtn={true}
         // onClick={() => (location ? updateAndGoHome(navigate, location) : () => {})}
-        confirmText={
-          "Continue"
-        }
+        confirmText={'Continue'}
         conditionNext={formIsValid}
       />
       {/* {validating ? <MoonLoader /> : <></>}{' '} */}

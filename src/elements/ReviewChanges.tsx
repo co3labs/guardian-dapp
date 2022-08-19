@@ -8,7 +8,7 @@ import TxApprovalModal from './TxApprovalModal';
 import { useGuardians, usePermissions, useSecret, useThreshold, useVault } from '../hooks';
 
 export default function ReviewChanges() {
-  const { currentVaultEdits, walletAddress, location, setTxState, txState, setAllVaults, allVaults, currentVault } =
+  const { currentVaultEdits, walletAddress, location, setTxState, txState, setAllVaults, allVaults, selectedVault } =
     useContext(GlobalContext);
   const [showSecret, setShowSecret] = useState(false);
   const fields: [string, string, boolean, string][] = [
@@ -23,7 +23,6 @@ export default function ReviewChanges() {
   const { setSecret } = useSecret();
   const { setThreshold } = useThreshold();
   const { deployVault } = useVault();
-  const txModalHasOpened = useRef(false);
 
   return (
     <>
@@ -40,11 +39,7 @@ export default function ReviewChanges() {
                     title={params[0]}
                     passStates={params[2] ? { show: showSecret, setShow: setShowSecret } : undefined}
                     element={
-                      <div
-                        className={`flex flex-col rounded-sm border p-4 overflow-x-scroll no-scrollbar ${
-                          index % 2 !== 0 ? 'border-l' : ''
-                        }`}
-                      >
+                      <div className={`flex flex-col rounded-sm border p-4 overflow-x-scroll no-scrollbar`}>
                         <span className={'text-' + params[3]}>
                           {params[2] && !showSecret ? (
                             <span className="flex p-2">
@@ -66,10 +61,20 @@ export default function ReviewChanges() {
             <div className="mt-6">
               <span className="text-xs text-gray-400">Guardian List {`(${currentVaultEdits.guardianCount})`}</span>
               <div className="w-full grid grid-flow-row ">
-                {Object.entries(currentVaultEdits?.guardianList).map(([_, { name, address }], index) => (
-                  <div className="my-4 border p-4 rounded-sm grid grid-flow-col text-left">
-                    <span className="text-gray-300 mr-3">{index + 1}</span> <span>{name}</span> <span>{address}</span>
-                  </div>
+                {Object.entries(currentVaultEdits?.guardianList).map(([_, { name, address, action }], index) => (
+                  <ElementWithTitle
+                    title={location?.pathname === '/app/create' ? '' : action || ''}
+                    parentClasses="my-4"
+                    titleClasses={`italic ${action === 'remove' ? 'text-red-500' : 'text-green-400'} capitalize`}
+                    element={
+                      <div className="border rounded-sm">
+                        <div className="grid grid-flow-col p-4 text-left">
+                          <span className="text-gray-300 mr-3">{index + 1}</span> <span>{name}</span>{' '}
+                          <span>{address}</span>
+                        </div>
+                      </div>
+                    }
+                  />
                 ))}
               </div>
             </div>
@@ -79,58 +84,85 @@ export default function ReviewChanges() {
         )}
       </div>
       <BackOrContinueBtns
-        confirmText={txModalHasOpened.current ? 'View Transactions' : 'Confirm'}
-        exitBtn={txModalHasOpened.current}
+        confirmText={'Confirm'}
+        exitBtn={true}
         onNextClick={async () => {
-          if (txModalHasOpened.current) {
-            setTxState({ ...txState, showModal: true });
-          } else {
-            txModalHasOpened.current = true;
+          let vaultAddress;
+          const callDeployVault = !!!selectedVault.current.vaultAddress;
+          const callAddPermissions = location?.pathname === '/app/create'; //this should actually check permissions
+          const callSetSecret = !!currentVaultEdits.newSecret;
+          const callSetThreshold =
+            location?.pathname === '/app/create' || selectedVault.current.threshold !== currentVaultEdits.threshold;
 
-            let vaultAddress;
-            const shouldDeploy = !!!currentVault.current.vaultAddress;
-            const shouldAddPermissions = location?.pathname === '/app/create'; //this should actually check permissions
-            const shouldSetSecret = !!currentVaultEdits.newSecret;
-            // currentVault.current.threshold !== currentVaultEdits.threshold;
-            const shoudlSetThreshold = true
-            // Math.abs(currentVault.current.guardianCount - currentVaultEdits.guardianCount);
-            const shouldAddGuardians = currentVaultEdits.guardianCount
+          let addGuardianAmount = 0;
+          let removeGuardianAmount = 0;
+
+          for (const guardian of Object.values(currentVaultEdits.guardianList)) {
+            switch (guardian.action) {
+              case 'remove':
+                removeGuardianAmount++;
+                break;
+              case 'add':
+                addGuardianAmount++;
+                break;
+              default:
+                if (location?.pathname === '/app/create') addGuardianAmount++;
+                break;
+            }
+          }
+
+          const transactionIsNeeded =
+            callDeployVault ||
+            callAddPermissions ||
+            callSetSecret ||
+            callSetThreshold ||
+            addGuardianAmount ||
+            removeGuardianAmount;
+
+          if (transactionIsNeeded) {
             const account = currentVaultEdits.ERC725Address;
             if (!walletAddress) throw new Error('No account id.');
             setTxState({
               showModal: true,
-              'Deploy Vault': shouldDeploy,
-              'Add Permissions': shouldAddPermissions,
-              'Set Secret': shouldSetSecret,
-              'Add Guardians': shouldAddGuardians,
-              'Set Threshold': shoudlSetThreshold,
+              'Deploy Vault': callDeployVault,
+              'Add Permissions': callAddPermissions,
+              'Set Secret': callSetSecret,
+              'Add Guardians': addGuardianAmount,
+              'Set Threshold': callSetThreshold,
+              'Remove Guardians': removeGuardianAmount,
             });
             try {
-              if (shouldDeploy) {
+              if (callDeployVault) {
                 const [newVault] = await deployVault(account, walletAddress);
                 vaultAddress = newVault;
               } else {
                 vaultAddress = currentVaultEdits.vaultAddress;
               }
 
-              if (shouldAddPermissions) await addPermissions(walletAddress, vaultAddress, account);
+              if (callAddPermissions) await addPermissions(walletAddress, vaultAddress, account);
 
               const isPermitted = await checkPermissions(vaultAddress, account);
 
               // if (isPermitted) {
-              if (shouldSetSecret) await setSecret(vaultAddress, account, walletAddress);
-              if (shouldAddGuardians) await updateGuardians(vaultAddress, account, walletAddress);
-              if (shoudlSetThreshold) await setThreshold(vaultAddress, account, walletAddress);
+              if (callSetSecret) await setSecret(vaultAddress, account, walletAddress);
+              if (addGuardianAmount || removeGuardianAmount)
+                await updateGuardians(vaultAddress, account, walletAddress);
+              if (callSetThreshold) await setThreshold(vaultAddress, account, walletAddress);
               // }
 
               const now = Date.now();
               const { ERC725Address, guardianCount, guardianList, threshold, vaultName, vaultOwner, timestampId } =
                 currentVaultEdits;
 
+              const finalGuardianList = { ...guardianList };
+              Object.entries(finalGuardianList).forEach(([key, guardian]) => {
+                delete guardian['action'];
+              });
+
               const newVaultInfo: IVaultInfo = {
                 ERC725Address,
                 guardianCount,
-                guardianList,
+                guardianList: finalGuardianList,
                 lastUpdated: now,
                 threshold,
                 vaultName,
@@ -139,12 +171,18 @@ export default function ReviewChanges() {
                 timestampId: timestampId || now,
               };
 
-              currentVault.current = newVaultInfo;
-              setAllVaults({ ...allVaults, [timestampId]: newVaultInfo });
+              selectedVault.current = newVaultInfo;
+              setAllVaults({ ...allVaults, [vaultAddress]: newVaultInfo });
             } catch (error) {
               console.error(error);
               // addToGlobalSnackbarQue('An error occured when attempting to create a vault. Please try again.');
             }
+          } else if (selectedVault.current.vaultName !== currentVaultEdits.vaultName) {
+            setAllVaults({
+              ...allVaults,
+              [selectedVault.current.vaultAddress]: { ...selectedVault.current, vaultName: currentVaultEdits.vaultName },
+            });
+            alert("Vault name has been updated.")
           }
         }}
       />
