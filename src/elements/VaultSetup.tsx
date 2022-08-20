@@ -64,7 +64,7 @@ export default function VaultSetup({
             info="This is the ERC725 contract address that the Recovery Vault will be associated with. Your contract must already be deployed."
             paramName="ERC725Address"
             maxLength={maxLength}
-            className="w-[32rem]"
+            className="md:w-96"
             isEthAddress={isEthAddress}
           />
         ) : (

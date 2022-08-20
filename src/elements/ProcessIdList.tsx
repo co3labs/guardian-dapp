@@ -18,8 +18,7 @@ export default function ListProcessIds() {
       <div className="w-1/2 h-1px bg-gray-400" />
       {idsLoading ? (
         <div className="w-full flex justify-center mt-6">
-          {' '}
-          <MoonLoader size={16} />{' '}
+          <MoonLoader size={16} />
         </div>
       ) : (
         <></>
