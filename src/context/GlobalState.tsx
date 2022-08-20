@@ -33,14 +33,15 @@ export const INITIAL_CURR_VAULT: IVaultInfo = {
 
 export const INITIAL_VAULT_EDITS: IVaultInfoEdits = {
   ...INITIAL_CURR_VAULT,
-  oldSecret: '',
   newSecret: '',
   guardianList: { 0: { name: '', address: '', action: undefined } },
 };
 
 export const INITIAL_RECOVERY_INFO: IRecoveryProcessInfo = {
   recoveryProcessId: '',
+  oldSecret: '',
   newOwner: '',
+  newSecret: '',
 };
 
 export const INITIAL_TX_STATE: ITxState = {
@@ -286,9 +287,9 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
 
     if (vault) {
       selectedVault.current = vault;
-      setCurrentVaultEdits({ ...vault, newSecret: '', oldSecret: '' });
+      setCurrentVaultEdits({ ...vault, newSecret: '' });
     } else {
-      selectedVault.current = {...INITIAL_CURR_VAULT}
+      selectedVault.current = { ...INITIAL_CURR_VAULT };
       setCurrentVaultEdits({ ...INITIAL_VAULT_EDITS, guardianList: { ...INITIAL_GUARDIAN_LIST } });
     }
     setRecoverInfo({ ...INITIAL_RECOVERY_INFO });

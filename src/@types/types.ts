@@ -33,7 +33,6 @@ export interface IVaultInfo {
 
 export interface IVaultInfoEdits extends IVaultInfo {
   newSecret: string;
-  oldSecret: string;
   guardianList: IGuardianListEdits;
 }
 
@@ -44,6 +43,8 @@ export interface IGuardianInfoEdits extends IGuardianInfo {
 export interface IRecoveryProcessInfo {
   recoveryProcessId: string;
   newOwner: string;
+  oldSecret: string;
+  newSecret: string;
 }
 
 export interface IUserVaults {

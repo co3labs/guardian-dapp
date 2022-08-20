@@ -49,6 +49,8 @@ export default function StandardInput({
               const value = e.target.value;
               if (value.length <= maxLength) {
                 if (recover) {
+                  console.log("Setting recover info");
+                  
                   setRecoverInfo({ ...recoverInfo, [paramName]: value });
                 } else {
                   setCurrentVaultEdits({ ...currentVaultEdits, [paramName]: value });

@@ -55,7 +55,7 @@ export default function ManageVaults() {
                         if (currentVaultEdits.vaultAddress === vault.vaultAddress) {
                           setCurrentVaultEdits(INITIAL_VAULT_EDITS);
                         } else {
-                          setCurrentVaultEdits({ ...vault, newSecret: '', oldSecret: '' });
+                          setCurrentVaultEdits({ ...vault, newSecret: '' });
                           selectedVault.current = vault;
                         }
                       }

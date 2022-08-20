@@ -21,7 +21,7 @@ export default function VoteWithId() {
             title="New Vault Owner"
             info="Propose a new owner for the vault. The new owner must be an existing guardian."
             elementTitle="New Owner"
-            maxLength={42}
+            maxLength={180}
             paramName={'newOwner'}
             recover={true}
             placeholder="0x0"
@@ -38,16 +38,17 @@ export default function VoteWithId() {
         confirmText="Vote"
         onNextClick={() => {
           console.log(
-            'process id',
+            "Values passed to voteToRecover in order: \n",
             recoverInfo.recoveryProcessId,
-            'new owner',
+            '<-- process id \n',
             recoverInfo.newOwner,
-            'vaultAddress',
+            '<-- new owner \n',
             selectedVault.current.vaultAddress,
-            'account',
+            '<-- vaultAddress \n',
             selectedVault.current.ERC725Address,
-            'walletAddress',
-            walletAddress
+            '<-- account \n',
+            walletAddress,
+            '<-- walletAddress \n',
           );
           if (walletAddress) {
             recovery?.voteToRecover(

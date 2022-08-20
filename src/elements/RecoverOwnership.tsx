@@ -7,9 +7,8 @@ import StandardInput from './StandardInput';
 import UpdateSecretFields from './UpdateSecretFields';
 
 export default function RecoverOwnerShip() {
-  const { recoverInfo, recovery, currentVaultEdits, walletAddress } = useContext(GlobalContext);
-
-  
+  const { recoverInfo, recovery, selectedVault, walletAddress, addToGlobalSnackbarQue, setAllVaults, allVaults } =
+    useContext(GlobalContext);
 
   return (
     <>
@@ -29,15 +28,38 @@ export default function RecoverOwnerShip() {
         conditionNext={!!recoverInfo}
         confirmText="Recover Ownership"
         onNextClick={() => {
+          console.log(
+            'Values passed to recoverOwnership in order: \n',
+            selectedVault.current.vaultAddress,
+            '<-- vaultAddress \n',
+            selectedVault.current.ERC725Address,
+            '<-- account \n',
+            recoverInfo.recoveryProcessId,
+            '<-- process id \n',
+            recoverInfo.oldSecret,
+            '<-- old secret \n',
+            recoverInfo.newSecret,
+            '<-- new secret \n',
+            walletAddress,
+            '<-- walletAddress \n'
+          );
           if (walletAddress)
-            recovery?.recoverOwnership(
-              currentVaultEdits.vaultAddress,
-              currentVaultEdits.ERC725Address,
-              recoverInfo.recoveryProcessId,
-              currentVaultEdits.oldSecret,
-              currentVaultEdits.newSecret,
-              walletAddress
-            );
+            recovery
+              ?.recoverOwnership(
+                selectedVault.current.vaultAddress,
+                selectedVault.current.ERC725Address,
+                recoverInfo.recoveryProcessId,
+                recoverInfo.oldSecret,
+                recoverInfo.newSecret,
+                walletAddress
+              )
+              .then(() => {
+                addToGlobalSnackbarQue('vault recovered');
+                setAllVaults({
+                  ...allVaults,
+                  [selectedVault.current.vaultAddress]: { ...selectedVault.current, vaultOwner: walletAddress },
+                });
+              });
         }}
       />{' '}
     </>
