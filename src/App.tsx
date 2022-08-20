@@ -16,6 +16,8 @@ import Recover from './pages/Recover';
 import VoteWithId from './elements/VoteWithId';
 import Vote from './pages/Vote';
 import TxApprovalModal from './elements/TxApprovalModal';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+
 export default function App() {
   const { txState } = useContext(GlobalContext);
 
@@ -44,6 +46,7 @@ export default function App() {
       <Footer />
       {/* <TxApprovalModal /> */}
       {txState.showModal ? <TxApprovalModal /> : <></>}
+      <ReactQueryDevtools initialIsOpen={false} />
     </Router>
   );
 }

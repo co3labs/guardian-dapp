@@ -8,7 +8,7 @@ import VoteWithId from '../elements/VoteWithId';
 
 export default function Recover() {
   const { currentVaultEdits } = useContext(GlobalContext);
-  const fieldsToRender = { name: false, profile: false, secret: true, old:true, processId:true };
+
   return (
     <ComponentWrapper
       title={

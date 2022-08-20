@@ -166,7 +166,7 @@ export default function ReviewChanges() {
                 lastUpdated: now,
                 threshold,
                 vaultName,
-                vaultOwner,
+                vaultOwner: walletAddress,
                 vaultAddress: vaultAddress,
                 timestampId: timestampId || now,
               };

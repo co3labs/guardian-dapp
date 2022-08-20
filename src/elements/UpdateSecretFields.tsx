@@ -21,7 +21,7 @@ export default function UpdateSecretFields({
             title="Old Recovery Secret"
             elementTitle="Secret"
             value={currentVaultEdits.oldSecret}
-            id="recovery_vault_secret"
+            id="recovery_vault_old_secret"
             placeholder="0x0"
             type={showOldSecret ? 'text' : 'password'}
             info="Your old vault recovery secret."
@@ -39,7 +39,7 @@ export default function UpdateSecretFields({
           title={`${location?.pathname === '/app/create' ? '' : 'New'} Recovery Secret`}
           elementTitle="Secret"
           value={currentVaultEdits.newSecret}
-          id="recovery_vault_secret"
+          id="recovery_vault_new_secret"
           placeholder="0x0"
           type={showSecret ? 'text' : 'password'}
           info="Set a recovery secret that will be needed anytime a recovery process occurs. This secret will be needed to transfer ownership."

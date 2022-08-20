@@ -213,7 +213,6 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
   useEffect(() => {
     if (!allVaults) {
       const storage = localStorage.getItem('user_vaults');
-      console.log('Storage found:', storage);
       if (storage) setAllVaults(JSON.parse(storage));
     }
   }, []);
