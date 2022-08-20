@@ -3,7 +3,7 @@ import { GlobalContext } from '../context/GlobalState';
 import { useQuery } from '@tanstack/react-query';
 import { MoonLoader } from 'react-spinners';
 export default function ListProcessIds() {
-  const { recovery, selectedVault } = useContext(GlobalContext);
+  const { recovery, selectedVault, setRecoverInfo, recoverInfo } = useContext(GlobalContext);
   const { data: ids, isLoading: idsLoading } = useQuery([`process_ids_${selectedVault.current.vaultAddress}`], () =>
     recovery?.getRecoverProcessesIds(selectedVault.current.vaultAddress)
   );
@@ -24,7 +24,15 @@ export default function ListProcessIds() {
       ) : (
         <></>
       )}
-      {ids ? ids.map((id) => <p className='my-2'>{id}</p>) : <></>}
+      {ids ? (
+        ids.map((id) => (
+          <button className="my-2" onClick={() => setRecoverInfo({ ...recoverInfo, recoveryProcessId: id })}>
+            {id}
+          </button>
+        ))
+      ) : (
+        <></>
+      )}
       {ids && ids.length == 0 ? (
         <div className="w-full p-6 border rounded-sm text-center text-gray-400 my-2">No Process Ids</div>
       ) : (
