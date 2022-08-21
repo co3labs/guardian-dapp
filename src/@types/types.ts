@@ -34,6 +34,7 @@ export interface IVaultInfo {
 export interface IVaultInfoEdits extends IVaultInfo {
   newSecret: string;
   guardianList: IGuardianListEdits;
+  guardianRemoveAmt: number
 }
 
 export interface IGuardianInfoEdits extends IGuardianInfo {

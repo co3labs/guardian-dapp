@@ -75,7 +75,7 @@ export default function GuardianForm() {
           }
         )}
       </div>
-      {currentVaultEdits.guardianCount < selectedVault.current.guardianCount && location.pathname !== "/app/create" ? (
+      {currentVaultEdits.guardianRemoveAmt > 0? (
         <div className="flex flex-col h-full m-6">
           <p className="font-light">Remove Guardians</p>
           {Object.entries(currentVaultEdits.guardianList).map(
@@ -104,6 +104,8 @@ export default function GuardianForm() {
             className="btn btnSmall btnSecondary w-fit"
             type="button"
             onClick={() => {
+              let setTo = "add"
+
               setCurrentVaultEdits({
                 ...currentVaultEdits,
                 guardianCount: currentVaultEdits.guardianCount + 1,

@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useContext } from 'react';
+import { Dispatch, SetStateAction, useContext, useEffect, useState } from 'react';
 import { GlobalContext } from '../context/GlobalState';
 import ElementWithTitle from './ElementWithTitle';
 
@@ -15,7 +15,7 @@ export default function StandardInput({
   type = 'text',
   passStates,
   recover,
-  isEthAddress,
+  isEthAddress = false,
 }: {
   paramName: string;
   elementTitle: string;
@@ -31,7 +31,30 @@ export default function StandardInput({
   recover?: boolean;
   isEthAddress?: boolean;
 }) {
-  const { currentVaultEdits, setCurrentVaultEdits, recoverInfo, setRecoverInfo } = useContext(GlobalContext);
+  const { currentVaultEdits, setCurrentVaultEdits, recoverInfo, setRecoverInfo, web3, recovery, walletAddress } =
+    useContext(GlobalContext);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  useEffect(() => {
+    if(!isEthAddress) return 
+    async function checkEthAddress() {
+      if (!web3 || !walletAddress) return;
+      const isAddress = web3.utils.isAddress(currentVaultEdits.ERC725Address);
+      const canAddVault = await recovery
+        ?.canCreateRecoveryVault(walletAddress, currentVaultEdits.ERC725Address)
+      if (!isAddress) {
+        setErrorMessage('Invalid Eth Address');
+      } else if (!canAddVault) {
+        setErrorMessage('Connected wallet cannot add vault to this profile.');
+      } else {
+        setErrorMessage('');
+      }
+    }
+
+    if (web3 && currentVaultEdits.ERC725Address.length === 42 && walletAddress) {
+      checkEthAddress();
+    }
+  }, [currentVaultEdits.ERC725Address, walletAddress]);
 
   return (
     <div className={`w-min ml-6 ${className}`}>
@@ -43,14 +66,13 @@ export default function StandardInput({
       <ElementWithTitle
         title={elementTitle}
         passStates={passStates}
+        error={errorMessage}
         element={
           <input
             onChange={(e) => {
               const value = e.target.value;
               if (value.length <= maxLength) {
                 if (recover) {
-                  console.log("Setting recover info");
-                  
                   setRecoverInfo({ ...recoverInfo, [paramName]: value });
                 } else {
                   setCurrentVaultEdits({ ...currentVaultEdits, [paramName]: value });

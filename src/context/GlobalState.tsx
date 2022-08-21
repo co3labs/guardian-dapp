@@ -35,6 +35,7 @@ export const INITIAL_VAULT_EDITS: IVaultInfoEdits = {
   ...INITIAL_CURR_VAULT,
   newSecret: '',
   guardianList: { 0: { name: '', address: '', action: undefined } },
+  guardianRemoveAmt: 0
 };
 
 export const INITIAL_RECOVERY_INFO: IRecoveryProcessInfo = {
@@ -287,7 +288,7 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
 
     if (vault) {
       selectedVault.current = vault;
-      setCurrentVaultEdits({ ...vault, newSecret: '' });
+      setCurrentVaultEdits({ ...vault, newSecret: '', guardianRemoveAmt: 0 });
     } else {
       selectedVault.current = { ...INITIAL_CURR_VAULT };
       setCurrentVaultEdits({ ...INITIAL_VAULT_EDITS, guardianList: { ...INITIAL_GUARDIAN_LIST } });

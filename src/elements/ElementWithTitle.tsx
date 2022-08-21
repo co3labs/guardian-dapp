@@ -8,6 +8,7 @@ export default function ElementWithTitle({
   passStates,
   parentClasses,
   titleClasses,
+  error,
 }: {
   title: string;
   element: JSX.Element;
@@ -15,6 +16,7 @@ export default function ElementWithTitle({
   passStates?: { show: boolean; setShow: Dispatch<SetStateAction<boolean>> };
   parentClasses?: string;
   titleClasses?: string;
+  error?: string;
 }) {
   return (
     <div className={`relative flex-grow ${parentClasses}`}>
@@ -35,6 +37,7 @@ export default function ElementWithTitle({
       ) : (
         <></>
       )}
+      {<p className="absolute text-xs text-red-400 bottom-0 translate-y-full">{error}</p>}
     </div>
   );
 }

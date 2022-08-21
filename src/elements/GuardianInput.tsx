@@ -66,17 +66,20 @@ export default function GuardianInput({
   function removeGuardian() {
     const newGuardians = currentVaultEdits.guardianList;
     let newCount = currentVaultEdits.guardianCount;
+    let removeCount = currentVaultEdits.guardianRemoveAmt;
 
     if (guardian.action === 'remove') {
       const updatedGuardian: IGuardianInfoEdits = { ...guardian, action: 'add' };
       newGuardians[Number(id)] = updatedGuardian;
       newCount++;
+      removeCount--;
     } else {
       if (location?.pathname === '/app/create') {
         delete newGuardians[Number(id)];
       } else {
         const updatedGuardian: IGuardianInfoEdits = { ...guardian, action: 'remove' };
         newGuardians[Number(id)] = updatedGuardian;
+        removeCount++;
       }
       newCount--;
     }
@@ -84,6 +87,7 @@ export default function GuardianInput({
       ...currentVaultEdits,
       guardianList: newGuardians,
       guardianCount: newCount,
+      guardianRemoveAmt: removeCount,
     });
   }
 
@@ -95,7 +99,6 @@ export default function GuardianInput({
           element={
             <input
               type="text"
-              //   debounceTimeout={500}
               onChange={(event) => {
                 updateGuardian(event.target.value, index, 'name');
               }}
@@ -141,7 +144,9 @@ export default function GuardianInput({
       {index > 0 ? (
         <button
           type="button"
-          className={`transition-colors ml-2 ${guardian.action !== "remove"?"hover:bg-red-500": "hover:bg-blue-800"}  hover:text-white w-10 rounded-sm bg-gray-100 flex justify-center items-center`}
+          className={`transition-colors ml-2 ${
+            guardian.action !== 'remove' ? 'hover:bg-red-500' : 'hover:bg-blue-800'
+          }  hover:text-white w-10 rounded-sm bg-gray-100 flex justify-center items-center`}
           onClick={removeGuardian}
         >
           {guardian.action !== 'remove' ? <BsTrash /> : '+'}

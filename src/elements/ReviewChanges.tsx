@@ -1,6 +1,13 @@
 import { useContext, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ITxState, IVaultDeployReceipt, IVaultInfo, IVaultInfoEdits } from '../@types/types';
+import {
+  IGuardianInfo,
+  IGuardianList,
+  ITxState,
+  IVaultDeployReceipt,
+  IVaultInfo,
+  IVaultInfoEdits,
+} from '../@types/types';
 import { getInitialGuardiansAdded, GlobalContext, INITIAL_TX_STATE, vaultCreatedTopic } from '../context/GlobalState';
 import BackOrContinueBtns from './BackOrContinueBtns';
 import ElementWithTitle from './ElementWithTitle';
@@ -154,9 +161,9 @@ export default function ReviewChanges() {
               const { ERC725Address, guardianCount, guardianList, threshold, vaultName, vaultOwner, timestampId } =
                 currentVaultEdits;
 
-              const finalGuardianList = { ...guardianList };
-              Object.entries(finalGuardianList).forEach(([key, guardian]) => {
-                delete guardian['action'];
+              const finalGuardianList: IGuardianList = {};
+              Object.values(currentVaultEdits.guardianList).forEach((guardian) => {
+                finalGuardianList[guardian.address] = { address: guardian.address, name: guardian.name };
               });
 
               const newVaultInfo: IVaultInfo = {
@@ -180,9 +187,12 @@ export default function ReviewChanges() {
           } else if (selectedVault.current.vaultName !== currentVaultEdits.vaultName) {
             setAllVaults({
               ...allVaults,
-              [selectedVault.current.vaultAddress]: { ...selectedVault.current, vaultName: currentVaultEdits.vaultName },
+              [selectedVault.current.vaultAddress]: {
+                ...selectedVault.current,
+                vaultName: currentVaultEdits.vaultName,
+              },
             });
-            alert("Vault name has been updated.")
+            alert('Vault name has been updated.');
           }
         }}
       />

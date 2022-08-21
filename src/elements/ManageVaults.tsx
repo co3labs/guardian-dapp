@@ -55,7 +55,7 @@ export default function ManageVaults() {
                         if (currentVaultEdits.vaultAddress === vault.vaultAddress) {
                           setCurrentVaultEdits(INITIAL_VAULT_EDITS);
                         } else {
-                          setCurrentVaultEdits({ ...vault, newSecret: '' });
+                          setCurrentVaultEdits({ ...vault, newSecret: '', guardianRemoveAmt:0 });
                           selectedVault.current = vault;
                         }
                       }
@@ -83,7 +83,7 @@ export default function ManageVaults() {
                         to="/app/edit"
                         className="text-xs btnSecondary py-1 px-2"
                       >
-                        Edit
+                        Update
                       </Link>
                       <Link
                         onClick={(e) => {
@@ -117,9 +117,9 @@ export default function ManageVaults() {
                       <div className="inline-flex">
                         <div className="flex-grow">
                           {[
-                            ['Vault Address', getShortId(currentVaultEdits.vaultAddress)],
-                            ['Profile Address', getShortId(currentVaultEdits.ERC725Address)],
-                            // ['Vault Owner', getShortId(currentVaultEdits.vaultOwner)],
+                            ['Vault Address', getShortId(vault.vaultAddress)],
+                            ['Profile Address', getShortId(vault.ERC725Address)],
+                            ['Vault Owner', getShortId(vault.vaultOwner)],
                             ['Last Updated', getLastUpdated()],
                           ].map((item: string[]) => (
                             <div className="my-6 mr-6 ">
@@ -138,11 +138,11 @@ export default function ManageVaults() {
                           ))}
                         </div>
                         <ElementWithTitle
-                          title={`Guardian List (${currentVaultEdits.guardianCount})`}
+                          title={`Guardian List (${vault.guardianCount})`}
                           element={
                             <>
                               <div className="border mt-6  p-6">
-                                {Object.entries(currentVaultEdits.guardianList).map(([_, guardian]) => (
+                                {Object.entries(allVaults[vault.vaultAddress].guardianList).map(([_, guardian]) => (
                                   <div className="flex w-fit items-center my-3">
                                     <p className="mr-6">{guardian.name}</p>
                                     <a

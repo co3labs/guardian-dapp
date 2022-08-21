@@ -18,21 +18,11 @@ export default function VaultSetup({
   };
 }) {
   const maxLength = 42;
-  const { currentVaultEdits, web3, location, currentStep, setCurrentStep } = useContext(GlobalContext);
+  const { currentVaultEdits, web3, location, recovery, walletAddress } = useContext(GlobalContext);
   const [updateSecret, setUpdateSecret] = useState(false);
-  const [isEthAddress, setIsEthAddress] = useState<boolean>(true);
   const { name, profile, secret, old, processId, secretToggle } = renderFields;
 
-  useEffect(() => {
-    if (profile && web3 && currentVaultEdits.ERC725Address.length === 42) {
-      const isAddress = web3.utils.isAddress(currentVaultEdits.ERC725Address);
-      if (isAddress) {
-        setIsEthAddress(true);
-        return;
-      }
-    }
-    setIsEthAddress(false);
-  }, [currentVaultEdits.ERC725Address]);
+
 
   return (
     <>
@@ -65,7 +55,7 @@ export default function VaultSetup({
             paramName="ERC725Address"
             maxLength={maxLength}
             className="md:w-96"
-            isEthAddress={isEthAddress}
+            isEthAddress={true}
           />
         ) : (
           <></>
@@ -92,7 +82,11 @@ export default function VaultSetup({
           <></>
         )}
 
-        {updateSecret || location?.pathname === "/app/create" ? <UpdateSecretFields renderFields={{ old, secret, updateSecret }} /> : <></>}
+        {updateSecret || location?.pathname === '/app/create' ? (
+          <UpdateSecretFields renderFields={{ old, secret, updateSecret }} />
+        ) : (
+          <></>
+        )}
       </div>
 
       {location?.pathname === '/app/create' ? (
@@ -102,8 +96,7 @@ export default function VaultSetup({
           conditionNext={
             !!currentVaultEdits.vaultName &&
             !!currentVaultEdits.ERC725Address &&
-            !!currentVaultEdits.newSecret &&
-            isEthAddress
+            !!currentVaultEdits.newSecret 
           }
         />
       ) : (
