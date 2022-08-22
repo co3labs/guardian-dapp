@@ -27,7 +27,7 @@ export default function Header() {
             </button>
           )}
           <button className="m-auto" onClick={switchNetwork}>
-            {chainId === 2828 ? 'Lukso Testnet (L16)' : chainId ? 'Switch to Lukso Network' : 'Network'}
+            {chainId === process.env.REACT_APP_CHAIN_ID ? 'Lukso Testnet (L16)' : chainId ? 'Switch to Lukso Network' : 'Network'}
           </button>
         </div>
       </header>

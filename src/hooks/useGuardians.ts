@@ -60,6 +60,8 @@ export default function useGuardians() {
       console.log('Guardian Receipt:\n', guardianReceipt);
       guardianReceipts[i] = guardianReceipt;
     }
+
+    return guardianReceipts
   };
 
   return { updateGuardians };

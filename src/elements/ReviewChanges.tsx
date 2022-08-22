@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import {
   IGuardianInfo,
   IGuardianList,
+  IGuardianListEdits,
   ITxState,
   IVaultDeployReceipt,
   IVaultInfo,
@@ -166,7 +167,9 @@ export default function ReviewChanges() {
 
               const finalGuardianList: IGuardianList = {};
               Object.values(guardianList).forEach((guardian) => {
-                finalGuardianList[guardian.address] = { address: guardian.address, name: guardian.name };
+                if (guardian.action !== 'remove') {
+                  finalGuardianList[guardian.address] = { address: guardian.address, name: guardian.name };
+                }
               });
 
               const newVaultInfo: IVaultInfo = {

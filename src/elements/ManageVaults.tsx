@@ -124,7 +124,6 @@ export default function ManageVaults() {
 
   const stringOrAddress = (text: string) => {
     const first2 = text.slice(0, 2);
-    console.log(first2);
     if (first2 === '0x') {
       return [getShortId(text), true];
     }
@@ -187,7 +186,6 @@ export default function ManageVaults() {
                           {[
                             ['Vault Address', vault.vaultAddress],
                             ['Profile Address', vault.ERC725Address],
-                            ['Vault Owner', vault.vaultOwner],
                             ['Last Updated', getLastUpdated()],
                           ].map((item: string[]) => (
                             <div className="my-6 mr-6 ">

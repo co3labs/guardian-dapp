@@ -68,6 +68,7 @@ export const getInitialGuardiansAdded = (guardians: IGuardianList) => {
 
 export const networks = {
   2828: 'Lukso Testnet (L16)',
+  4: 'Rinkeby'
 };
 
 export const getShortId = (id: string) => {
@@ -221,12 +222,13 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
   }, []);
 
   const switchNetwork = async () => {
-    if (chainId !== 2828) {
+    if(!process.env.REACT_APP_CHAIN_ID) return 
+    if (chainId !== process.env.REACT_APP_CHAIN_ID) {
       try {
         //@ts-ignore
         await web3?.currentProvider?.request({
           method: 'wallet_switchEthereumChain',
-          params: [{ chainId: web3.utils.toHex(2828) }],
+          params: [{ chainId: web3.utils.toHex(process.env.REACT_APP_CHAIN_ID) }],
         });
       } catch (switchError: any) {
         // This error code indicates that the chain has not been added to MetaMask.
@@ -265,7 +267,7 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
   };
 
   useEffect(() => {
-    if (chainId !== 2828) {
+    if (chainId !== process.env.CHAIN_ID) {
       switchNetwork();
     }
   }, [chainId]);

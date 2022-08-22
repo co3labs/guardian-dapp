@@ -36,8 +36,9 @@ export default function ConnectWallet({ back }: { back?: string }) {
         backText={back ? <BsChevronLeft /> : undefined}
         exitBtn={!!back}
         confirmText="Continue"
-        conditionNext={!!walletAddress && chainId === 2828}
+        conditionNext={!!walletAddress && !!chainId}
       />
+       {/* === process.env.REACT_APP_CHAIN_ID */}
     </>
   );
 }
