@@ -26,7 +26,7 @@ export default function VaultSetup({
 
   return (
     <>
-      <div className="flex flex-col w-full">
+      <div className="flex flex-col w-full xl:w-1/2">
         {name ? (
           <StandardInput
             title="Recovery Vault Name"
@@ -38,7 +38,7 @@ export default function VaultSetup({
             stored on chain."
             paramName="vaultName"
             maxLength={maxLength}
-            className="w-full md:w-96"
+            className="w-full"
           />
         ) : (
           <></>
@@ -54,7 +54,7 @@ export default function VaultSetup({
             info="This is the ERC725 contract address that the Recovery Vault will be associated with. Your contract must already be deployed."
             paramName="ERC725Address"
             maxLength={maxLength}
-            className="w-full md:w-96"
+            className="w-full"
             erc725states={{isValid:valid725, setIsValid:setValid725}}
           />
         ) : (

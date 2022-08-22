@@ -26,7 +26,7 @@ export default function UpdateSecretFields({
             type={showOldSecret ? 'text' : 'password'}
             info="Your old vault recovery secret."
             paramName="oldSecret"
-            className="w-full md:w-96"
+            className="w-full"
             maxLength={180}
             passStates={{ show: showOldSecret, setShow: setShowOldSecret }}
             recover={true}
@@ -47,7 +47,7 @@ export default function UpdateSecretFields({
           paramName="newSecret"
           maxLength={180}
           passStates={{ show: showSecret, setShow: setShowSecret }}
-          className="w-full md:w-96"
+          className="w-full"
           recover={location?.pathname === '/app/recover'}
         />
       ) : (
