@@ -101,19 +101,19 @@ export default function ReviewChanges() {
           const callSetThreshold =
             location?.pathname === '/app/create' || selectedVault.current.threshold !== currentVaultEdits.threshold;
 
-          let addGuardianAmount = 0;
-          let removeGuardianAmount = 0;
+          let addGuardianList = [];
+          let removeGuardianList = [];
 
           for (const guardian of Object.values(currentVaultEdits.guardianList)) {
             switch (guardian.action) {
               case 'remove':
-                removeGuardianAmount++;
+                removeGuardianList.push(guardian.address);
                 break;
               case 'add':
-                addGuardianAmount++;
+                addGuardianList.push(guardian.address);
                 break;
               default:
-                if (location?.pathname === '/app/create') addGuardianAmount++;
+                if (location?.pathname === '/app/create') addGuardianList.push(guardian.address);
                 break;
             }
           }
@@ -123,8 +123,8 @@ export default function ReviewChanges() {
             callAddPermissions ||
             callSetSecret ||
             callSetThreshold ||
-            addGuardianAmount ||
-            removeGuardianAmount;
+            addGuardianList.length ||
+            removeGuardianList.length;
 
           if (transactionIsNeeded) {
             const account = currentVaultEdits.ERC725Address;
@@ -134,9 +134,9 @@ export default function ReviewChanges() {
               'Deploy Vault': callDeployVault,
               'Add Permissions': callAddPermissions,
               'Set Secret': callSetSecret,
-              'Add Guardians': addGuardianAmount,
+              'Remove Guardians': removeGuardianList.length,
+              'Add Guardians': addGuardianList.length,
               'Set Threshold': callSetThreshold,
-              'Remove Guardians': removeGuardianAmount,
             });
             try {
               if (callDeployVault) {
@@ -152,17 +152,19 @@ export default function ReviewChanges() {
 
               // if (isPermitted) {
               if (callSetSecret) await setSecret(vaultAddress, account, walletAddress);
-              if (addGuardianAmount || removeGuardianAmount)
-                await updateGuardians(vaultAddress, account, walletAddress);
+              if (removeGuardianList.length > 0)
+                await updateGuardians(removeGuardianList, 'remove', vaultAddress, account, walletAddress);
+              if (addGuardianList.length > 0)
+                await updateGuardians(addGuardianList, 'add', vaultAddress, account, walletAddress);
               if (callSetThreshold) await setThreshold(vaultAddress, account, walletAddress);
               // }
 
               const now = Date.now();
-              const { ERC725Address, guardianCount, guardianList, threshold, vaultName, vaultOwner, timestampId } =
+              const { ERC725Address, guardianCount, guardianList, threshold, vaultName, timestampId } =
                 currentVaultEdits;
 
               const finalGuardianList: IGuardianList = {};
-              Object.values(currentVaultEdits.guardianList).forEach((guardian) => {
+              Object.values(guardianList).forEach((guardian) => {
                 finalGuardianList[guardian.address] = { address: guardian.address, name: guardian.name };
               });
 
@@ -182,7 +184,6 @@ export default function ReviewChanges() {
               setAllVaults({ ...allVaults, [vaultAddress]: newVaultInfo });
             } catch (error) {
               console.error(error);
-              // addToGlobalSnackbarQue('An error occured when attempting to create a vault. Please try again.');
             }
           } else if (selectedVault.current.vaultName !== currentVaultEdits.vaultName) {
             setAllVaults({

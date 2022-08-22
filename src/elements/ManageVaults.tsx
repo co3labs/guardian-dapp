@@ -142,7 +142,7 @@ export default function ManageVaults() {
                           element={
                             <>
                               <div className="border mt-6  p-6">
-                                {Object.entries(allVaults[vault.vaultAddress].guardianList).map(([_, guardian]) => (
+                                {Object.entries(vault.guardianList).map(([_, guardian]) => (
                                   <div className="flex w-fit items-center my-3">
                                     <p className="mr-6">{guardian.name}</p>
                                     <a

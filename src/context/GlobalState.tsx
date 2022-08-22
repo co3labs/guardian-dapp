@@ -5,6 +5,7 @@ import WalletConnectProvider from '@walletconnect/web3-provider';
 import {
   globalStates,
   IGuardianList,
+  IGuardianListEdits,
   IRecoveryProcessInfo,
   ITxProgress,
   ITxState,
@@ -34,8 +35,8 @@ export const INITIAL_CURR_VAULT: IVaultInfo = {
 export const INITIAL_VAULT_EDITS: IVaultInfoEdits = {
   ...INITIAL_CURR_VAULT,
   newSecret: '',
-  guardianList: { 0: { name: '', address: '', action: undefined } },
-  guardianRemoveAmt: 0
+  guardianList: { 0: { name: '', address: '', action: "add" } },
+  guardianRemoveAmt: 0,
 };
 
 export const INITIAL_RECOVERY_INFO: IRecoveryProcessInfo = {
@@ -288,7 +289,14 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
 
     if (vault) {
       selectedVault.current = vault;
-      setCurrentVaultEdits({ ...vault, newSecret: '', guardianRemoveAmt: 0 });
+      // change current guardian list to an object where the index is they key
+      // necessary for adding guardians to bottom of the list in the UI, and preventing
+      // removal of the first guardian in the list. 
+      const guardianList: IGuardianListEdits = {};
+      Object.values(vault.guardianList).forEach((guardian, index) => {
+        guardianList[index] = guardian;
+      });
+      setCurrentVaultEdits({ ...vault, newSecret: '', guardianRemoveAmt: 0, guardianList });
     } else {
       selectedVault.current = { ...INITIAL_CURR_VAULT };
       setCurrentVaultEdits({ ...INITIAL_VAULT_EDITS, guardianList: { ...INITIAL_GUARDIAN_LIST } });
