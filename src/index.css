@@ -37,7 +37,7 @@ input {
 }
 
 .vaultInfo {
-  @apply border rounded-sm w-max py-2 text-xs
+  @apply border rounded-sm py-2 text-xs
 }
 
 /* Hide scrollbar for IE, Edge and Firefox */

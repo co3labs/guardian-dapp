@@ -25,6 +25,7 @@ export default function ReviewChanges() {
     ['Secret', 'newSecret', true, 'base'],
   ];
 
+  const navigate = useNavigate();
   const { updateGuardians } = useGuardians();
   const { addPermissions, checkPermissions } = usePermissions();
   const { setSecret } = useSecret();
@@ -185,15 +186,29 @@ export default function ReviewChanges() {
             } catch (error) {
               console.error(error);
             }
-          } else if (selectedVault.current.vaultName !== currentVaultEdits.vaultName) {
-            setAllVaults({
-              ...allVaults,
-              [selectedVault.current.vaultAddress]: {
-                ...selectedVault.current,
-                vaultName: currentVaultEdits.vaultName,
-              },
-            });
-            alert('Vault name has been updated.');
+          } else {
+            const nameChanged = selectedVault.current.vaultName !== currentVaultEdits.vaultName;
+            const guardiansNameChanged = Object.values(currentVaultEdits.guardianList).find(
+              (guardian) => guardian.name !== selectedVault.current.guardianList[guardian.address].name
+            );
+
+            if (nameChanged || guardiansNameChanged) {
+              const newGuardians: IGuardianList = {};
+              Object.values(currentVaultEdits.guardianList).forEach((guardian) => {
+                newGuardians[guardian.address] = { name: guardian.name, address: guardian.address };
+              });
+
+              setAllVaults({
+                ...allVaults,
+                [selectedVault.current.vaultAddress]: {
+                  ...selectedVault.current,
+                  vaultName: currentVaultEdits.vaultName,
+                  guardianList: newGuardians,
+                },
+              });
+              navigate('/app/manage');
+              alert('Vault has been updated.');
+            }
           }
         }}
       />
