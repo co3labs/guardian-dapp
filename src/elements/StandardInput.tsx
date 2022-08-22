@@ -15,7 +15,7 @@ export default function StandardInput({
   type = 'text',
   passStates,
   recover,
-  isEthAddress = false,
+  erc725states,
 }: {
   paramName: string;
   elementTitle: string;
@@ -29,25 +29,34 @@ export default function StandardInput({
   type?: string;
   passStates?: { show: boolean; setShow: Dispatch<SetStateAction<boolean>> };
   recover?: boolean;
-  isEthAddress?: boolean;
+  erc725states?: { isValid: boolean; setIsValid: Dispatch<SetStateAction<boolean>> };
 }) {
   const { currentVaultEdits, setCurrentVaultEdits, recoverInfo, setRecoverInfo, web3, recovery, walletAddress } =
     useContext(GlobalContext);
   const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
-    if(!isEthAddress) return 
+    if (!erc725states) return;
+    const { setIsValid } = erc725states;
     async function checkEthAddress() {
       if (!web3 || !walletAddress) return;
       const isAddress = web3.utils.isAddress(currentVaultEdits.ERC725Address);
-      const canAddVault = await recovery
-        ?.canCreateRecoveryVault(walletAddress, currentVaultEdits.ERC725Address)
-      if (!isAddress) {
-        setErrorMessage('Invalid Eth Address');
-      } else if (!canAddVault) {
-        setErrorMessage('Connected wallet cannot add vault to this profile.');
-      } else {
-        setErrorMessage('');
+      let canAddVault;
+      try {
+        canAddVault = await recovery?.canCreateRecoveryVault(walletAddress, currentVaultEdits.ERC725Address);
+        if (!isAddress) {
+          setErrorMessage('Invalid Eth Address');
+          setIsValid(false);
+        } else if (!canAddVault) {
+          setErrorMessage('Connected wallet cannot add vault to this profile.');
+          setIsValid(false);
+        } else {
+          setErrorMessage('');
+          setIsValid(true);
+        }
+      } catch (error) {
+        setErrorMessage('This is not a valid ERC725 address.');
+        setIsValid(false);
       }
     }
 
@@ -57,7 +66,7 @@ export default function StandardInput({
   }, [currentVaultEdits.ERC725Address, walletAddress]);
 
   return (
-    <div className={`w-min ml-6 ${className}`}>
+    <div className={`px-6 ${className}`}>
       <div className="my-4">
         <p className="font-light">{title}</p>
         <p className="font-light text-xs text-gray-400">{info}</p>

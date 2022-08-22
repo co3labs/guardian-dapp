@@ -21,7 +21,7 @@ export default function VaultSetup({
   const { currentVaultEdits, web3, location, recovery, walletAddress } = useContext(GlobalContext);
   const [updateSecret, setUpdateSecret] = useState(false);
   const { name, profile, secret, old, processId, secretToggle } = renderFields;
-
+  const [valid725, setValid725] = useState(false)
 
 
   return (
@@ -38,7 +38,7 @@ export default function VaultSetup({
             stored on chain."
             paramName="vaultName"
             maxLength={maxLength}
-            className="md:w-96"
+            className="w-full md:w-96"
           />
         ) : (
           <></>
@@ -54,8 +54,8 @@ export default function VaultSetup({
             info="This is the ERC725 contract address that the Recovery Vault will be associated with. Your contract must already be deployed."
             paramName="ERC725Address"
             maxLength={maxLength}
-            className="md:w-96"
-            isEthAddress={true}
+            className="w-full md:w-96"
+            erc725states={{isValid:valid725, setIsValid:setValid725}}
           />
         ) : (
           <></>
@@ -96,7 +96,8 @@ export default function VaultSetup({
           conditionNext={
             !!currentVaultEdits.vaultName &&
             !!currentVaultEdits.ERC725Address &&
-            !!currentVaultEdits.newSecret 
+            !!currentVaultEdits.newSecret &&
+            valid725
           }
         />
       ) : (

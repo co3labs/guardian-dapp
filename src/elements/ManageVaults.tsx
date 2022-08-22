@@ -29,6 +29,45 @@ export default function ManageVaults() {
     return `${lastUpdated.getMonth()}-${lastUpdated.getDate()}-${lastUpdated.getFullYear()}`;
   };
 
+  const links = (vault: IVaultInfo) => (
+    <div className="flex items-center">
+      <Link
+        id={'edit_vault_' + vault.vaultAddress}
+        onClick={() => {
+          resetVaultAndSteps(vault);
+          selectedVault.current = vault;
+        }}
+        to="/app/edit"
+        className="text-xs btnSecondary py-1 px-2"
+      >
+        Update
+      </Link>
+      <Link
+        onClick={(e) => {
+          resetVaultAndSteps(vault);
+          selectedVault.current = vault;
+        }}
+        to="/app/recover"
+        className="text-xs btnSecondary flex items-center mx-2 py-1 px-2"
+      >
+        Recover
+      </Link>
+      <Link
+        onClick={() => {
+          resetVaultAndSteps(vault);
+          selectedVault.current = vault;
+        }}
+        to="/app/vote"
+        className="text-xs btnPrimary flex items-center mr-2 py-1 px-2"
+      >
+        Vote
+      </Link>
+      <BsChevronDown
+        className={`transition-transform ${currentVaultEdits.vaultAddress === vault.vaultAddress ? 'rotate-180' : ''}`}
+      />
+    </div>
+  );
+
   return (
     <>
       <div className="m-6 font-light flex flex-col">
@@ -55,7 +94,7 @@ export default function ManageVaults() {
                         if (currentVaultEdits.vaultAddress === vault.vaultAddress) {
                           setCurrentVaultEdits(INITIAL_VAULT_EDITS);
                         } else {
-                          setCurrentVaultEdits({ ...vault, newSecret: '', guardianRemoveAmt:0 });
+                          setCurrentVaultEdits({ ...vault, newSecret: '', guardianRemoveAmt: 0 });
                           selectedVault.current = vault;
                         }
                       }
@@ -73,49 +112,14 @@ export default function ManageVaults() {
                     <td className={selectedClasses(vault)}>{vault.guardianCount}</td>
                     <td className={selectedClasses(vault)}>{vault.threshold}</td>
                     <td className={selectedClasses(vault)}>{getShortId(vault.vaultAddress)}</td>
-                    <td className={'flex items-center border-r rounded-r-sm ' + selectedClasses(vault)}>
-                      <Link
-                        id={'edit_vault_' + vault.vaultAddress}
-                        onClick={() => {
-                          resetVaultAndSteps(vault);
-                          selectedVault.current = vault;
-                        }}
-                        to="/app/edit"
-                        className="text-xs btnSecondary py-1 px-2"
-                      >
-                        Update
-                      </Link>
-                      <Link
-                        onClick={(e) => {
-                          resetVaultAndSteps(vault);
-                          selectedVault.current = vault;
-                        }}
-                        to="/app/recover"
-                        className="text-xs btnSecondary flex items-center mx-2 py-1 px-2"
-                      >
-                        Recover
-                      </Link>
-                      <Link
-                        onClick={() => {
-                          resetVaultAndSteps(vault);
-                          selectedVault.current = vault;
-                        }}
-                        to="/app/vote"
-                        className="text-xs btnPrimary flex items-center mr-2 py-1 px-2"
-                      >
-                        Vote
-                      </Link>
-                      <BsChevronDown
-                        className={`transition-transform ${
-                          currentVaultEdits.vaultAddress === vault.vaultAddress ? 'rotate-180' : ''
-                        }`}
-                      />
+                    <td className={'hidden lg:table-cell border-r rounded-r-sm ' + selectedClasses(vault)}>
+                      {links(vault)}
                     </td>
                   </tr>
-                  <tr className={`${currentVaultEdits.vaultAddress === vault.vaultAddress ? 'visible' : 'hidden'}`}>
+                  <tr className={`${currentVaultEdits.vaultAddress === vault.vaultAddress ? 'visible' : 'hidden'} `}>
                     <td colSpan={5}>
                       <div className="inline-flex">
-                        <div className="flex-grow">
+                        <div className="">
                           {[
                             ['Vault Address', getShortId(vault.vaultAddress)],
                             ['Profile Address', getShortId(vault.ERC725Address)],
@@ -141,7 +145,7 @@ export default function ManageVaults() {
                           title={`Guardian List (${vault.guardianCount})`}
                           element={
                             <>
-                              <div className="border mt-6  p-6">
+                              <div className="border mt-6 p-6">
                                 {Object.entries(vault.guardianList).map(([_, guardian]) => (
                                   <div className="flex w-fit items-center my-3">
                                     <p className="mr-6">{guardian.name}</p>
@@ -149,7 +153,8 @@ export default function ManageVaults() {
                                       href={`${blockExplorer}${guardian.address}`}
                                       className="mr-6 text-sm text-gray-400 hover:text-black"
                                     >
-                                      {guardian.address}
+                                      <span className="hidden xl:block">{guardian.address}</span>
+                                      <span className="block xl:hidden">{getShortId(guardian.address)}</span>
                                     </a>
                                   </div>
                                 ))}

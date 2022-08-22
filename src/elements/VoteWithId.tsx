@@ -26,7 +26,7 @@ export default function VoteWithId() {
             recover={true}
             placeholder="0x0"
             value={recoverInfo.newOwner}
-            className="md:w-96"
+            className="w-full"
           />{' '}
         </div>
       </div>

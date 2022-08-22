@@ -16,7 +16,7 @@ export default function RecoverIdInput() {
       recover={true}
       placeholder="ID_1234"
       value={recoverInfo.recoveryProcessId}
-      className="md:w-96"
+      className="w-full"
     />
   );
 }

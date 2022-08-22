@@ -85,5 +85,9 @@ select {
 }
 
 .vaultListItem > td {
-  @apply p-4 border-y;
+  @apply py-4 border-y;
+}
+
+th, td{
+  @apply px-2
 }
