@@ -24,7 +24,7 @@ export default function UpdateSecretFields({
             id="recovery_vault_old_secret"
             placeholder="0x0"
             type={showOldSecret ? 'text' : 'password'}
-            info="Your old vault recovery secret."
+            info="Your old Recovery Vault recovery secret."
             paramName="oldSecret"
             className="w-full"
             maxLength={180}

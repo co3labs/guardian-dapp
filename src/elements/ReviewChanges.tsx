@@ -25,7 +25,7 @@ export default function ReviewChanges() {
   } = useContext(GlobalContext);
   const [showSecret, setShowSecret] = useState(false);
   const fields: [string, string, boolean, string][] = [
-    ['Vault Name', 'vaultName', false, '2xl'],
+    ['Recovery Vault Name', 'vaultName', false, '2xl'],
     ['Transaction Approval Threshold', 'threshold', false, '2xl'],
     ['ERC725 Address', 'ERC725Address', false, 'base'],
     ['Secret', 'newSecret', true, 'base'],
@@ -105,7 +105,7 @@ export default function ReviewChanges() {
       selectedVault.current = newVaultInfo;
       setAllVaults({ ...allVaults, [vaultAddress]: newVaultInfo });
       setShowConfetti(true);
-      addToGlobalSnackbarQue('Vault Succesfully Created!');
+      addToGlobalSnackbarQue('Recovery Vault Succesfully Created!');
     } catch (error) {
       console.error(error);
     }
@@ -245,7 +245,7 @@ export default function ReviewChanges() {
                 },
               });
               navigate('/app/manage');
-              alert('Vault has been updated.');
+              alert('Recovery Vault has been updated.');
             }
           }
         }}

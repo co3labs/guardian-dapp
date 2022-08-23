@@ -10,7 +10,7 @@ export default function CreateVault() {
     <ComponentWrapper
       steps={[
         ['Connect Wallet', <ConnectWallet />],
-        ['Setup Vault', <VaultSetup renderFields={fieldsToRender} />],
+        ['Setup Recovery Vault', <VaultSetup renderFields={fieldsToRender} />],
         ['Add Guardians', <GuardianForm />],
         ['Review & Deploy', <ReviewChanges />],
       ]}

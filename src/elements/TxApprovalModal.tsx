@@ -68,7 +68,7 @@ export default function TxApprovalModal() {
                 let state: ITxProgress;
 
                 switch (title) {
-                  case 'Deploy Vault':
+                  case 'Deploy Recovery Vault':
                     state = vaultDeploying;
                     break;
                   case 'Add Guardians':
