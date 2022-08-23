@@ -77,6 +77,9 @@ export const getShortId = (id: string) => {
   return split.join('');
 };
 
+export const cantAddVaults =
+  'The connected wallet cannot add Recovery Vaults to this Universal Profile. Please switch to a controller account.';
+
 export const GlobalContext = createContext({} as globalStates);
 
 export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }) => {
@@ -283,7 +286,7 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
   const resetVaultAndSteps = (vault?: IVaultInfo) => {
     resetAllLoaderStates();
     setShowConfetti(false);
-    
+
     if (walletAddress) {
       setCurrentStep(1);
     } else {

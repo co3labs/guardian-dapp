@@ -1,13 +1,13 @@
 import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IGuardianList, ITxState, IVaultInfo } from '../@types/types';
-import { GlobalContext } from '../context/GlobalState';
+import { cantAddVaults, GlobalContext } from '../context/GlobalState';
 import BackOrContinueBtns from './BackOrContinueBtns';
 import ElementWithTitle from './ElementWithTitle';
 import { useGuardians, usePermissions, useSecret, useThreshold, useVault } from '../hooks';
 import Confetti from './Confetti';
-import useCanAddVault from '../hooks/useCanAddVault';
-import CannotAddRvs from './CannotAddRVs';
+import {useCheckAddVault} from '../hooks/permissionChecks';
+import CannotContinueError from './CannotContinueError';
 
 export default function ReviewChanges() {
   const {
@@ -32,7 +32,7 @@ export default function ReviewChanges() {
   ];
 
   const navigate = useNavigate();
-  const [canAddVault] = useCanAddVault();
+  const [canAddVault] = useCheckAddVault();
 
   console.log(Object.values(txState).filter((value) => !!value).length > 1);
 
@@ -167,7 +167,7 @@ export default function ReviewChanges() {
               </div>
             </div>
             <div className="w-full flex justify-end">
-              <CannotAddRvs render={canAddVault} />
+              <CannotContinueError render={canAddVault} message={cantAddVaults}/>
             </div>
           </div>
         ) : (

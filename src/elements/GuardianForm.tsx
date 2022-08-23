@@ -3,10 +3,10 @@ import { BsChevronDown } from 'react-icons/bs';
 import OutsideClickHandler from 'react-outside-click-handler';
 import { useNavigate } from 'react-router-dom';
 import { IGuardianInfo, IGuardianInfoEdits, IGuardianList } from '../@types/types';
-import { GlobalContext } from '../context/GlobalState';
-import useCanAddVault from '../hooks/useCanAddVault';
+import { cantAddVaults, GlobalContext } from '../context/GlobalState';
+import {useCheckAddVault} from '../hooks/permissionChecks';
 import BackOrContinueBtns from './BackOrContinueBtns';
-import CannotAddRvs from './CannotAddRVs';
+import CannotContinueError from './CannotContinueError';
 import GuardianInput from './GuardianInput';
 
 export default function GuardianForm() {
@@ -16,7 +16,7 @@ export default function GuardianForm() {
   const [validating, setValidating] = useState(false);
   const [duplicate, setDuplicate] = useState<number[]>();
 
-  const [validERC725] = useCanAddVault();
+  const [validERC725] = useCheckAddVault();
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -169,7 +169,7 @@ export default function GuardianForm() {
               <span>out of {currentVaultEdits.guardianCount} guardian(s)</span>
             </div>
           </div>
-         <CannotAddRvs render={validERC725}/>
+         <CannotContinueError render={validERC725} message={cantAddVaults}/>
         </div>
       </div>
       <BackOrContinueBtns

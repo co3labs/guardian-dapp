@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { GlobalContext } from '../context/GlobalState';
 import { useQuery } from '@tanstack/react-query';
 import { MoonLoader } from 'react-spinners';
@@ -8,14 +8,30 @@ export default function ListProcessIds() {
     recovery?.getRecoverProcessesIds(selectedVault.current.vaultAddress)
   );
 
-  // const guardians = await recovery?.getGuardians(selectedVault.current.vaultAddress);
-  // const account = await recovery?.getAccount(selectedVault.current.vaultAddress);
-  // console.log('ids', ids, 'guardians', guardians, account);
+  interface IVoteTotals {
+    [id: string]: number;
+  }
+
+  const [processIdVotes, setProcessIdVotes] = useState<IVoteTotals>({});
+
+  const getTotals = async (ids: string[]) => {
+    const totals: IVoteTotals = {};
+    for (let i = 0; i < ids.length; i++) {
+      const currId = ids[i];
+      const totalVotes = await recovery?.getTotalVotes(selectedVault.current.vaultAddress, currId);
+      if (totalVotes) totals[currId] = totalVotes;
+    }
+    return totals;
+  };
+
+  useEffect(() => {
+    if (ids) getTotals(ids).then(setProcessIdVotes);
+  }, [ids]);
 
   return (
-    <div className="px-6 py-4">
-      <p>Current Process Ids</p>
-      <div className="w-1/2 h-1px bg-gray-400" />
+    <div className="px-6 py-4 flex flex-col justify-start">
+      <p>Current Recovery Processes</p>
+      <div className="w-full my-2 h-1px bg-gray-200 " />
       {idsLoading ? (
         <div className="w-full flex justify-center mt-6">
           <MoonLoader size={16} />
@@ -23,17 +39,26 @@ export default function ListProcessIds() {
       ) : (
         <></>
       )}
-      {ids ? (
+      {processIdVotes && ids ? (
         ids.map((id) => (
-          <button className="my-2" onClick={() => setRecoverInfo({ ...recoverInfo, recoveryProcessId: id })}>
-            {id}
-          </button>
+          <div className="w-1/2 flex items-center justify-between ">
+            <button className="my-2 w-fit" onClick={() => setRecoverInfo({ ...recoverInfo, recoveryProcessId: id })}>
+              {id}
+            </button>
+            <p className='text-gray-400'>
+              <span className="pb-1">{processIdVotes[id]}</span>
+              <span className="mx-1">/</span> 
+              <span className='pt-1'>{selectedVault.current.threshold}</span>
+            </p>
+          </div>
         ))
       ) : (
         <></>
       )}
       {ids && ids.length == 0 ? (
-        <div className="w-full p-6 border rounded-sm text-center text-gray-400 my-2">No Process Ids</div>
+        <div className="w-full p-6 border rounded-sm text-center text-gray-400 my-2">
+          There are no ongoing recovery processes yet.
+        </div>
       ) : (
         <></>
       )}

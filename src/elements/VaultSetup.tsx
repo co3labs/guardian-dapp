@@ -4,7 +4,7 @@ import { GlobalContext } from '../context/GlobalState';
 import BackOrContinueBtns from './BackOrContinueBtns';
 import StandardInput from './StandardInput';
 import UpdateSecretFields from './UpdateSecretFields';
-import useCanAddVault from '../hooks/useCanAddVault';
+import {useCheckAddVault} from '../hooks/permissionChecks';
 
 export default function VaultSetup({
   renderFields,
@@ -22,13 +22,9 @@ export default function VaultSetup({
   const { currentVaultEdits, location, allVaults } = useContext(GlobalContext);
   const [updateSecret, setUpdateSecret] = useState(false);
   const { name, profile, secret, old, secretToggle } = renderFields;
-  const [nameIsTaken, setNameIsTaken] = useState(true);
+  const [nameIsTaken, setNameIsTaken] = useState(false);
 
-  const [validERC725, addressMessage] = useCanAddVault(true);
-
-  useEffect(() => {
-    console.log(validERC725, addressMessage);
-  }, [validERC725, addressMessage]);
+  const [validERC725, addressMessage] = useCheckAddVault(true);
 
   useEffect(() => {
     if (allVaults) {
@@ -64,7 +60,7 @@ export default function VaultSetup({
 
         {profile ? (
           <StandardInput
-            title="Universal Profile"
+            title="ERC725 Account to Recover"
             elementTitle="ERC725 Address"
             value={currentVaultEdits.ERC725Address}
             id="recovery_vault_address"
