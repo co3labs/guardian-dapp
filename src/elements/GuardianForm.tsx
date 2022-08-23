@@ -4,7 +4,7 @@ import OutsideClickHandler from 'react-outside-click-handler';
 import { useNavigate } from 'react-router-dom';
 import { IGuardianInfo, IGuardianInfoEdits, IGuardianList } from '../@types/types';
 import { cantAddVaults, GlobalContext } from '../context/GlobalState';
-import {useCheckAddVault} from '../hooks/permissionChecks';
+import {useCheckAddVault} from '../hooks/usePermissions';
 import BackOrContinueBtns from './BackOrContinueBtns';
 import CannotContinueError from './CannotContinueError';
 import GuardianInput from './GuardianInput';

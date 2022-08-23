@@ -6,7 +6,7 @@ import BackOrContinueBtns from './BackOrContinueBtns';
 import ElementWithTitle from './ElementWithTitle';
 import { useGuardians, usePermissions, useSecret, useThreshold, useVault } from '../hooks';
 import Confetti from './Confetti';
-import {useCheckAddVault} from '../hooks/permissionChecks';
+import {useCheckAddVault} from '../hooks/usePermissions';
 import CannotContinueError from './CannotContinueError';
 
 export default function ReviewChanges() {

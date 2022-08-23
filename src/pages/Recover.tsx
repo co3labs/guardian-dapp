@@ -3,8 +3,7 @@ import { getShortId, GlobalContext } from '../context/GlobalState';
 import ComponentWrapper from '../elements/ComponentWrapper';
 import ConnectWallet from '../elements/ConnectWallet';
 import RecoverOwnerShip from '../elements/RecoverOwnership';
-import VaultSetup from '../elements/VaultSetup';
-import VoteWithId from '../elements/VoteWithId';
+
 
 export default function Recover() {
   const { selectedVault } = useContext(GlobalContext);

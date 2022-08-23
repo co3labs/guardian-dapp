@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { GlobalContext } from '../context/GlobalState';
-import { useCheckAddVault, useCheckNewOwner, useCheckUserCanVote } from '../hooks/permissionChecks';
+import { useCheckAddVault, useCheckNewOwner, useCheckUserCanVote } from '../hooks/usePermissions';
 import BackOrContinueBtns from './BackOrContinueBtns';
 import CannotContinueError from './CannotContinueError';
 import ListProcessIds from './ProcessIdList';

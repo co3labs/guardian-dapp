@@ -4,7 +4,7 @@ import { GlobalContext } from '../context/GlobalState';
 import BackOrContinueBtns from './BackOrContinueBtns';
 import StandardInput from './StandardInput';
 import UpdateSecretFields from './UpdateSecretFields';
-import {useCheckAddVault} from '../hooks/permissionChecks';
+import {useCheckAddVault} from '../hooks/usePermissions';
 
 export default function VaultSetup({
   renderFields,
