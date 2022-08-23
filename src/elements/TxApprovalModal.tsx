@@ -28,7 +28,7 @@ export default function TxApprovalModal() {
             <button
               onClick={() => {
                 setTxState({ ...txState, showModal: false });
-                // navigate("/app/welcome")
+                navigate("/app/welcome")
               }}
             >
               <BsX />
