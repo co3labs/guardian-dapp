@@ -46,7 +46,6 @@ export default function TxApprovalModal() {
               <>
                 {Object.entries(txState).map(([title, value], index) => {
                   let state: ITxProgress;
-                  let alldone = true;
 
                   switch (title) {
                     case 'Deploy Vault':

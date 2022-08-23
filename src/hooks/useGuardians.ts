@@ -30,7 +30,13 @@ export default function useGuardians() {
             walletAddress,
             '<-- wallet address connected to dapp'
           );
-          await recovery?.removeGuardian(address, vaultAddress, account, walletAddress);
+          const threshold = await recovery?.getGuardiansThreshold(vaultAddress);
+          const guardians = await recovery?.getGuardians(vaultAddress);
+          if (threshold && guardians && threshold > guardians.length) {
+            await recovery?.removeGuardian(address, vaultAddress, account, walletAddress);
+          } else {
+            throw new Error ("Cannot set threshold less than the amount of guardians.")
+          }
           setRemoveGuardiansLoading('success');
         } catch (error) {
           setRemoveGuardiansLoading('failed');
@@ -61,7 +67,7 @@ export default function useGuardians() {
       guardianReceipts[i] = guardianReceipt;
     }
 
-    return guardianReceipts
+    return guardianReceipts;
   };
 
   return { updateGuardians };

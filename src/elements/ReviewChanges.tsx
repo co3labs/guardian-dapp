@@ -1,24 +1,17 @@
-import { useContext, useRef, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import {
-  IGuardianInfo,
-  IGuardianList,
-  IGuardianListEdits,
-  ITxState,
-  IVaultDeployReceipt,
-  IVaultInfo,
-  IVaultInfoEdits,
-} from '../@types/types';
-import { getInitialGuardiansAdded, GlobalContext, INITIAL_TX_STATE, vaultCreatedTopic } from '../context/GlobalState';
+import { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { IGuardianList, IVaultInfo } from '../@types/types';
+import { GlobalContext } from '../context/GlobalState';
 import BackOrContinueBtns from './BackOrContinueBtns';
 import ElementWithTitle from './ElementWithTitle';
-import TxApprovalModal from './TxApprovalModal';
 import { useGuardians, usePermissions, useSecret, useThreshold, useVault } from '../hooks';
+import Confetti from './Confetti';
 
 export default function ReviewChanges() {
-  const { currentVaultEdits, walletAddress, location, setTxState, txState, setAllVaults, allVaults, selectedVault } =
+  const { currentVaultEdits, walletAddress, location, setTxState, txState, setAllVaults, allVaults, selectedVault, addToGlobalSnackbarQue } =
     useContext(GlobalContext);
   const [showSecret, setShowSecret] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
   const fields: [string, string, boolean, string][] = [
     ['Vault Name', 'vaultName', false, '2xl'],
     ['Transaction Approval Threshold', 'threshold', false, '2xl'],
@@ -35,6 +28,7 @@ export default function ReviewChanges() {
 
   return (
     <>
+      {showConfetti ? <Confetti /> : <></>}
       <div className="m-6">
         <span className="w-max font-light">Does Everything Look Correct?</span>
 
@@ -136,9 +130,9 @@ export default function ReviewChanges() {
               'Deploy Vault': callDeployVault,
               'Add Permissions': callAddPermissions,
               'Set Secret': callSetSecret,
-              'Remove Guardians': removeGuardianList.length,
               'Add Guardians': addGuardianList.length,
               'Set Threshold': callSetThreshold,
+              'Remove Guardians': removeGuardianList.length,
             });
             try {
               if (callDeployVault) {
@@ -186,6 +180,8 @@ export default function ReviewChanges() {
 
               selectedVault.current = newVaultInfo;
               setAllVaults({ ...allVaults, [vaultAddress]: newVaultInfo });
+              setShowConfetti(true);
+              addToGlobalSnackbarQue("Vault Succesfully Created!")
             } catch (error) {
               console.error(error);
             }
