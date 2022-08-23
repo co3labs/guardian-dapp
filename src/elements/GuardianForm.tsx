@@ -4,7 +4,9 @@ import OutsideClickHandler from 'react-outside-click-handler';
 import { useNavigate } from 'react-router-dom';
 import { IGuardianInfo, IGuardianInfoEdits, IGuardianList } from '../@types/types';
 import { GlobalContext } from '../context/GlobalState';
+import useCanAddVault from '../hooks/useCanAddVault';
 import BackOrContinueBtns from './BackOrContinueBtns';
+import CannotAddRvs from './CannotAddRVs';
 import GuardianInput from './GuardianInput';
 
 export default function GuardianForm() {
@@ -13,6 +15,9 @@ export default function GuardianForm() {
   const [formIsValid, setFormIsValid] = useState(false);
   const [validating, setValidating] = useState(false);
   const [duplicate, setDuplicate] = useState<number[]>();
+
+  const [validERC725] = useCanAddVault();
+
   const navigate = useNavigate();
   useEffect(() => {
     const culprit = Object.values(currentVaultEdits.guardianList).find(
@@ -75,7 +80,7 @@ export default function GuardianForm() {
           }
         )}
       </div>
-      {currentVaultEdits.guardianRemoveAmt > 0? (
+      {currentVaultEdits.guardianRemoveAmt > 0 ? (
         <div className="flex flex-col h-full m-6">
           <p className="font-light">Remove Guardians</p>
           {Object.entries(currentVaultEdits.guardianList).map(
@@ -104,7 +109,7 @@ export default function GuardianForm() {
             className="btn btnSmall btnSecondary w-fit"
             type="button"
             onClick={() => {
-              let setTo = "add"
+              let setTo = 'add';
 
               setCurrentVaultEdits({
                 ...currentVaultEdits,
@@ -124,51 +129,54 @@ export default function GuardianForm() {
           </button>
         </div>
         <div className="w-full h-1px bg-gray-400 my-4" />
-        <div className="my-4 font-light">
-          <p>Any transaction requires the confirmation of:</p>
-          <div className="flex items-center">
-            <button
-              type="button"
-              onClick={() => setOpenThresholdSelect(!openThresholdSelect)}
-              className="relative flex items-center p-2 border rounded-sm mr-3 my-4"
-            >
-              <span className="mr-3">{currentVaultEdits.threshold}</span>
-              <span>
-                <BsChevronDown />
-              </span>
-              {openThresholdSelect && currentVaultEdits.guardianCount > 0 ? (
-                <OutsideClickHandler
-                  onOutsideClick={() => {
-                    setOpenThresholdSelect(false);
-                  }}
-                >
-                  <ul className="absolute left-0 right-0 bottom-0 border rounded-sm bg-white max-h-96 overflow-scroll no-scrollbar">
-                    {Object.keys(currentVaultEdits.guardianList).map((_: string, index: number) => (
-                      <li
-                        onClick={() => {
-                          setCurrentVaultEdits({ ...currentVaultEdits, threshold: index + 1 });
-                          setOpenThresholdSelect(false);
-                        }}
-                        className="my-2 hover:bg-gray-200"
-                      >
-                        {index + 1}
-                      </li>
-                    ))}
-                  </ul>
-                </OutsideClickHandler>
-              ) : (
-                <></>
-              )}
-            </button>
-            <span>out of {currentVaultEdits.guardianCount} guardian(s)</span>
+        <div className="my-4 font-light flex justify-between">
+          <div>
+            <p>Any transaction requires the confirmation of:</p>
+            <div className="flex items-center">
+              <button
+                type="button"
+                onClick={() => setOpenThresholdSelect(!openThresholdSelect)}
+                className="relative flex items-center p-2 border rounded-sm mr-3 my-4"
+              >
+                <span className="mr-3">{currentVaultEdits.threshold}</span>
+                <span>
+                  <BsChevronDown />
+                </span>
+                {openThresholdSelect && currentVaultEdits.guardianCount > 0 ? (
+                  <OutsideClickHandler
+                    onOutsideClick={() => {
+                      setOpenThresholdSelect(false);
+                    }}
+                  >
+                    <ul className="absolute left-0 right-0 bottom-0 border rounded-sm bg-white max-h-96 overflow-scroll no-scrollbar">
+                      {Object.keys(currentVaultEdits.guardianList).map((_: string, index: number) => (
+                        <li
+                          onClick={() => {
+                            setCurrentVaultEdits({ ...currentVaultEdits, threshold: index + 1 });
+                            setOpenThresholdSelect(false);
+                          }}
+                          className="my-2 hover:bg-gray-200"
+                        >
+                          {index + 1}
+                        </li>
+                      ))}
+                    </ul>
+                  </OutsideClickHandler>
+                ) : (
+                  <></>
+                )}
+              </button>
+              <span>out of {currentVaultEdits.guardianCount} guardian(s)</span>
+            </div>
           </div>
+         <CannotAddRvs render={validERC725}/>
         </div>
       </div>
       <BackOrContinueBtns
         exitBtn={true}
         // onClick={() => (location ? updateAndGoHome(navigate, location) : () => {})}
         confirmText={'Continue'}
-        conditionNext={formIsValid}
+        conditionNext={formIsValid && validERC725}
       />
       {/* {validating ? <MoonLoader /> : <></>}{' '} */}
     </>

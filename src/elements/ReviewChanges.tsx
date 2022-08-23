@@ -1,11 +1,13 @@
 import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { IGuardianList, IVaultInfo } from '../@types/types';
+import { IGuardianList, ITxState, IVaultInfo } from '../@types/types';
 import { GlobalContext } from '../context/GlobalState';
 import BackOrContinueBtns from './BackOrContinueBtns';
 import ElementWithTitle from './ElementWithTitle';
 import { useGuardians, usePermissions, useSecret, useThreshold, useVault } from '../hooks';
 import Confetti from './Confetti';
+import useCanAddVault from '../hooks/useCanAddVault';
+import CannotAddRvs from './CannotAddRVs';
 
 export default function ReviewChanges() {
   const {
@@ -18,9 +20,10 @@ export default function ReviewChanges() {
     allVaults,
     selectedVault,
     addToGlobalSnackbarQue,
+    setShowConfetti,
+    showConfetti,
   } = useContext(GlobalContext);
   const [showSecret, setShowSecret] = useState(false);
-  const [showConfetti, setShowConfetti] = useState(false);
   const fields: [string, string, boolean, string][] = [
     ['Vault Name', 'vaultName', false, '2xl'],
     ['Transaction Approval Threshold', 'threshold', false, '2xl'],
@@ -29,11 +32,84 @@ export default function ReviewChanges() {
   ];
 
   const navigate = useNavigate();
+  const [canAddVault] = useCanAddVault();
+
+  console.log(Object.values(txState).filter((value) => !!value).length > 1);
+
   const { updateGuardians } = useGuardians();
   const { addPermissions, checkPermissions } = usePermissions();
   const { setSecret } = useSecret();
   const { setThreshold } = useThreshold();
   const { deployVault } = useVault();
+
+  async function executeTransactions(newTxState: ITxState) {
+    if (!walletAddress) throw new Error('No wallet address connected');
+
+    const {
+      'Add Guardians': addGuardians,
+      'Add Permissions': callAddPermissions,
+      'Deploy Vault': callDeployVault,
+      'Remove Guardians': removeGuardians,
+      'Set Secret': callSetSecret,
+      'Set Threshold': callSetThreshold,
+    } = newTxState;
+
+    let vaultAddress;
+    const { ERC725Address, guardianCount, guardianList, threshold, vaultName, timestampId } = currentVaultEdits;
+
+    try {
+      if (callDeployVault) {
+        const [newVault] = await deployVault(ERC725Address, walletAddress);
+        vaultAddress = newVault;
+      } else {
+        vaultAddress = currentVaultEdits.vaultAddress;
+      }
+
+      if (callAddPermissions) await addPermissions(walletAddress, vaultAddress, ERC725Address);
+
+      const isPermitted = await checkPermissions(vaultAddress, ERC725Address);
+
+      // if (isPermitted) {
+      if (callSetSecret) await setSecret(vaultAddress, ERC725Address, walletAddress);
+
+      if (addGuardians.length > 0)
+        await updateGuardians(addGuardians, 'add', vaultAddress, ERC725Address, walletAddress);
+
+      if (callSetThreshold) await setThreshold(vaultAddress, ERC725Address, walletAddress);
+
+      if (removeGuardians.length > 0)
+        await updateGuardians(removeGuardians, 'remove', vaultAddress, ERC725Address, walletAddress);
+      // }
+
+      const now = Date.now();
+
+      const finalGuardianList: IGuardianList = {};
+      Object.values(guardianList).forEach((guardian) => {
+        if (guardian.action !== 'remove') {
+          finalGuardianList[guardian.address] = { address: guardian.address, name: guardian.name };
+        }
+      });
+
+      const newVaultInfo: IVaultInfo = {
+        ERC725Address,
+        guardianCount,
+        guardianList: finalGuardianList,
+        lastUpdated: now,
+        threshold,
+        vaultName,
+        vaultOwner: walletAddress,
+        vaultAddress: vaultAddress,
+        timestampId: timestampId || now,
+      };
+
+      selectedVault.current = newVaultInfo;
+      setAllVaults({ ...allVaults, [vaultAddress]: newVaultInfo });
+      setShowConfetti(true);
+      addToGlobalSnackbarQue('Vault Succesfully Created!');
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   return (
     <>
@@ -90,6 +166,9 @@ export default function ReviewChanges() {
                 ))}
               </div>
             </div>
+            <div className="w-full flex justify-end">
+              <CannotAddRvs render={canAddVault} />
+            </div>
           </div>
         ) : (
           <>{/**TODO: Throw / show an error here */}</>
@@ -98,8 +177,8 @@ export default function ReviewChanges() {
       <BackOrContinueBtns
         confirmText={'Confirm'}
         exitBtn={true}
+        conditionNext={canAddVault}
         onNextClick={async () => {
-          let vaultAddress;
           const callDeployVault = !!!selectedVault.current.vaultAddress;
           const callAddPermissions = location?.pathname === '/app/create'; //this should actually check permissions
           const callSetSecret = !!currentVaultEdits.newSecret;
@@ -132,71 +211,19 @@ export default function ReviewChanges() {
             removeGuardianList.length;
 
           if (transactionIsNeeded) {
-            const account = currentVaultEdits.ERC725Address;
             if (!walletAddress) throw new Error('No account id.');
-            setTxState({
+            const newTxState = {
               showModal: true,
               'Deploy Vault': callDeployVault,
               'Add Permissions': callAddPermissions,
               'Set Secret': callSetSecret,
-              'Add Guardians': addGuardianList.length,
+              'Add Guardians': addGuardianList,
               'Set Threshold': callSetThreshold,
-              'Remove Guardians': removeGuardianList.length,
-            });
-            try {
-              if (callDeployVault) {
-                const [newVault] = await deployVault(account, walletAddress);
-                vaultAddress = newVault;
-              } else {
-                vaultAddress = currentVaultEdits.vaultAddress;
-              }
+              'Remove Guardians': removeGuardianList,
+            };
 
-              if (callAddPermissions) await addPermissions(walletAddress, vaultAddress, account);
-
-              const isPermitted = await checkPermissions(vaultAddress, account);
-
-              // if (isPermitted) {
-              if (callSetSecret) await setSecret(vaultAddress, account, walletAddress);
-              
-              if (removeGuardianList.length > 0)
-                await updateGuardians(removeGuardianList, 'remove', vaultAddress, account, walletAddress);
-
-              if (callSetThreshold) await setThreshold(vaultAddress, account, walletAddress);
-
-              if (addGuardianList.length > 0)
-                await updateGuardians(addGuardianList, 'add', vaultAddress, account, walletAddress);
-              // }
-
-              const now = Date.now();
-              const { ERC725Address, guardianCount, guardianList, threshold, vaultName, timestampId } =
-                currentVaultEdits;
-
-              const finalGuardianList: IGuardianList = {};
-              Object.values(guardianList).forEach((guardian) => {
-                if (guardian.action !== 'remove') {
-                  finalGuardianList[guardian.address] = { address: guardian.address, name: guardian.name };
-                }
-              });
-
-              const newVaultInfo: IVaultInfo = {
-                ERC725Address,
-                guardianCount,
-                guardianList: finalGuardianList,
-                lastUpdated: now,
-                threshold,
-                vaultName,
-                vaultOwner: walletAddress,
-                vaultAddress: vaultAddress,
-                timestampId: timestampId || now,
-              };
-
-              selectedVault.current = newVaultInfo;
-              setAllVaults({ ...allVaults, [vaultAddress]: newVaultInfo });
-              setShowConfetti(true);
-              addToGlobalSnackbarQue('Vault Succesfully Created!');
-            } catch (error) {
-              console.error(error);
-            }
+            setTxState(newTxState);
+            await executeTransactions(newTxState);
           } else {
             const nameChanged = selectedVault.current.vaultName !== currentVaultEdits.vaultName;
             const guardiansNameChanged = Object.values(currentVaultEdits.guardianList).find(

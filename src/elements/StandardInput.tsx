@@ -15,7 +15,8 @@ export default function StandardInput({
   type = 'text',
   passStates,
   recover,
-  erc725states,
+  isERC725,
+  error,
 }: {
   paramName: string;
   elementTitle: string;
@@ -29,41 +30,17 @@ export default function StandardInput({
   type?: string;
   passStates?: { show: boolean; setShow: Dispatch<SetStateAction<boolean>> };
   recover?: boolean;
-  erc725states?: { isValid: boolean; setIsValid: Dispatch<SetStateAction<boolean>> };
+  isERC725?: boolean;
+  error?: string;
 }) {
   const { currentVaultEdits, setCurrentVaultEdits, recoverInfo, setRecoverInfo, web3, recovery, walletAddress } =
     useContext(GlobalContext);
   const [errorMessage, setErrorMessage] = useState('');
 
+  //For misc error messaged passed to this component
   useEffect(() => {
-    if (!erc725states) return;
-    const { setIsValid } = erc725states;
-    async function checkEthAddress() {
-      if (!web3 || !walletAddress) return;
-      const isAddress = web3.utils.isAddress(currentVaultEdits.ERC725Address);
-      let canAddVault;
-      try {
-        canAddVault = await recovery?.canCreateRecoveryVault(walletAddress, currentVaultEdits.ERC725Address);
-        if (!isAddress) {
-          setErrorMessage('Invalid Eth Address');
-          setIsValid(false);
-        } else if (!canAddVault) {
-          setErrorMessage('Connected wallet cannot add vault to this profile.');
-          setIsValid(false);
-        } else {
-          setErrorMessage('');
-          setIsValid(true);
-        }
-      } catch (error) {
-        setErrorMessage('This is not a valid ERC725 address.');
-        setIsValid(false);
-      }
-    }
-
-    if (web3 && currentVaultEdits.ERC725Address.length === 42 && walletAddress) {
-      checkEthAddress();
-    }
-  }, [currentVaultEdits.ERC725Address, walletAddress]);
+    if (error || error === '') setErrorMessage(error);
+  }, [error]);
 
   return (
     <div className={`px-6 ${className}`}>

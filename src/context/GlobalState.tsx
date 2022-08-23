@@ -35,7 +35,7 @@ export const INITIAL_CURR_VAULT: IVaultInfo = {
 export const INITIAL_VAULT_EDITS: IVaultInfoEdits = {
   ...INITIAL_CURR_VAULT,
   newSecret: '',
-  guardianList: { 0: { name: '', address: '', action: "add" } },
+  guardianList: { 0: { name: '', address: '', action: 'add' } },
   guardianRemoveAmt: 0,
 };
 
@@ -52,8 +52,8 @@ export const INITIAL_TX_STATE: ITxState = {
   'Add Permissions': false,
   'Set Secret': false,
   'Set Threshold': false,
-  'Add Guardians': 0,
-  'Remove Guardians': 0,
+  'Add Guardians': [],
+  'Remove Guardians': [],
 };
 
 export const vaultCreatedTopic = '0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0';
@@ -68,7 +68,7 @@ export const getInitialGuardiansAdded = (guardians: IGuardianList) => {
 
 export const networks = {
   2828: 'Lukso Testnet (L16)',
-  4: 'Rinkeby'
+  4: 'Rinkeby',
 };
 
 export const getShortId = (id: string) => {
@@ -105,6 +105,8 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
   const [permissionsUpdating, setPermissionsUpdating] = useState<ITxProgress>('');
   const [addGuardiansLoading, setAddGuardiansLoading] = useState<ITxProgress>('');
   const [removeGuardiansLoading, setRemoveGuardiansLoading] = useState<ITxProgress>('');
+
+  const [showConfetti, setShowConfetti] = useState<boolean>(false);
 
   const resetAllLoaderStates = () => {
     setVaultDeploying('');
@@ -222,7 +224,7 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
   }, []);
 
   const switchNetwork = async () => {
-    if(!process.env.REACT_APP_CHAIN_ID) return 
+    if (!process.env.REACT_APP_CHAIN_ID) return;
     if (chainId !== process.env.REACT_APP_CHAIN_ID) {
       try {
         //@ts-ignore
@@ -280,9 +282,8 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
 
   const resetVaultAndSteps = (vault?: IVaultInfo) => {
     resetAllLoaderStates();
-
-    // setTxState({ ...INITIAL_TX_STATE });
-
+    setShowConfetti(false);
+    
     if (walletAddress) {
       setCurrentStep(1);
     } else {
@@ -293,7 +294,7 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
       selectedVault.current = vault;
       // change current guardian list to an object where the index is they key
       // necessary for adding guardians to bottom of the list in the UI, and preventing
-      // removal of the first guardian in the list. 
+      // removal of the first guardian in the list.
       const guardianList: IGuardianListEdits = {};
       Object.values(vault.guardianList).forEach((guardian, index) => {
         guardianList[index] = guardian;
@@ -371,6 +372,8 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
         resetAllLoaderStates,
         guardiansToRemove,
         setGuardiansToRemove,
+        showConfetti,
+        setShowConfetti,
       }}
     >
       <>{children}</>

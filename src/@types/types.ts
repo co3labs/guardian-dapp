@@ -34,7 +34,7 @@ export interface IVaultInfo {
 export interface IVaultInfoEdits extends IVaultInfo {
   newSecret: string;
   guardianList: IGuardianListEdits;
-  guardianRemoveAmt: number
+  guardianRemoveAmt: number;
 }
 
 export interface IGuardianInfoEdits extends IGuardianInfo {
@@ -58,8 +58,8 @@ export interface ITxState {
   'Add Permissions': boolean;
   'Set Secret': boolean;
   'Set Threshold': boolean;
-  'Add Guardians': number;
-  'Remove Guardians': number;
+  'Add Guardians': string[];
+  'Remove Guardians': string[];
 }
 
 export interface IVaultDeployReceipt {
@@ -142,4 +142,6 @@ export interface globalStates {
   resetAllLoaderStates: VoidFunciton;
   guardiansToRemove: IGuardianList;
   setGuardiansToRemove: Dispatch<SetStateAction<IGuardianList>>;
+  showConfetti: boolean;
+  setShowConfetti: Dispatch<SetStateAction<boolean>>;
 }

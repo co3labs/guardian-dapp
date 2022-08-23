@@ -4,6 +4,7 @@ import { GlobalContext } from '../context/GlobalState';
 import BackOrContinueBtns from './BackOrContinueBtns';
 import StandardInput from './StandardInput';
 import UpdateSecretFields from './UpdateSecretFields';
+import useCanAddVault from '../hooks/useCanAddVault';
 
 export default function VaultSetup({
   renderFields,
@@ -18,11 +19,27 @@ export default function VaultSetup({
   };
 }) {
   const maxLength = 42;
-  const { currentVaultEdits, web3, location, recovery, walletAddress } = useContext(GlobalContext);
+  const { currentVaultEdits, location, allVaults } = useContext(GlobalContext);
   const [updateSecret, setUpdateSecret] = useState(false);
-  const { name, profile, secret, old, processId, secretToggle } = renderFields;
-  const [valid725, setValid725] = useState(false)
+  const { name, profile, secret, old, secretToggle } = renderFields;
+  const [nameIsTaken, setNameIsTaken] = useState(true);
 
+  const [validERC725, addressMessage] = useCanAddVault(true);
+
+  useEffect(() => {
+    console.log(validERC725, addressMessage);
+  }, [validERC725, addressMessage]);
+
+  useEffect(() => {
+    if (allVaults) {
+      const names = Object.values(allVaults).map((vault) => vault.vaultName);
+      if (names.includes(currentVaultEdits.vaultName)) {
+        setNameIsTaken(true);
+      } else {
+        setNameIsTaken(false);
+      }
+    }
+  }, [currentVaultEdits.vaultName]);
 
   return (
     <>
@@ -39,6 +56,7 @@ export default function VaultSetup({
             paramName="vaultName"
             maxLength={maxLength}
             className="w-full"
+            error={nameIsTaken ? 'You already have a vault with this name.' : ''}
           />
         ) : (
           <></>
@@ -55,7 +73,7 @@ export default function VaultSetup({
             paramName="ERC725Address"
             maxLength={maxLength}
             className="w-full"
-            erc725states={{isValid:valid725, setIsValid:setValid725}}
+            error={addressMessage}
           />
         ) : (
           <></>
@@ -97,7 +115,8 @@ export default function VaultSetup({
             !!currentVaultEdits.vaultName &&
             !!currentVaultEdits.ERC725Address &&
             !!currentVaultEdits.newSecret &&
-            valid725
+            validERC725 &&
+            !nameIsTaken
           }
         />
       ) : (
