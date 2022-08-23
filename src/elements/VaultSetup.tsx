@@ -43,11 +43,11 @@ export default function VaultSetup({
         {name ? (
           <StandardInput
             title="Recovery Vault Name"
-            elementTitle="Vault Name"
+            elementTitle="Name"
             value={currentVaultEdits.vaultName}
             id="recovery_vault_name"
             placeholder="my vault"
-            info="This name is for you to easily identify your vault while using the Guardian app. The name will not be
+            info="This name is for you to easily identify your Recovery Vault while using the Guardian app. The name will not be
             stored on chain."
             paramName="vaultName"
             maxLength={maxLength}

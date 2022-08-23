@@ -48,7 +48,7 @@ export default function ReviewChanges() {
     const {
       'Add Guardians': addGuardians,
       'Add Permissions': callAddPermissions,
-      'Deploy Vault': callDeployVault,
+      'Deploy Recovery Vault': callDeployVault,
       'Remove Guardians': removeGuardians,
       'Set Secret': callSetSecret,
       'Set Threshold': callSetThreshold,
@@ -214,7 +214,7 @@ export default function ReviewChanges() {
             if (!walletAddress) throw new Error('No account id.');
             const newTxState = {
               showModal: true,
-              'Deploy Vault': callDeployVault,
+              'Deploy Recovery Vault': callDeployVault,
               'Add Permissions': callAddPermissions,
               'Set Secret': callSetSecret,
               'Add Guardians': addGuardianList,

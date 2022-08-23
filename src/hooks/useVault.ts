@@ -15,7 +15,7 @@ export default function useVault() {
         data.raw.topics.includes(vaultCreatedTopic)
       );
 
-      if (!vaultEvent) throw new Error('Vault address could not be found in receipt.');
+      if (!vaultEvent) throw new Error('Recovery Vault address could not be found in receipt.');
       const newVaultAddress = vaultEvent.address;
       console.log(walletAddress, newVaultAddress, account);
       setVaultDeploying('success');

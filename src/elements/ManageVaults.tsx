@@ -184,7 +184,7 @@ export default function ManageVaults() {
                       <div className="inline-flex">
                         <div className="">
                           {[
-                            ['Vault Address', vault.vaultAddress],
+                            ['Recovery Vault Address', vault.vaultAddress],
                             ['Profile Address', vault.ERC725Address],
                             ['Last Updated', getLastUpdated()],
                           ].map((item: string[]) => (
@@ -238,21 +238,21 @@ export default function ManageVaults() {
           </table>
         ) : (
           <div className="w-full my-4 py-2 border border-red-400 rounded-sm text-center">
-            <span>No vaults in memory! Try importing a vault below or </span>
+            <span>No Recovery Vaults in memory! Try importing a one below or </span>
             <span>
               <Link to="/app/create" className="text-blue-800 hover:underline" onClick={() => resetVaultAndSteps()}>
-                create a new vault.
+                create a new Recovery Vault.
               </Link>
             </span>
           </div>
         )}
 
         <div className="mb-6">
-          <p className="font-light text-sm md:text-base">Import a vault by it's address.</p>
+          <p className="font-light text-sm md:text-base">Import a Recovery Vault by it's address.</p>
         </div>
         <div className="flex flex-col md:flex-row items-center w-full py-1 px-6 md:px-0">
           <ElementWithTitle
-            title="Import Vault"
+            title="Import Recovery Vault"
             error={importIsValid}
             element={
               <input

@@ -54,7 +54,7 @@ export interface IUserVaults {
 
 export interface ITxState {
   showModal: boolean;
-  'Deploy Vault': boolean;
+  'Deploy Recovery Vault': boolean;
   'Add Permissions': boolean;
   'Set Secret': boolean;
   'Set Threshold': boolean;

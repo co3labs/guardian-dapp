@@ -54,7 +54,7 @@ export default function RecoverOwnerShip() {
                 walletAddress
               )
               .then(() => {
-                addToGlobalSnackbarQue('vault recovered');
+                addToGlobalSnackbarQue('Profile Successfully Recovered!');
                 setAllVaults({
                   ...allVaults,
                   [selectedVault.current.vaultAddress]: { ...selectedVault.current, vaultOwner: walletAddress },

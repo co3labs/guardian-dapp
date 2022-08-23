@@ -48,7 +48,7 @@ export const INITIAL_RECOVERY_INFO: IRecoveryProcessInfo = {
 
 export const INITIAL_TX_STATE: ITxState = {
   showModal: false,
-  'Deploy Vault': false,
+  'Deploy Recovery Vault': false,
   'Add Permissions': false,
   'Set Secret': false,
   'Set Threshold': false,
@@ -318,7 +318,7 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
 
     setGlobalSnackbarQue([
       ...globalSnackbarQue,
-      `Vault succesfully ${location.pathname.includes('manage') ? 'updated' : ' created'}`,
+      `Recovery Vault succesfully ${location.pathname.includes('manage') ? 'updated' : ' created'}`,
     ]);
 
     navigate('/app/welcome', { replace: true });

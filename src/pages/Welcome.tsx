@@ -24,10 +24,10 @@ export default function Welcome() {
         </section>
         <div className="welcomeCard">
           <section className="shadow-lg">
-            <h3>Create A New Vault</h3>
-            <p>Create a new vault that is controlled by one or multiple owners.</p>
+            <h3>Create A New Recovery Vault</h3>
+            <p>Create a new Recovery Vault that is controlled by one or multiple owners.</p>
             <Link className="btnSmall btnPrimary w-fit my-6" onClick={() => resetVaultAndSteps()} to="/app/create">
-              Create Vault
+              Create Recovery Vault
             </Link>
           </section>{' '}
           <section className="shadow-lg">
