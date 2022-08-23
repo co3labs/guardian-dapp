@@ -8,8 +8,17 @@ import { useGuardians, usePermissions, useSecret, useThreshold, useVault } from 
 import Confetti from './Confetti';
 
 export default function ReviewChanges() {
-  const { currentVaultEdits, walletAddress, location, setTxState, txState, setAllVaults, allVaults, selectedVault, addToGlobalSnackbarQue } =
-    useContext(GlobalContext);
+  const {
+    currentVaultEdits,
+    walletAddress,
+    location,
+    setTxState,
+    txState,
+    setAllVaults,
+    allVaults,
+    selectedVault,
+    addToGlobalSnackbarQue,
+  } = useContext(GlobalContext);
   const [showSecret, setShowSecret] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const fields: [string, string, boolean, string][] = [
@@ -148,11 +157,14 @@ export default function ReviewChanges() {
 
               // if (isPermitted) {
               if (callSetSecret) await setSecret(vaultAddress, account, walletAddress);
+              
               if (removeGuardianList.length > 0)
                 await updateGuardians(removeGuardianList, 'remove', vaultAddress, account, walletAddress);
+
+              if (callSetThreshold) await setThreshold(vaultAddress, account, walletAddress);
+
               if (addGuardianList.length > 0)
                 await updateGuardians(addGuardianList, 'add', vaultAddress, account, walletAddress);
-              if (callSetThreshold) await setThreshold(vaultAddress, account, walletAddress);
               // }
 
               const now = Date.now();
@@ -181,7 +193,7 @@ export default function ReviewChanges() {
               selectedVault.current = newVaultInfo;
               setAllVaults({ ...allVaults, [vaultAddress]: newVaultInfo });
               setShowConfetti(true);
-              addToGlobalSnackbarQue("Vault Succesfully Created!")
+              addToGlobalSnackbarQue('Vault Succesfully Created!');
             } catch (error) {
               console.error(error);
             }
