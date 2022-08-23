@@ -7,8 +7,10 @@ import StandardInput from './StandardInput';
 import UpdateSecretFields from './UpdateSecretFields';
 
 export default function RecoverOwnerShip() {
-  const { recoverInfo, recovery, selectedVault, walletAddress, addToGlobalSnackbarQue, setAllVaults, allVaults } =
+  const { recoverInfo, recovery, selectedVault, walletAddress, addToGlobalSnackbarQue, setAllVaults, allVaults, setShowConfetti } =
     useContext(GlobalContext);
+
+  recovery?.canRecover
 
   return (
     <>
@@ -54,6 +56,7 @@ export default function RecoverOwnerShip() {
                 walletAddress
               )
               .then(() => {
+                setShowConfetti(true)
                 addToGlobalSnackbarQue('Profile Successfully Recovered!');
                 setAllVaults({
                   ...allVaults,

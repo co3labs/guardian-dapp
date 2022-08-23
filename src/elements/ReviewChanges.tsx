@@ -67,9 +67,6 @@ export default function ReviewChanges() {
 
       if (callAddPermissions) await addPermissions(walletAddress, vaultAddress, ERC725Address);
 
-      const isPermitted = await checkPermissions(vaultAddress, ERC725Address);
-
-      // if (isPermitted) {
       if (callSetSecret) await setSecret(vaultAddress, ERC725Address, walletAddress);
 
       if (addGuardians.length > 0)
@@ -79,7 +76,6 @@ export default function ReviewChanges() {
 
       if (removeGuardians.length > 0)
         await updateGuardians(removeGuardians, 'remove', vaultAddress, ERC725Address, walletAddress);
-      // }
 
       const now = Date.now();
 
@@ -113,7 +109,6 @@ export default function ReviewChanges() {
 
   return (
     <>
-      {showConfetti ? <Confetti /> : <></>}
       <div className="m-6">
         <span className="w-max font-light">Does Everything Look Correct?</span>
 
@@ -254,6 +249,3 @@ export default function ReviewChanges() {
   );
 }
 
-// onNextClick={async () => {
-
-// }}

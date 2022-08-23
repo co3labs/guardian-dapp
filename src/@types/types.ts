@@ -1,5 +1,5 @@
 import { ERC725Utils, Recovery } from 'guardians.js';
-import React, { Dispatch, MutableRefObject, SetStateAction } from 'react';
+import { Dispatch, MutableRefObject, SetStateAction } from 'react';
 import { Location, NavigateFunction } from 'react-router-dom';
 import Web3 from 'web3';
 import Web3Modal from 'web3modal';

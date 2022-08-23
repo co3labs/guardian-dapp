@@ -17,12 +17,14 @@ import VoteWithId from './elements/VoteWithId';
 import Vote from './pages/Vote';
 import TxApprovalModal from './elements/TxApprovalModal';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import Confetti from './elements/Confetti';
 
 export default function App() {
-  const { txState } = useContext(GlobalContext);
+  const { txState, showConfetti } = useContext(GlobalContext);
 
   return (
     <Router>
+      {showConfetti ? <Confetti /> : <></>}
       <Header />
       <Snackbar />
       <WatchLocation />
