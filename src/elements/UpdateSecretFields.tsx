@@ -43,7 +43,7 @@ export default function UpdateSecretFields({
           id="recovery_vault_new_secret"
           placeholder="my_secret"
           type={showSecret ? 'text' : 'password'}
-          info="Set a recovery secret that will be needed anytime a recovery process occurs. This secret will be needed to transfer ownership."
+          info="Set a recovery secret that will be needed anytime a recovery process occurs. This secret will be needed to manage ownership."
           paramName="newSecret"
           maxLength={180}
           passStates={{ show: showSecret, setShow: setShowSecret }}

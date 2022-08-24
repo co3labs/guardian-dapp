@@ -22,39 +22,42 @@ import Background from './elements/Background';
 import { initializeGA } from './context/Analytics';
 
 export default function App() {
-  const { txState } = useContext(GlobalContext);
+  const { txState, showConfetti } = useContext(GlobalContext);
 
   useEffect(() => {
     initializeGA();
   }, []);
 
   return (
-    <Router>
-      <Header />
-      <Snackbar />
-      <WatchLocation />
-      <div className="flex-grow relative z-10 overflow-scroll no-scrollbar flex flex-col">
-        <div className="flex-grow">
-          <Routes>
-            <Route path="" element={<LandingPage />} />
-            <Route path="app">
-              <Route path="welcome" element={<Welcome />} />
-              <Route path="create" element={<CreateVault />} />
-              <Route path="edit" element={<EditVault />} />
-              <Route path="manage" element={<MyVaults />} />
-              <Route path="recover" element={<Recover />} />
-              <Route path="vote" element={<Vote />} />
-            </Route>
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+    <>
+      <div className='relative z-50'>{showConfetti ? <Confetti /> : <></>}</div>
+      <Router>
+        <Header />
+        <Snackbar />
+        <WatchLocation />
+        <div className="flex-grow relative z-10 overflow-scroll no-scrollbar flex flex-col">
+          <div className="flex-grow">
+            <Routes>
+              <Route path="" element={<LandingPage />} />
+              <Route path="app">
+                <Route path="welcome" element={<Welcome />} />
+                <Route path="create" element={<CreateVault />} />
+                <Route path="update" element={<EditVault />} />
+                <Route path="manage" element={<MyVaults />} />
+                <Route path="recover" element={<Recover />} />
+                <Route path="vote" element={<Vote />} />
+              </Route>
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </div>
         </div>
-      </div>
 
-      <Footer />
-      <Background />
-      {/* <TxApprovalModal /> */}
-      {txState.showModal ? <TxApprovalModal /> : <></>}
-      <ReactQueryDevtools initialIsOpen={false} />
-    </Router>
+        <Footer />
+        <Background />
+        {/* <TxApprovalModal /> */}
+        {txState.showModal ? <TxApprovalModal /> : <></>}
+        <ReactQueryDevtools initialIsOpen={false} />
+      </Router>
+    </>
   );
 }

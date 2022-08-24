@@ -4,7 +4,7 @@ import { GlobalContext } from '../context/GlobalState';
 import BackOrContinueBtns from './BackOrContinueBtns';
 import StandardInput from './StandardInput';
 import UpdateSecretFields from './UpdateSecretFields';
-import {useCheckAddVault} from '../hooks/usePermissions';
+import { useCheckAddVault } from '../hooks/usePermissions';
 
 export default function VaultSetup({
   renderFields,
@@ -24,7 +24,7 @@ export default function VaultSetup({
   const { name, profile, secret, old, secretToggle } = renderFields;
   const [nameIsTaken, setNameIsTaken] = useState(false);
 
-  const [validERC725, addressMessage] = useCheckAddVault(true);
+  const [validERC725, addressMessage, addVaultCheckLoading] = useCheckAddVault(true);
 
   useEffect(() => {
     if (allVaults) {
@@ -47,12 +47,14 @@ export default function VaultSetup({
             value={currentVaultEdits.vaultName}
             id="recovery_vault_name"
             placeholder="my vault"
-            info="This name is for you to easily identify your Recovery Vault while using the Guardian app. The name will not be
+            info="This name is for you to easily identify your Recovery Vault while using the Guardians dApp. The name will not be
             stored on chain."
             paramName="vaultName"
             maxLength={maxLength}
             className="w-full"
-            error={nameIsTaken && location?.pathname === "/app/create" ? 'You already have a vault with this name.' : ''}
+            error={
+              nameIsTaken && location?.pathname === '/app/create' ? 'You already have a vault with this name.' : ''
+            }
           />
         ) : (
           <></>
@@ -65,11 +67,12 @@ export default function VaultSetup({
             value={currentVaultEdits.ERC725Address}
             id="recovery_vault_address"
             placeholder="0x0"
-            info="This is the ERC725 contract address that the Recovery Vault will be associated with. Your contract must already be deployed."
+            info="This is the ERC725 contract address that the new Recovery Vault will be associated with."
             paramName="ERC725Address"
             maxLength={maxLength}
             className="w-full"
             error={addressMessage}
+            loading={addVaultCheckLoading}
           />
         ) : (
           <></>
@@ -108,11 +111,12 @@ export default function VaultSetup({
           confirmText="Continue"
           exitBtn={true}
           conditionNext={
+            validERC725 &&
             !!currentVaultEdits.vaultName &&
             !!currentVaultEdits.ERC725Address &&
             !!currentVaultEdits.newSecret &&
-            validERC725 &&
-            !nameIsTaken
+            !nameIsTaken &&
+            !addVaultCheckLoading
           }
         />
       ) : (

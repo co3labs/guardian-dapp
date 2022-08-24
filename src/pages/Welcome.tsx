@@ -32,7 +32,7 @@ export default function Welcome() {
           </section>{' '}
           <section className="shadow-lg">
             <h3>Manage Existing Vaults</h3>
-            <p>Edit or import your existing vaults. Easily manage your vaults, guardians, and thresholds.</p>
+            <p>Update or import your existing vaults. Easily manage your vaults, guardians, and thresholds.</p>
             <Link className="btnSmall btnSecondary w-fit my-6" to="/app/manage">
               My Vaults
             </Link>

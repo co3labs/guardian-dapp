@@ -11,7 +11,7 @@ export default function Header() {
   return (
     <>
       <header
-        className={`w-full bg-white flex justify-between items-center shadow-md z-20 absolute transition-transform transform ${
+        className={`w-full  bg-white flex justify-between items-center shadow-md z-20 absolute transition-transform transform ${
           location.pathname === '/' ? '-translate-y-full' : ''
         }`}
       >
@@ -26,7 +26,10 @@ export default function Header() {
               Connect Wallet
             </button>
           )}
-          <button className="m-auto" onClick={switchNetwork}>
+          <button
+            className={`m-auto  ${chainId === Number(process.env.REACT_APP_CHAIN_ID) ? 'hover:cursor-default' : ''}`}
+            onClick={switchNetwork}
+          >
             {chainId === Number(process.env.REACT_APP_CHAIN_ID)
               ? 'Lukso Testnet (L16)'
               : chainId

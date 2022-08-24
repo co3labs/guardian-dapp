@@ -4,8 +4,10 @@ import { useQuery } from '@tanstack/react-query';
 import { MoonLoader } from 'react-spinners';
 export default function ListProcessIds() {
   const { recovery, selectedVault, setRecoverInfo, recoverInfo } = useContext(GlobalContext);
-  const { data: ids, isLoading: idsLoading } = useQuery([`process_ids_${selectedVault.current.vaultAddress}`], () =>
-    recovery?.getRecoverProcessesIds(selectedVault.current.vaultAddress)
+  const { data: ids, isLoading: idsLoading } = useQuery(
+    [`process_ids_${selectedVault.current.vaultAddress}`],
+    () => recovery?.getRecoverProcessesIds(selectedVault.current.vaultAddress),
+    { staleTime: 15000, refetchOnMount: true, refetchInterval:10000 }
   );
 
   interface IVoteTotals {
@@ -16,20 +18,27 @@ export default function ListProcessIds() {
 
   const getTotals = async (ids: string[]) => {
     const totals: IVoteTotals = {};
-    for (let i = 0; i < ids.length; i++) {
-      const currId = ids[i];
-      const totalVotes = await recovery?.getTotalVotes(selectedVault.current.vaultAddress, currId);
-      if (totalVotes) totals[currId] = totalVotes;
+    try {
+      for (let i = 0; i < ids.length; i++) {
+        const currId = ids[i];
+        const totalVotes = await recovery?.getTotalVotes(selectedVault.current.vaultAddress, currId);
+        if (totalVotes) totals[currId] = totalVotes;
+      }
+    } catch (error) {
+      console.error('An error occured while getting vote tallies.');
     }
+
     return totals;
   };
 
   useEffect(() => {
-    if (ids)
+    if (ids) {
+      console.log('Ids for vault', ids);
       getTotals(ids).then((res) => {
-        console.log("Vote totals: ", res)
+        console.log('Vote totals: ', res);
         setProcessIdVotes(res);
       });
+    }
   }, [ids]);
 
   return (
@@ -46,11 +55,14 @@ export default function ListProcessIds() {
       {processIdVotes && ids ? (
         ids.map((id) => (
           <div className="w-1/2 flex items-center justify-between ">
-            <button className="my-2 w-fit" onClick={() => setRecoverInfo({ ...recoverInfo, recoveryProcessId: id })}>
+            <button
+              className="p-2 w-fit hover:bg-gray-100 rounded-sm "
+              onClick={() => setRecoverInfo({ ...recoverInfo, recoveryProcessId: id })}
+            >
               {id}
             </button>
             <p className="text-gray-400 flex items-center">
-              <span className="pb-1 flex">{processIdVotes[id] || <MoonLoader size={16}/>}</span>
+              <span className="pb-1 flex">{processIdVotes[id] || <MoonLoader size={16} />}</span>
               <span className="mx-1">/</span>
               <span className="pt-1">{selectedVault.current.guardianCount}</span>
             </p>

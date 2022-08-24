@@ -9,7 +9,7 @@ export default function RecoverIdInput() {
     <StandardInput
       id="recover_process_id"
       title="Recovery Process ID"
-      info="The identifies the specific recovery process you are voting for, effectively grouping potentially concurrent processes."
+      info="The identifies the specific recovery process you are voting for. Select one from the left or enter a new one."
       elementTitle="ID"
       maxLength={Infinity}
       paramName={'recoveryProcessId'}

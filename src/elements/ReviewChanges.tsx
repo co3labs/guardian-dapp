@@ -1,7 +1,7 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IGuardianList, ITxState, IVaultInfo } from '../@types/types';
-import { cantAddVaults, GlobalContext } from '../context/GlobalState';
+import { cantAddVaults, GlobalContext, INITIAL_TX_STATE } from '../context/GlobalState';
 import BackOrContinueBtns from './BackOrContinueBtns';
 import ElementWithTitle from './ElementWithTitle';
 import { useGuardians, usePermissions, useSecret, useThreshold, useVault } from '../hooks';
@@ -24,9 +24,10 @@ export default function ReviewChanges() {
     showConfetti,
   } = useContext(GlobalContext);
   const [showSecret, setShowSecret] = useState(false);
+  const [noChange, setNoChange] = useState(false);
   const fields: [string, string, boolean, string][] = [
-    ['Recovery Vault Name', 'vaultName', false, '2xl'],
-    ['Transaction Approval Threshold', 'threshold', false, '2xl'],
+    ['Recovery Vault Name', 'vaultName', false, 'base'],
+    ['Transaction Approval Threshold', 'threshold', false, 'base'],
     ['ERC725 Address', 'ERC725Address', false, 'base'],
     ['Secret', 'newSecret', true, 'base'],
   ];
@@ -38,6 +39,87 @@ export default function ReviewChanges() {
   const { setSecret } = useSecret();
   const { setThreshold } = useThreshold();
   const { deployVault } = useVault();
+
+  useEffect(() => {
+    if (location?.pathname !== '/app/update') return;
+    const { transactionIsNeeded } = checkTransactionNeeded();
+    const [updatedNeeded] = checkNamesChanged();
+
+    if (transactionIsNeeded || updatedNeeded) {
+      setNoChange(false);
+    } else {
+      setNoChange(true);
+    }
+  }, [currentVaultEdits]);
+
+  function checkNamesChanged(): [boolean, IVaultInfo | null] {
+    const nameChanged = selectedVault.current.vaultName !== currentVaultEdits.vaultName;
+    const guardiansNameChanged = Object.values(currentVaultEdits.guardianList).find(
+      (guardian) => guardian.name !== selectedVault.current.guardianList[guardian.address].name
+    );
+
+    let updatedNeeded = false;
+    if (nameChanged || guardiansNameChanged) {
+      updatedNeeded = true;
+      const newGuardians: IGuardianList = {};
+      Object.values(currentVaultEdits.guardianList).forEach((guardian) => {
+        newGuardians[guardian.address] = { name: guardian.name, address: guardian.address };
+      });
+      return [
+        updatedNeeded,
+        {
+          ...selectedVault.current,
+          vaultName: currentVaultEdits.vaultName,
+          guardianList: newGuardians,
+        },
+      ];
+    }
+
+    return [updatedNeeded, null];
+  }
+
+  function checkTransactionNeeded() {
+    const callDeployVault = !!!selectedVault.current.vaultAddress;
+    const callAddPermissions = location?.pathname === '/app/create'; //this should actually check permissions
+    const callSetSecret = !!currentVaultEdits.newSecret;
+    const callSetThreshold =
+      location?.pathname === '/app/create' || selectedVault.current.threshold !== currentVaultEdits.threshold;
+
+    let addGuardianList = [];
+    let removeGuardianList = [];
+
+    for (const guardian of Object.values(currentVaultEdits.guardianList)) {
+      switch (guardian.action) {
+        case 'remove':
+          removeGuardianList.push(guardian.address);
+          break;
+        case 'add':
+          addGuardianList.push(guardian.address);
+          break;
+        default:
+          if (location?.pathname === '/app/create') addGuardianList.push(guardian.address);
+          break;
+      }
+    }
+
+    const transactionIsNeeded =
+      callDeployVault ||
+      callAddPermissions ||
+      callSetSecret ||
+      callSetThreshold ||
+      addGuardianList.length ||
+      removeGuardianList.length;
+
+    return {
+      transactionIsNeeded,
+      callDeployVault,
+      callAddPermissions,
+      callSetSecret,
+      callSetThreshold,
+      addGuardianList,
+      removeGuardianList,
+    };
+  }
 
   async function executeTransactions(newTxState: ITxState) {
     if (!walletAddress) throw new Error('No wallet address connected');
@@ -162,7 +244,10 @@ export default function ReviewChanges() {
               </div>
             </div>
             <div className="w-full flex justify-end">
-              <CannotContinueError render={canAddVault} message={cantAddVaults} />
+              <CannotContinueError
+                render={canAddVault && !noChange}
+                message={noChange ? 'No changes have been made' : cantAddVaults}
+              />
             </div>
           </div>
         ) : (
@@ -172,42 +257,22 @@ export default function ReviewChanges() {
       <BackOrContinueBtns
         confirmText={'Confirm'}
         exitBtn={true}
-        conditionNext={canAddVault}
+        conditionNext={canAddVault && !noChange}
         onNextClick={async () => {
-          const callDeployVault = !!!selectedVault.current.vaultAddress;
-          const callAddPermissions = location?.pathname === '/app/create'; //this should actually check permissions
-          const callSetSecret = !!currentVaultEdits.newSecret;
-          const callSetThreshold =
-            location?.pathname === '/app/create' || selectedVault.current.threshold !== currentVaultEdits.threshold;
-
-          let addGuardianList = [];
-          let removeGuardianList = [];
-
-          for (const guardian of Object.values(currentVaultEdits.guardianList)) {
-            switch (guardian.action) {
-              case 'remove':
-                removeGuardianList.push(guardian.address);
-                break;
-              case 'add':
-                addGuardianList.push(guardian.address);
-                break;
-              default:
-                if (location?.pathname === '/app/create') addGuardianList.push(guardian.address);
-                break;
-            }
-          }
-
-          const transactionIsNeeded =
-            callDeployVault ||
-            callAddPermissions ||
-            callSetSecret ||
-            callSetThreshold ||
-            addGuardianList.length ||
-            removeGuardianList.length;
+          const {
+            transactionIsNeeded,
+            callDeployVault,
+            callAddPermissions,
+            callSetSecret,
+            callSetThreshold,
+            addGuardianList,
+            removeGuardianList,
+          } = checkTransactionNeeded();
 
           if (transactionIsNeeded) {
             if (!walletAddress) throw new Error('No account id.');
             const newTxState = {
+              ...INITIAL_TX_STATE,
               showModal: true,
               'Deploy Recovery Vault': callDeployVault,
               'Add Permissions': callAddPermissions,
@@ -220,24 +285,11 @@ export default function ReviewChanges() {
             setTxState(newTxState);
             await executeTransactions(newTxState);
           } else {
-            const nameChanged = selectedVault.current.vaultName !== currentVaultEdits.vaultName;
-            const guardiansNameChanged = Object.values(currentVaultEdits.guardianList).find(
-              (guardian) => guardian.name !== selectedVault.current.guardianList[guardian.address].name
-            );
-
-            if (nameChanged || guardiansNameChanged) {
-              const newGuardians: IGuardianList = {};
-              Object.values(currentVaultEdits.guardianList).forEach((guardian) => {
-                newGuardians[guardian.address] = { name: guardian.name, address: guardian.address };
-              });
-
+            const [updatedNeeded, changes] = checkNamesChanged();
+            if (updatedNeeded && changes) {
               setAllVaults({
                 ...allVaults,
-                [selectedVault.current.vaultAddress]: {
-                  ...selectedVault.current,
-                  vaultName: currentVaultEdits.vaultName,
-                  guardianList: newGuardians,
-                },
+                [selectedVault.current.vaultAddress]: changes,
               });
               navigate('/app/manage');
               alert('Recovery Vault has been updated.');

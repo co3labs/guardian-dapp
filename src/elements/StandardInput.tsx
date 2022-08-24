@@ -17,6 +17,7 @@ export default function StandardInput({
   recover,
   isERC725,
   error,
+  loading,
 }: {
   paramName: string;
   elementTitle: string;
@@ -32,6 +33,7 @@ export default function StandardInput({
   recover?: boolean;
   isERC725?: boolean;
   error?: string;
+  loading?: boolean;
 }) {
   const { currentVaultEdits, setCurrentVaultEdits, recoverInfo, setRecoverInfo, web3, recovery, walletAddress } =
     useContext(GlobalContext);
@@ -53,6 +55,7 @@ export default function StandardInput({
         title={elementTitle}
         passStates={passStates}
         error={errorMessage}
+        loading={loading}
         element={
           <input
             onChange={(e) => {

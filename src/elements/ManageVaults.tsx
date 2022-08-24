@@ -11,7 +11,7 @@ import ElementWithTitle from './ElementWithTitle';
 import InfoParagraph from './InfoParagraph';
 import { Link } from 'react-router-dom';
 import { IGuardianInfo, IGuardianList, IVaultInfo } from '../@types/types';
-import { BsChevronDown, BsPen, BsPenFill } from 'react-icons/bs';
+import { BsBoxArrowUpRight, BsChevronDown, BsPen, BsPenFill } from 'react-icons/bs';
 
 export default function ManageVaults() {
   const {
@@ -49,7 +49,7 @@ export default function ManageVaults() {
           resetVaultAndSteps(vault);
           selectedVault.current = vault;
         }}
-        to="/app/edit"
+        to="/app/update"
         className="text-xs btnSecondary py-1 px-2"
       >
         Update
@@ -162,11 +162,11 @@ export default function ManageVaults() {
                         }
                       }
                     }}
-                    className="vaultListItem group"
+                    className="vaultListItem group hover:cursor-pointer "
                   >
                     <td
                       className={
-                        'w-max overflow-x-scroll no-scrollbar h-full bg-blue-800 bg-opacity-10 border-l border-y rounded-l-sm group-hover:border-blue-800 ' +
+                        'w-max overflow-x-scroll no-scrollbar h-full bg-gray-800 bg-opacity-5 border-l border-y rounded-l-sm group-hover:border-blue-800 group-hover:cursor-pointer ' +
                         selectedClasses(vault)
                       }
                     >
@@ -181,14 +181,15 @@ export default function ManageVaults() {
                   </tr>
                   <tr className={`${currentVaultEdits.vaultAddress === vault.vaultAddress ? 'visible' : 'hidden'} `}>
                     <td colSpan={5}>
-                      <div className="inline-flex">
+                    {/* className={`${currentVaultEdits.vaultAddress === vault.vaultAddress ? 'h-56 max-h-fit py-1' : 'h-0 overflow-hidden'} inline-flex transition-height`} */}
+                      <div className='inline-flex'>
                         <div className="">
                           {[
                             ['Recovery Vault Address', vault.vaultAddress],
                             ['Profile Address', vault.ERC725Address],
                             ['Last Updated', getLastUpdated()],
                           ].map((item: string[]) => (
-                            <div className="my-6 mr-6 ">
+                            <div className="mb-6 mr-6 flex justify-center">
                               <ElementWithTitle
                                 title={item[0]}
                                 element={
@@ -196,12 +197,13 @@ export default function ManageVaults() {
                                     <a
                                       target="_blank"
                                       href={`${blockExplorer}${item[1]}`}
-                                      className="vaultInfo hover:text-blue-800 px-12 w-full"
+                                      className="vaultInfo hover:text-blue-800 px-12 w-full flex items-center"
                                     >
-                                      {stringOrAddress(item[1])[0]}
+                                      <span className='mr-3'>{stringOrAddress(item[1])[0]}</span>
+                                      <BsBoxArrowUpRight />
                                     </a>
                                   ) : (
-                                    <p className="vaultInfo hover:text-blue-800 px-12 w-full">{item[1]}</p>
+                                    <p className="vaultInfo px-12 w-full text-center">{item[1]}</p>
                                   )
                                 }
                               />
@@ -212,16 +214,18 @@ export default function ManageVaults() {
                           title={`Guardian List (${vault.guardianCount})`}
                           element={
                             <>
-                              <div className="border mt-6 p-6">
+                              <div className="border px-6 py-3 rounded-sm">
                                 {Object.entries(vault.guardianList).map(([_, guardian]) => (
-                                  <div className="flex w-fit items-center my-3">
+                                  <div className="flex w-fit items-center my-2">
                                     <p className="mr-6">{guardian.name}</p>
                                     <a
                                       href={`${blockExplorer}${guardian.address}`}
-                                      className="mr-6 text-sm text-gray-400 hover:text-black"
+                                      className="mr-6 text-sm text-gray-400 hover:text-black flex items-center"
                                     >
-                                      <span className="hidden xl:block">{guardian.address}</span>
-                                      <span className="block xl:hidden">{getShortId(guardian.address)}</span>
+                                      <span className="hidden xl:block mr-3">{guardian.address}</span>
+                                      <span className="block xl:hidden mr-3">{getShortId(guardian.address)}</span>
+                                      <BsBoxArrowUpRight />
+
                                     </a>
                                   </div>
                                 ))}

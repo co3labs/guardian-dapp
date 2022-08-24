@@ -1,6 +1,8 @@
 import { useContext, useEffect, useState } from 'react';
-import { GlobalContext } from '../context/GlobalState';
+import { BsChevronLeft } from 'react-icons/bs';
+import { GlobalContext, INITIAL_TX_STATE } from '../context/GlobalState';
 import BackOrContinueBtns from './BackOrContinueBtns';
+import CannotContinueError from './CannotContinueError';
 import Confetti from './Confetti';
 import ListProcessIds from './ProcessIdList';
 import RecoverIdInput from './RecoveryIdInput';
@@ -17,24 +19,34 @@ export default function RecoverOwnerShip() {
     allVaults,
     setShowConfetti,
     showConfetti,
+    setRecovering,
+    setTxState,
   } = useContext(GlobalContext);
 
   const [canRecover, setCanRecover] = useState<[boolean, string]>([false, '']);
+  const [loading, setLoading] = useState<boolean>(false);
   const [userCanRecover, recoverMessage] = canRecover;
 
   async function canRecoverProfile() {
-    if (walletAddress) {
-      const userCanRecover = await recovery?.canRecover(
-        selectedVault.current.vaultAddress,
-        recoverInfo.recoveryProcessId,
-        walletAddress
-      );
+    try {
+      setLoading(true);
+      if (walletAddress) {
+        const userCanRecover = await recovery?.canRecover(
+          selectedVault.current.vaultAddress,
+          recoverInfo.recoveryProcessId,
+          walletAddress
+        );
 
-      if (userCanRecover) {
-        setCanRecover([true, '']);
-      } else {
-        setCanRecover([false, 'There are not enough votes for this wallet address.']);
+        if (userCanRecover) {
+          setCanRecover([true, '']);
+        } else {
+          setCanRecover([false, 'There are not enough votes for this wallet address to recover ownership.']);
+        }
       }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -54,12 +66,16 @@ export default function RecoverOwnerShip() {
         <div className="w-1/2">
           <RecoverIdInput />
           <UpdateSecretFields renderFields={{ old: true, secret: true, updateSecret: true }} />
+          <div className='ml-6 my-6'>
+            <CannotContinueError render={userCanRecover} message={recoverMessage} />
+          </div>
         </div>
       </div>
       <BackOrContinueBtns
         back="/app/manage"
-        backText={'My Vaults'}
+        backText={<BsChevronLeft />}
         exitBtn={true}
+        confirmLoading={loading}
         conditionNext={
           !!(recoverInfo.recoveryProcessId && recoverInfo.newSecret && recoverInfo.oldSecret && userCanRecover)
         }
@@ -80,7 +96,13 @@ export default function RecoverOwnerShip() {
             walletAddress,
             '<-- walletAddress \n'
           );
-          if (walletAddress)
+          if (walletAddress) {
+            setRecovering('loading');
+            setTxState({
+              ...INITIAL_TX_STATE,
+              showModal: true,
+              'Recover Ownership': true,
+            });
             recovery
               ?.recoverOwnership(
                 selectedVault.current.vaultAddress,
@@ -92,12 +114,17 @@ export default function RecoverOwnerShip() {
               )
               .then(() => {
                 setShowConfetti(true);
+                setRecovering('success');
                 addToGlobalSnackbarQue('Profile Successfully Recovered!');
                 setAllVaults({
                   ...allVaults,
                   [selectedVault.current.vaultAddress]: { ...selectedVault.current, vaultOwner: walletAddress },
                 });
+              })
+              .catch(() => {
+                setRecovering('failed');
               });
+          }
         }}
       />{' '}
     </>

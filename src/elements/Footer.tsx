@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import GitInfo, { GitCommitInformation } from 'react-git-info/macro';
 export default function Footer() {
   const links = [['Hashmesh Labs © 2022'], ['GitHub', 'https://github.com/hashmesh'], ['v1.0.0beta']];
-  const [gitinfo, setGitInfo] = useState();
   function getCommitInfo(): GitCommitInformation {
     const gitInfo = GitInfo();
     return gitInfo.commit;

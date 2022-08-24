@@ -54,6 +54,8 @@ export const INITIAL_TX_STATE: ITxState = {
   'Set Threshold': false,
   'Add Guardians': [],
   'Remove Guardians': [],
+  'Vote to Recover': false,
+  'Recover Ownership': false,
 };
 
 export const vaultCreatedTopic = '0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0';
@@ -102,6 +104,8 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
   const [guardiansToRemove, setGuardiansToRemove] = useState<IGuardianList>({});
 
   const [txState, setTxState] = useState<ITxState>(INITIAL_TX_STATE);
+  const [voting, setVoting] = useState<ITxProgress>('');
+  const [recovering, setRecovering] = useState<ITxProgress>('');
   const [vaultDeploying, setVaultDeploying] = useState<ITxProgress>('');
   const [secretUpdating, setSecretUpdating] = useState<ITxProgress>('');
   const [thresholdUpdating, setThresholdUpdating] = useState<ITxProgress>('');
@@ -377,6 +381,10 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
         setGuardiansToRemove,
         showConfetti,
         setShowConfetti,
+        voting,
+        setVoting,
+        recovering,
+        setRecovering,
       }}
     >
       <>{children}</>

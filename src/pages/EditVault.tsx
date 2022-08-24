@@ -14,7 +14,7 @@ export default function EditVault() {
         ['Guardians', <GuardianForm />],
         ['Review & Update', <ReviewChanges />],
       ]}
-      title="Edit Your Recovery Vault"
+      title="Update Your Recovery Vault"
     />
   );
 }

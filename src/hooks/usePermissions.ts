@@ -32,16 +32,24 @@ export default function useSetPermissions() {
 const checkEthAddy = (web3: Web3, address: string) => web3.utils.isAddress(address);
 
 /**
- * Returns a boolean state signifying whether the current connected address can add vaults to a up.
- *
+ * Checks wetherthe current wallet can add vaults to an ERC725 contract
+ * @param isERC725 If provided and the function catches an error, it will set the
+ * string in the response to 'This is not a valid UP ERC725 address'
+ * @returns An array containing [
+ * boolean (whether the connected wallet can add vaults)
+ * string (an error message if the user cannot add vaults)
+ * boolean (a loading state)
+ * ]
  */
-export function useCheckAddVault(isERC725: boolean = false) {
+export function useCheckAddVault(isERC725: boolean = false): [boolean, string, boolean] {
   const [canAddVaults, setCanAddVaults] = useState<[boolean, string]>([true, '']);
+  const [loading, setLoading] = useState(false);
 
   const { web3, walletAddress, currentVaultEdits, recovery } = useContext(GlobalContext);
 
   async function checkVaultAddress() {
     if (!web3 || !walletAddress) return;
+    setLoading(true);
     const isAddress = checkEthAddy(web3, currentVaultEdits.ERC725Address);
     let canAddVault;
     try {
@@ -55,6 +63,8 @@ export function useCheckAddVault(isERC725: boolean = false) {
       }
     } catch (error) {
       if (isERC725) setCanAddVaults([false, 'This is not a vaild UP ERC725 address.']);
+    } finally {
+      setLoading(false);
     }
   }
   useEffect(() => {
@@ -63,23 +73,41 @@ export function useCheckAddVault(isERC725: boolean = false) {
     }
   }, [currentVaultEdits.ERC725Address, walletAddress]);
 
-  return canAddVaults;
+  return [...canAddVaults, loading];
 }
 
-export function useCheckUserCanVote() {
+/**
+ * Checks wether the current wallet can vote.
+ *
+ * @returns An array containing [
+ * boolean (whether the connected wallet can vode)
+ * string (an error message if the user cannot vote)
+ * boolean (a loading state)
+ * ]
+ */
+export function useCheckUserCanVote(): [boolean, string, boolean] {
   const [canVote, setCanVote] = useState<[boolean, string]>([true, '']);
+  const [loading, setLoading] = useState(false);
+
   const { walletAddress, recovery, selectedVault } = useContext(GlobalContext);
 
   async function checkUserCanVote() {
     if (recovery && walletAddress) {
-      const isAGuardian = await recovery.isGuardian(selectedVault.current.vaultAddress, walletAddress);
-      if (!isAGuardian) {
-        setCanVote([
-          false,
-          'Current connected wallet is not a guardian of this vault. Only guardians can vote to recover.',
-        ]);
-      } else {
-        setCanVote([true, '']);
+      try {
+        setLoading(true);
+        const isAGuardian = await recovery.isGuardian(selectedVault.current.vaultAddress, walletAddress);
+        if (!isAGuardian) {
+          setCanVote([
+            false,
+            'Current connected wallet is not a guardian of this vault. Only guardians can vote to recover.',
+          ]);
+        } else {
+          setCanVote([true, '']);
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
       }
     }
   }
@@ -88,31 +116,40 @@ export function useCheckUserCanVote() {
     checkUserCanVote();
   }, [walletAddress, selectedVault.current.vaultAddress]);
 
-  return canVote;
+  return [...canVote, loading];
 }
 
-export function useCheckNewOwner() {
+export function useCheckNewOwner(): [boolean, string, boolean] {
   const [canBeNewOwner, setCanBeNewOwner] = useState<[boolean, string]>([true, '']);
+  const [loading, setLoading] = useState(false);
+
   const { selectedVault, recovery, recoverInfo, web3 } = useContext(GlobalContext);
 
   async function checkCanBeNewOwner() {
     if (web3 && recovery && recoverInfo.newOwner) {
-      const isAddress = checkEthAddy(web3, recoverInfo.newOwner);
-      if (!isAddress) {
-        setCanBeNewOwner([false, 'Invalid Eth Address']);
-        return;
-      }
+      try {
+        setLoading(true)
+        const isAddress = checkEthAddy(web3, recoverInfo.newOwner);
+        if (!isAddress) {
+          setCanBeNewOwner([false, 'Invalid Eth Address']);
+          return;
+        }
 
-      const isCurrentController = await recovery.canCreateRecoveryVault(
-        recoverInfo.newOwner,
-        selectedVault.current.ERC725Address
-      );
-      if (isCurrentController) {
-        setCanBeNewOwner([false, 'Cannot vote for current controller.']);
-        return;
-      }
+        const isCurrentController = await recovery.canCreateRecoveryVault(
+          recoverInfo.newOwner,
+          selectedVault.current.ERC725Address
+        );
+        if (isCurrentController) {
+          setCanBeNewOwner([false, 'Cannot vote for current controller.']);
+          return;
+        }
 
-      setCanBeNewOwner([true, '']);
+        setCanBeNewOwner([true, '']);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
     }
   }
 
@@ -120,5 +157,5 @@ export function useCheckNewOwner() {
     checkCanBeNewOwner();
   }, [recoverInfo.newOwner, selectedVault.current.ERC725Address]);
 
-  return canBeNewOwner;
+  return [...canBeNewOwner, loading];
 }

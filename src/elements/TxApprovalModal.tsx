@@ -2,9 +2,8 @@ import { useContext, useEffect, useState } from 'react';
 import { BsCheckCircleFill, BsX } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 import { MoonLoader } from 'react-spinners';
-import { ITxProgress} from '../@types/types';
+import { ITxProgress } from '../@types/types';
 import { GlobalContext } from '../context/GlobalState';
-import Confetti from './Confetti';
 import InfoParagraph from './InfoParagraph';
 
 export default function TxApprovalModal() {
@@ -17,7 +16,10 @@ export default function TxApprovalModal() {
     vaultDeploying,
     addGuardiansLoading,
     removeGuardiansLoading,
-    showConfetti
+    showConfetti,
+    recovering,
+    voting,
+    location
   } = useContext(GlobalContext);
   const navigate = useNavigate();
   const [txs, setTxs] = useState<[string, any][]>([]);
@@ -46,24 +48,28 @@ export default function TxApprovalModal() {
     <>
       <div className="absolute top-0 right-0 left-0 bottom-0 bg-black z-20 bg-opacity-25">
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-gray-100 flex flex-col p-6 rounded-sm border border-blue-800 shadow-lg">
-          <div className="w-full flex justify-end">
-            <button
-              onClick={() => {
-                setTxState({ ...txState, showModal: false });
-                navigate('/app/welcome');
-              }}
-            >
-              <BsX />
-            </button>
-          </div>
           {txs.length > 0 ? (
             <>
-              Sign these transactions in your wallet.
+              <div className="w-full flex justify-between mb-2">
+                <span>Sign these transactions in your wallet.</span>
+                <button
+                  className="p-1 border rounded-sm hover:bg-gray-200"
+                  onClick={() => {
+                    setTxState({ ...txState, showModal: false });
+                    if (location?.pathname === '/app/create') {
+                      navigate('/app/welcome');
+                    }
+                  }}
+                >
+                  <BsX />
+                </button>
+              </div>
+
               <InfoParagraph
                 tailwindMaxW="max-w-sm"
                 text={`You will need to sign a transaction for each 
-            item in this list. Each guardian will be a seperate
-            transaction`}
+            item in this list. For adding or removing guardians, each will be a seperate
+            transaction.`}
               />
               <>
                 {txs.map(([title, value], index) => {
@@ -85,6 +91,12 @@ export default function TxApprovalModal() {
                     case 'Remove Guardians':
                       state = removeGuardiansLoading;
                       break;
+                    case 'Recover Ownership':
+                      state = recovering;
+                      break;
+                    case 'Vote to Recover':
+                      state = voting;
+                      break;
                     default:
                       state = permissionsUpdating;
                       break;
@@ -92,7 +104,7 @@ export default function TxApprovalModal() {
 
                   return (
                     <div
-                      className={`p-2 my-2 border ${
+                      className={`p-2 my-2 border rounded-sm ${
                         state === 'loading'
                           ? 'border-blue-800 bg-blue-800 bg-opacity-10'
                           : 'border-gray-200 text-gray-400'

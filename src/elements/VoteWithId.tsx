@@ -1,5 +1,6 @@
 import { useContext } from 'react';
-import { GlobalContext } from '../context/GlobalState';
+import { BsChevronLeft } from 'react-icons/bs';
+import { GlobalContext, INITIAL_TX_STATE } from '../context/GlobalState';
 import { useCheckAddVault, useCheckNewOwner, useCheckUserCanVote } from '../hooks/usePermissions';
 import BackOrContinueBtns from './BackOrContinueBtns';
 import CannotContinueError from './CannotContinueError';
@@ -8,10 +9,12 @@ import RecoverIdInput from './RecoveryIdInput';
 import StandardInput from './StandardInput';
 
 export default function VoteWithId() {
-  const { recoverInfo, selectedVault, recovery, walletAddress, addToGlobalSnackbarQue } = useContext(GlobalContext);
+  const { recoverInfo, selectedVault, recovery, walletAddress, addToGlobalSnackbarQue, setTxState, setVoting, setShowConfetti } =
+    useContext(GlobalContext);
 
-  const [userCanVote, canVoteMessage] = useCheckUserCanVote();
-  const [isNotPrevOwner, prevOwnerMessage] = useCheckNewOwner();
+  const [userCanVote, canVoteMessage, loadingCanVote] = useCheckUserCanVote();
+  const [isNotPrevOwner, prevOwnerMessage, loadingCheckOwner] = useCheckNewOwner();
+
   return (
     <>
       <div className="w-full flex flex-row">
@@ -40,9 +43,19 @@ export default function VoteWithId() {
       </div>
       <BackOrContinueBtns
         back="/app/manage"
-        backText={'My Vaults'}
+        backText={<BsChevronLeft />}
         exitBtn={true}
-        conditionNext={!!(recoverInfo.recoveryProcessId && userCanVote && isNotPrevOwner)}
+        confirmLoading={loadingCanVote || loadingCheckOwner}
+        conditionNext={
+          !!(
+            recoverInfo.recoveryProcessId &&
+            recoverInfo.newOwner &&
+            userCanVote &&
+            isNotPrevOwner &&
+            !loadingCanVote &&
+            !loadingCheckOwner
+          )
+        }
         confirmText="Vote"
         onNextClick={() => {
           console.log(
@@ -59,6 +72,13 @@ export default function VoteWithId() {
             '<-- walletAddress \n'
           );
           if (walletAddress) {
+            setTxState({
+              ...INITIAL_TX_STATE,
+              showModal: true,
+              'Vote to Recover': true,
+            });
+            setVoting('loading');
+
             recovery
               ?.voteToRecover(
                 recoverInfo.recoveryProcessId,
@@ -68,7 +88,12 @@ export default function VoteWithId() {
                 walletAddress
               )
               .then(() => {
+                setVoting('success');
+                setShowConfetti(true)
                 addToGlobalSnackbarQue('Successfuly Voted');
+              })
+              .catch(() => {
+                setVoting('failed');
               });
           }
         }}

@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction } from 'react';
 import { BsEye, BsEyeSlash } from 'react-icons/bs';
+import { MoonLoader } from 'react-spinners';
 
 export default function ElementWithTitle({
   title,
@@ -9,6 +10,7 @@ export default function ElementWithTitle({
   parentClasses,
   titleClasses,
   error,
+  loading,
 }: {
   title: string;
   element: JSX.Element;
@@ -17,6 +19,7 @@ export default function ElementWithTitle({
   parentClasses?: string;
   titleClasses?: string;
   error?: string;
+  loading?: boolean;
 }) {
   return (
     <div className={`relative flex-grow ${parentClasses}`}>
@@ -34,6 +37,13 @@ export default function ElementWithTitle({
         >
           {passStates.show ? <BsEye /> : <BsEyeSlash />}
         </button>
+      ) : (
+        <></>
+      )}
+      {loading ? (
+        <div className="bg-white flex text-black p-2 absolute right-2 top-1/2 -translate-y-1/2">
+          {<MoonLoader size={16} />}
+        </div>
       ) : (
         <></>
       )}

@@ -60,6 +60,8 @@ export interface ITxState {
   'Set Threshold': boolean;
   'Add Guardians': string[];
   'Remove Guardians': string[];
+  'Vote to Recover': boolean;
+  'Recover Ownership': boolean;
 }
 
 export interface IVaultDeployReceipt {
@@ -144,4 +146,8 @@ export interface globalStates {
   setGuardiansToRemove: Dispatch<SetStateAction<IGuardianList>>;
   showConfetti: boolean;
   setShowConfetti: Dispatch<SetStateAction<boolean>>;
+  voting: ITxProgress;
+  setVoting: Dispatch<SetStateAction<ITxProgress>>;
+  recovering: ITxProgress;
+  setRecovering: Dispatch<SetStateAction<ITxProgress>>;
 }

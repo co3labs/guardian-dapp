@@ -1,6 +1,7 @@
 import { MouseEventHandler, useContext } from 'react';
 import { BsChevronLeft } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
+import { MoonLoader } from 'react-spinners';
 import { GlobalContext } from '../context/GlobalState';
 
 export default function BackOrContinueBtns({
@@ -12,11 +13,13 @@ export default function BackOrContinueBtns({
   exitBtn,
   backText,
   onBackClick,
+  confirmLoading,
 }: {
   back?: string;
   skip?: number[];
   conditionNext?: boolean;
   confirmText?: string | JSX.Element;
+  confirmLoading?: boolean;
   backText?: string | JSX.Element;
   onNextClick?: Function;
   exitBtn?: boolean;
@@ -51,20 +54,32 @@ export default function BackOrContinueBtns({
       </div>
 
       {skip && !skip.includes(2) ? (
-        <button
-          type="button"
-          onClick={() => {            
-            if (onNextClick) {
-              onNextClick();
-            } else if (conditionNext) {
-              setCurrentStep(currentStep + 1);
-            }
-          }}
-          disabled={!conditionNext}
-          className={`btn btnSmall ${conditionNext ? 'btnPrimary' : 'bg-gray-200 opacity-25 cursor-not-allowed'} w-min transition-colors`}
-        >
-          {confirmText}
-        </button>
+        <div className="flex items-center">
+          {confirmLoading ? (
+            <div className="flex">
+              <MoonLoader size={24} speedMultiplier={0.8} />
+            </div>
+          ) : (
+            <></>
+          )}
+
+          <button
+            type="button"
+            onClick={() => {
+              if (onNextClick) {
+                onNextClick();
+              } else if (conditionNext) {
+                setCurrentStep(currentStep + 1);
+              }
+            }}
+            disabled={!conditionNext}
+            className={`btn btnSmall ${
+              conditionNext ? 'btnPrimary' : 'bg-gray-200 opacity-25 cursor-not-allowed'
+            } w-min transition-colors`}
+          >
+            {confirmText}
+          </button>
+        </div>
       ) : (
         <></>
       )}

@@ -11,7 +11,7 @@ export default function ConnectWallet({ back }: { back?: string }) {
   return (
     <>
       <div className="m-6">
-        <p className="font-light">Connect your wallet to manage your Recover Vaults.</p>
+        <p className="font-light">Connect your wallet to manage your Recovery Vaults.</p>
         <InfoParagraph text="You must be connected to the Lukso Testnet (L16)." />
       </div>
       <div className="w-full py-10 bg-gray-50 flex flex-col justify-center items-center">
