@@ -10,7 +10,7 @@ import NotFound from './elements/NotFound';
 import Snackbar from './elements/Snackbar';
 import WatchLocation from './elements/WatchLocation';
 import { GlobalContext } from './context/GlobalState';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import EditVault from './pages/EditVault';
 import Recover from './pages/Recover';
 import VoteWithId from './elements/VoteWithId';
@@ -19,9 +19,14 @@ import TxApprovalModal from './elements/TxApprovalModal';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import Confetti from './elements/Confetti';
 import Background from './elements/Background';
+import { initializeGA } from './context/Analytics';
 
 export default function App() {
   const { txState } = useContext(GlobalContext);
+
+  useEffect(() => {
+    initializeGA();
+  }, []);
 
   return (
     <Router>
