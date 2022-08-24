@@ -49,8 +49,8 @@ export default function ListProcessIds() {
             <button className="my-2 w-fit" onClick={() => setRecoverInfo({ ...recoverInfo, recoveryProcessId: id })}>
               {id}
             </button>
-            <p className="text-gray-400">
-              <span className="pb-1">{processIdVotes[id]}</span>
+            <p className="text-gray-400 flex items-center">
+              <span className="pb-1 flex">{processIdVotes[id] || <MoonLoader size={16}/>}</span>
               <span className="mx-1">/</span>
               <span className="pt-1">{selectedVault.current.guardianCount}</span>
             </p>
