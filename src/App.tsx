@@ -20,11 +20,10 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import Confetti from './elements/Confetti';
 
 export default function App() {
-  const { txState, showConfetti } = useContext(GlobalContext);
+  const { txState } = useContext(GlobalContext);
 
   return (
     <Router>
-      {showConfetti ? <Confetti /> : <></>}
       <Header />
       <Snackbar />
       <WatchLocation />

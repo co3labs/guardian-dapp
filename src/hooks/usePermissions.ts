@@ -36,7 +36,7 @@ const checkEthAddy = (web3: Web3, address: string) => web3.utils.isAddress(addre
  *
  */
 export function useCheckAddVault(isERC725: boolean = false) {
-  const [canAddVaults, setCanAddVaults] = useState<[boolean, string]>([false, '']);
+  const [canAddVaults, setCanAddVaults] = useState<[boolean, string]>([true, '']);
 
   const { web3, walletAddress, currentVaultEdits, recovery } = useContext(GlobalContext);
 
@@ -74,7 +74,10 @@ export function useCheckUserCanVote() {
     if (recovery && walletAddress) {
       const isAGuardian = await recovery.isGuardian(selectedVault.current.vaultAddress, walletAddress);
       if (!isAGuardian) {
-        setCanVote([false, 'Current connected wallet can not vote.']);
+        setCanVote([
+          false,
+          'Current connected wallet is not a guardian of this vault. Only guardians can vote to recover.',
+        ]);
       } else {
         setCanVote([true, '']);
       }

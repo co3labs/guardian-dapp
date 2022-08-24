@@ -33,7 +33,7 @@ export default function VoteWithId() {
             className="w-full"
             error={prevOwnerMessage}
           />
-          <div className="my-12 ml-6">
+          <div className="m-6">
             <CannotContinueError render={userCanVote} message={canVoteMessage} />
           </div>
         </div>

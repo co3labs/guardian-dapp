@@ -1,16 +1,46 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { GlobalContext } from '../context/GlobalState';
 import BackOrContinueBtns from './BackOrContinueBtns';
 import ListProcessIds from './ProcessIdList';
 import RecoverIdInput from './RecoveryIdInput';
-import StandardInput from './StandardInput';
 import UpdateSecretFields from './UpdateSecretFields';
 
 export default function RecoverOwnerShip() {
-  const { recoverInfo, recovery, selectedVault, walletAddress, addToGlobalSnackbarQue, setAllVaults, allVaults, setShowConfetti } =
-    useContext(GlobalContext);
+  const {
+    recoverInfo,
+    recovery,
+    selectedVault,
+    walletAddress,
+    addToGlobalSnackbarQue,
+    setAllVaults,
+    allVaults,
+    setShowConfetti,
+  } = useContext(GlobalContext);
 
-  recovery?.canRecover
+  const [canRecover, setCanRecover] = useState<[boolean, string]>([false, '']);
+  const [userCanRecover, recoverMessage] = canRecover;
+
+  async function canRecoverProfile() {
+    if (walletAddress) {
+      const userCanRecover = await recovery?.canRecover(
+        selectedVault.current.vaultAddress,
+        recoverInfo.recoveryProcessId,
+        walletAddress
+      );
+
+      if (userCanRecover) {
+        setCanRecover([true, '']);
+      } else {
+        setCanRecover([false, 'There are not enough votes for this wallet address.']);
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (walletAddress && recoverInfo.recoveryProcessId) {
+      canRecoverProfile();
+    }
+  }, [walletAddress, recoverInfo.recoveryProcessId]);
 
   return (
     <>
@@ -27,7 +57,9 @@ export default function RecoverOwnerShip() {
         back="/app/manage"
         backText={'My Vaults'}
         exitBtn={true}
-        conditionNext={!!recoverInfo}
+        conditionNext={
+          !!(recoverInfo.recoveryProcessId && recoverInfo.newSecret && recoverInfo.oldSecret && userCanRecover)
+        }
         confirmText="Recover Ownership"
         onNextClick={() => {
           console.log(
@@ -56,7 +88,7 @@ export default function RecoverOwnerShip() {
                 walletAddress
               )
               .then(() => {
-                setShowConfetti(true)
+                setShowConfetti(true);
                 addToGlobalSnackbarQue('Profile Successfully Recovered!');
                 setAllVaults({
                   ...allVaults,

@@ -6,7 +6,7 @@ import BackOrContinueBtns from './BackOrContinueBtns';
 import ElementWithTitle from './ElementWithTitle';
 import { useGuardians, usePermissions, useSecret, useThreshold, useVault } from '../hooks';
 import Confetti from './Confetti';
-import {useCheckAddVault} from '../hooks/usePermissions';
+import { useCheckAddVault } from '../hooks/usePermissions';
 import CannotContinueError from './CannotContinueError';
 
 export default function ReviewChanges() {
@@ -33,11 +33,8 @@ export default function ReviewChanges() {
 
   const navigate = useNavigate();
   const [canAddVault] = useCheckAddVault();
-
-  console.log(Object.values(txState).filter((value) => !!value).length > 1);
-
   const { updateGuardians } = useGuardians();
-  const { addPermissions, checkPermissions } = usePermissions();
+  const { addPermissions } = usePermissions();
   const { setSecret } = useSecret();
   const { setThreshold } = useThreshold();
   const { deployVault } = useVault();
@@ -101,7 +98,10 @@ export default function ReviewChanges() {
       selectedVault.current = newVaultInfo;
       setAllVaults({ ...allVaults, [vaultAddress]: newVaultInfo });
       setShowConfetti(true);
-      addToGlobalSnackbarQue('Recovery Vault Succesfully Created!');
+      location?.pathname === '/app/create'
+        ? addToGlobalSnackbarQue('Recovery Vault Succesfully Created!')
+        : addToGlobalSnackbarQue('Recovery Vault Succesfully Updated!');
+
     } catch (error) {
       console.error(error);
     }
@@ -162,11 +162,11 @@ export default function ReviewChanges() {
               </div>
             </div>
             <div className="w-full flex justify-end">
-              <CannotContinueError render={canAddVault} message={cantAddVaults}/>
+              <CannotContinueError render={canAddVault} message={cantAddVaults} />
             </div>
           </div>
         ) : (
-          <>{/**TODO: Throw / show an error here */}</>
+          <></>
         )}
       </div>
       <BackOrContinueBtns
@@ -248,4 +248,3 @@ export default function ReviewChanges() {
     </>
   );
 }
-

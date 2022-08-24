@@ -52,7 +52,7 @@ export default function VaultSetup({
             paramName="vaultName"
             maxLength={maxLength}
             className="w-full"
-            error={nameIsTaken ? 'You already have a vault with this name.' : ''}
+            error={nameIsTaken && location?.pathname === "/app/create" ? 'You already have a vault with this name.' : ''}
           />
         ) : (
           <></>

@@ -17,6 +17,7 @@ export default function Confetti() {
       onConfettiComplete={() => {
         setShowConfetti(false);
       }}
+      className= "relative z-30"
     />
   );
 }
