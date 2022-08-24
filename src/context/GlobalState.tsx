@@ -228,7 +228,7 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
 
   const switchNetwork = async () => {
     if (!process.env.REACT_APP_CHAIN_ID) return;
-    if (chainId !== process.env.REACT_APP_CHAIN_ID) {
+    if (chainId !== Number(process.env.REACT_APP_CHAIN_ID)) {
       try {
         //@ts-ignore
         await web3?.currentProvider?.request({
