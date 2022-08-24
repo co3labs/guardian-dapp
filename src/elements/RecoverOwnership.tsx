@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { GlobalContext } from '../context/GlobalState';
 import BackOrContinueBtns from './BackOrContinueBtns';
+import Confetti from './Confetti';
 import ListProcessIds from './ProcessIdList';
 import RecoverIdInput from './RecoveryIdInput';
 import UpdateSecretFields from './UpdateSecretFields';
@@ -15,6 +16,7 @@ export default function RecoverOwnerShip() {
     setAllVaults,
     allVaults,
     setShowConfetti,
+    showConfetti,
   } = useContext(GlobalContext);
 
   const [canRecover, setCanRecover] = useState<[boolean, string]>([false, '']);
@@ -44,6 +46,7 @@ export default function RecoverOwnerShip() {
 
   return (
     <>
+      {showConfetti ? <Confetti /> : <></>}
       <div className="w-full flex">
         <div className="w-1/2">
           <ListProcessIds />

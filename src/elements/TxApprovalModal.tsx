@@ -44,8 +44,6 @@ export default function TxApprovalModal() {
 
   return (
     <>
-      {showConfetti ? <Confetti /> : <></>}
-
       <div className="absolute top-0 right-0 left-0 bottom-0 bg-black z-20 bg-opacity-25">
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-gray-100 flex flex-col p-6 rounded-sm border border-blue-800 shadow-lg">
           <div className="w-full flex justify-end">

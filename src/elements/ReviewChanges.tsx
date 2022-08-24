@@ -101,7 +101,6 @@ export default function ReviewChanges() {
       location?.pathname === '/app/create'
         ? addToGlobalSnackbarQue('Recovery Vault Succesfully Created!')
         : addToGlobalSnackbarQue('Recovery Vault Succesfully Updated!');
-
     } catch (error) {
       console.error(error);
     }
@@ -109,6 +108,7 @@ export default function ReviewChanges() {
 
   return (
     <>
+      {showConfetti ? <Confetti /> : <></>}
       <div className="m-6">
         <span className="w-max font-light">Does Everything Look Correct?</span>
 
