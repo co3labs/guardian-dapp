@@ -7,6 +7,9 @@ module.exports = {
   mode: 'jit',
   theme: {
     extend: {
+      fontFamily:{
+        "ubuntu":["'Ubuntu'", "sans", "sans-serif"]
+      },
       spacing: {
         '1px': '1px',
         '2px': '2px',

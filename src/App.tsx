@@ -18,6 +18,7 @@ import Vote from './pages/Vote';
 import TxApprovalModal from './elements/TxApprovalModal';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import Confetti from './elements/Confetti';
+import Background from './elements/Background';
 
 export default function App() {
   const { txState } = useContext(GlobalContext);
@@ -45,6 +46,7 @@ export default function App() {
       </div>
 
       <Footer />
+      <Background />
       {/* <TxApprovalModal /> */}
       {txState.showModal ? <TxApprovalModal /> : <></>}
       <ReactQueryDevtools initialIsOpen={false} />

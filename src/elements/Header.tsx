@@ -10,14 +10,14 @@ export default function Header() {
 
   return (
     <>
-      <Link to="/" className="ml-4">
-        <img src={logo} className="w-32 absolute z-30 top-2 left-2" />
-      </Link>
       <header
-        className={`w-full bg-white flex justify-end items-center shadow-md z-20 absolute transition-transform transform ${
+        className={`w-full bg-white flex justify-between items-center shadow-md z-20 absolute transition-transform transform ${
           location.pathname === '/' ? '-translate-y-full' : ''
         }`}
       >
+        <Link to="/" className="ml-4">
+          <img src={logo} className="w-32" />
+        </Link>
         <div className="text-xs grid grid-flow-col gap-4 mr-4 ">
           {walletAddress ? (
             <span className="border-x border-gray-300 p-3 bg-blue-800 text-white">{getShortId(walletAddress)}</span>
@@ -27,7 +27,11 @@ export default function Header() {
             </button>
           )}
           <button className="m-auto" onClick={switchNetwork}>
-            {chainId === process.env.REACT_APP_CHAIN_ID ? 'Lukso Testnet (L16)' : chainId ? 'Switch to Lukso Network' : 'Network'}
+            {chainId === process.env.REACT_APP_CHAIN_ID
+              ? 'Lukso Testnet (L16)'
+              : chainId
+              ? 'Switch to Lukso Network'
+              : 'Network'}
           </button>
         </div>
       </header>

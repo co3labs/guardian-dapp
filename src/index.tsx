@@ -22,8 +22,6 @@ try {
           <App />
         </GlobalProvider>{' '}
       </QueryClientProvider>
-
-      <Background />
     </React.StrictMode>
   );
 } catch (error) {

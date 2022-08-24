@@ -2,10 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,700;1,300;1,400;1,500;1,700&display=swap');
+
 /* #F6B26B */
 html,
 body {
-  @apply h-full w-full relative flex flex-col overflow-hidden opacity-100;
+  @apply h-full w-full relative flex flex-col overflow-hidden opacity-100 font-ubuntu;
 }
 
 .btnPrimary {
