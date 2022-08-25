@@ -18,11 +18,11 @@ body {
   @apply rounded-sm shadow-md border border-blue-800 bg-white hover:bg-blue-800 hover:bg-opacity-10;
 }
 .btnBig {
-  @apply px-12 py-3 w-max ;
+  @apply px-12 py-3 w-max;
 }
 
 .btnSmall {
-  @apply px-6 py-1 mx-2 w-max ;
+  @apply px-6 py-1 mx-2 w-max;
 }
 
 html,
@@ -39,7 +39,7 @@ input {
 }
 
 .vaultInfo {
-  @apply border rounded-sm py-2 text-xs
+  @apply border rounded-sm py-2 text-xs;
 }
 
 /* Hide scrollbar for IE, Edge and Firefox */
@@ -62,7 +62,7 @@ select {
   border-radius: 0.125rem !important/* 2px */;
 }
 
-.web3modal-modal-lightbox{
+.web3modal-modal-lightbox {
   z-index: 60 !important;
 }
 
@@ -90,10 +90,20 @@ select {
   @apply py-4 border-y;
 }
 
-th, td{
-  @apply lg:px-2 text-center
+th,
+td {
+  @apply lg:px-2 text-center;
 }
 
+html,
+body {
+  background: radial-gradient(circle at 20% 20%, rgba(244, 231, 255, 0.534) 10%, rgba(0, 0, 0, 0) 30%),
+    radial-gradient(circle at 5% 15%, rgba(212, 255, 212, 0.629) 10%, rgba(0, 0, 0, 0) 30%),
+    radial-gradient(circle at 0% 30%, rgba(210, 235, 255, 0.704) 10%, rgba(0, 0, 0, 0) 30%),
+    radial-gradient(circle at 100% 70%, rgba(244, 231, 255, 0.828) 10%, rgba(0, 0, 0, 0) 30%),
+    radial-gradient(circle at 95% 85%, rgba(201, 255, 201, 0.5) 10%, rgba(0, 0, 0, 0) 30%),
+    radial-gradient(circle at 100% 30%, rgba(215, 237, 255, 0.512) 10%, rgba(0, 0, 0, 0) 30%);
+}
 /* td{
   @apply 
 } */
