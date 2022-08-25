@@ -30,11 +30,15 @@ export default function Header() {
             className={`m-auto  ${chainId === Number(process.env.REACT_APP_CHAIN_ID) ? 'hover:cursor-default' : ''}`}
             onClick={switchNetwork}
           >
-            {chainId === Number(process.env.REACT_APP_CHAIN_ID)
-              ? 'Lukso Testnet (L16)'
-              : chainId
-              ? 'Switch to Lukso Network'
-              : 'Network'}
+            {chainId === Number(process.env.REACT_APP_CHAIN_ID) ? (
+              'Lukso Testnet (L16)'
+            ) : chainId ? (
+              <p>
+                Switch to Lukso <span className='ml-1 hidden md:block'>Network</span>{' '}
+              </p>
+            ) : (
+              'Network'
+            )}
           </button>
         </div>
       </header>
