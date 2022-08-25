@@ -10,19 +10,29 @@ export default function CreateVault() {
     <ComponentWrapper
       steps={[
         [
-          <p>
-            Connect <span className="hidden md:visible">Wallet</span>{' '}
+          <p className="flex items-center">
+            Connect <span className="ml-1 hidden md:block">Wallet</span>{' '}
           </p>,
           <ConnectWallet />,
         ],
         [
-          <p>
-            Setup <span className="hidden md:visible">Recovery Vault</span>
+          <p className="flex items-center">
+            Setup <span className="ml-1 hidden md:block">Recovery Vault</span>
           </p>,
           <VaultSetup renderFields={fieldsToRender} />,
         ],
-        [<p><span className='hidden md:visible'>Add </span>Guardians</p>, <GuardianForm />],
-        [<p>Review <span className="hidden md:visible">& Deploy</span></p>, <ReviewChanges />],
+        [
+          <p className="flex items-center">
+            <span className="mr-1 hidden md:block">Add </span>Guardians
+          </p>,
+          <GuardianForm />,
+        ],
+        [
+          <p className="flex items-center">
+            Review <span className="ml-1 hidden md:block">& Deploy</span>
+          </p>,
+          <ReviewChanges />,
+        ],
       ]}
       title="Create a New Recovery Vault"
     />
