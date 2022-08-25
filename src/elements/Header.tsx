@@ -31,10 +31,10 @@ export default function Header() {
             </button>
           )}
           <button
-            className={`m-auto  ${chainId === Number(process.env.REACT_APP_CHAIN_ID) ? 'hover:cursor-default' : ''}`}
+            className={`m-auto  ${Number(chainId) === Number(process.env.REACT_APP_CHAIN_ID) ? 'hover:cursor-default' : ''}`}
             onClick={switchNetwork}
           >
-            {chainId === Number(process.env.REACT_APP_CHAIN_ID) ? (
+            {Number(chainId) === Number(process.env.REACT_APP_CHAIN_ID) ? (
               'Lukso Testnet (L16)'
             ) : chainId ? (
               <p>

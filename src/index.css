@@ -91,5 +91,9 @@ select {
 }
 
 th, td{
-  @apply lg:px-2
+  @apply lg:px-2 text-center
 }
+
+/* td{
+  @apply 
+} */
