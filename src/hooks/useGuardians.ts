@@ -32,7 +32,7 @@ export default function useGuardians() {
           );
           const threshold = await recovery?.getGuardiansThreshold(vaultAddress);
           const guardians = await recovery?.getGuardians(vaultAddress);
-          if (threshold && guardians && threshold > guardians.length) {
+          if (threshold && guardians && threshold < guardians.length) {
             await recovery?.removeGuardian(address, vaultAddress, account, walletAddress);
           } else {
             throw new Error ("Cannot set threshold less than the amount of guardians.")

@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { BsChevronDown } from 'react-icons/bs';
 import OutsideClickHandler from 'react-outside-click-handler';
-import { useNavigate } from 'react-router-dom';
 import { IGuardianInfo, IGuardianInfoEdits, IGuardianList } from '../@types/types';
 import { cantAddVaults, GlobalContext } from '../context/GlobalState';
 import {useCheckAddVault} from '../hooks/usePermissions';
@@ -18,7 +17,6 @@ export default function GuardianForm() {
 
   const [validERC725] = useCheckAddVault();
 
-  const navigate = useNavigate();
   useEffect(() => {
     const culprit = Object.values(currentVaultEdits.guardianList).find(
       (guardian) =>
@@ -109,8 +107,6 @@ export default function GuardianForm() {
             className="btn btnSmall btnSecondary w-fit"
             type="button"
             onClick={() => {
-              let setTo = 'add';
-
               setCurrentVaultEdits({
                 ...currentVaultEdits,
                 guardianCount: currentVaultEdits.guardianCount + 1,

@@ -57,7 +57,7 @@ export default function TxApprovalModal() {
                     className="p-1 border rounded-sm hover:bg-gray-200"
                     onClick={() => {
                       setTxState({ ...txState, showModal: false });
-                      if (location?.pathname === '/app/create') {
+                      if (location?.pathname === '/app/create' || location?.pathname === '/app/update') {
                         navigate('/app/welcome');
                       }
                     }}
@@ -69,8 +69,8 @@ export default function TxApprovalModal() {
                 <InfoParagraph
                   tailwindMaxW="max-w-sm"
                   text={`You will need to sign a transaction for each 
-            item in this list. For adding or removing guardians, each will be a seperate
-            transaction.`}
+                  item in this list. For adding or removing guardians, 
+                  each will be a seperate transaction.`}
                 />
                 <>
                   {txs.map(([title, value], index) => {

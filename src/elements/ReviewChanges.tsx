@@ -42,13 +42,17 @@ export default function ReviewChanges() {
 
   useEffect(() => {
     if (location?.pathname !== '/app/update') return;
-    const { transactionIsNeeded } = checkTransactionNeeded();
-    const [updatedNeeded] = checkNamesChanged();
+    try {
+      const { transactionIsNeeded } = checkTransactionNeeded();
+      const [updatedNeeded] = checkNamesChanged();
 
-    if (transactionIsNeeded || updatedNeeded) {
-      setNoChange(false);
-    } else {
-      setNoChange(true);
+      if (transactionIsNeeded || updatedNeeded) {
+        setNoChange(false);
+      } else {
+        setNoChange(true);
+      }
+    } catch (error) {
+      console.error(error)
     }
   }, [currentVaultEdits]);
 
@@ -235,8 +239,8 @@ export default function ReviewChanges() {
                       <div className="border rounded-sm">
                         <div className="grid grid-flow-col p-4 text-left">
                           <span className="text-gray-300 mr-3">{index + 1}</span> <span>{name}</span>{' '}
-                          <span className='hidden mb:block'>{address}</span>
-                          <span className='md:hidden'>{getShortId(address)}</span>
+                          <span className="hidden mb:block">{address}</span>
+                          <span className="md:hidden">{getShortId(address)}</span>
                         </div>
                       </div>
                     }

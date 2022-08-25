@@ -24,15 +24,7 @@ export default function GuardianInput({
   const [hasTypedName, setHasTypedName] = useState(false);
   const [hasTypedAddress, setHasTypedAddress] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
-  const {
-    currentVaultEdits,
-    setCurrentVaultEdits,
-    selectedVault,
-    web3,
-    location,
-    setGuardiansToRemove,
-    guardiansToRemove,
-  } = useContext(GlobalContext);
+  const { currentVaultEdits, setCurrentVaultEdits, web3, selectedVault, location } = useContext(GlobalContext);
 
   useEffect(() => {
     if (guardian.name && !hasTypedName) setHasTypedName(true);
@@ -68,19 +60,19 @@ export default function GuardianInput({
     let newCount = currentVaultEdits.guardianCount;
     let removeCount = currentVaultEdits.guardianRemoveAmt;
 
-    if (guardian.action === 'remove') {
+    const currentGuardians = Object.values(selectedVault.current.guardianList).map((value) => value.address);
+    if (!currentGuardians.includes(newGuardians[Number(id)].address) || location?.pathname === "/app/create") {
+      delete newGuardians[Number(id)];
+      newCount--;
+    } else if (guardian.action === 'remove') {
       const updatedGuardian: IGuardianInfoEdits = { ...guardian, action: 'add' };
       newGuardians[Number(id)] = updatedGuardian;
       newCount++;
       removeCount--;
     } else {
-      if (location?.pathname === '/app/create') {
-        delete newGuardians[Number(id)];
-      } else {
-        const updatedGuardian: IGuardianInfoEdits = { ...guardian, action: 'remove' };
-        newGuardians[Number(id)] = updatedGuardian;
-        removeCount++;
-      }
+      const updatedGuardian: IGuardianInfoEdits = { ...guardian, action: 'remove' };
+      newGuardians[Number(id)] = updatedGuardian;
+      removeCount++;
       newCount--;
     }
     setCurrentVaultEdits({
