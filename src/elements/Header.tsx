@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { getShortId, GlobalContext, networks } from '../context/GlobalState';
 import logo from '../assets/logo.png';
@@ -7,6 +7,10 @@ export default function Header() {
   const { handleConnect, walletAddress, chainId, switchNetwork } = useContext(GlobalContext);
 
   const location = useLocation();
+
+  useEffect(()=>{
+    console.log(chainId, process.env.REACT_APP_CHAIN_ID)
+  }, [chainId])
 
   return (
     <>
