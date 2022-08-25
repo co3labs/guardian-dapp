@@ -51,8 +51,8 @@ export const INITIAL_TX_STATE: ITxState = {
   'Deploy Recovery Vault': false,
   'Add Permissions': false,
   'Set Secret': false,
-  'Set Threshold': false,
   'Add Guardians': [],
+  'Set Threshold': false,
   'Remove Guardians': [],
   'Vote to Recover': false,
   'Recover Ownership': false,
@@ -133,10 +133,14 @@ export const GlobalProvider = ({ children }: { children: PropsWithChildren<{}> }
           cacheProvider: false,
           network: 'mainnet',
           providerOptions: {
+            
             walletconnect: {
+            
               package: WalletConnectProvider, // required
               options: {
                 infuraId: process.env.REACT_APP_INFURA_ID, // required
+                rpc: { 2828: 'https://rpc.l16.lukso.network/' },
+
               },
             },
           }, // required

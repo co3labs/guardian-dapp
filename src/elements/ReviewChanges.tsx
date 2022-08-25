@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IGuardianList, ITxState, IVaultInfo } from '../@types/types';
-import { cantAddVaults, GlobalContext, INITIAL_TX_STATE } from '../context/GlobalState';
+import { cantAddVaults, getShortId, GlobalContext, INITIAL_TX_STATE } from '../context/GlobalState';
 import BackOrContinueBtns from './BackOrContinueBtns';
 import ElementWithTitle from './ElementWithTitle';
 import { useGuardians, usePermissions, useSecret, useThreshold, useVault } from '../hooks';
@@ -235,7 +235,8 @@ export default function ReviewChanges() {
                       <div className="border rounded-sm">
                         <div className="grid grid-flow-col p-4 text-left">
                           <span className="text-gray-300 mr-3">{index + 1}</span> <span>{name}</span>{' '}
-                          <span>{address}</span>
+                          <span className='hidden mb:block'>{address}</span>
+                          <span className='md:hidden'>{getShortId(address)}</span>
                         </div>
                       </div>
                     }

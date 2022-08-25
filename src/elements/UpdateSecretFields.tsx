@@ -11,7 +11,7 @@ export default function UpdateSecretFields({
   const [showSecret, setShowSecret] = useState(false);
   const [showOldSecret, setShowOldSecret] = useState(false);
   const { old, updateSecret, secret } = renderFields;
-  // old && updateSecret
+
   return (
     <>
       {' '}

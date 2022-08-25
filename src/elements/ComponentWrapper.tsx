@@ -2,10 +2,10 @@ import { useContext } from 'react';
 import { BsCheckCircleFill } from 'react-icons/bs';
 import { GlobalContext } from '../context/GlobalState';
 
-export default function ComponentWrapper({ steps, title }: { steps: [string, JSX.Element][]; title: string | JSX.Element }) {
+export default function ComponentWrapper({ steps, title }: { steps: [string | JSX.Element, JSX.Element][]; title: string | JSX.Element }) {
   const { currentStep } = useContext(GlobalContext);
   return (
-    <div className="w-full h-full flex justify-center items-center px-4 md:px-12 lg:px-0 relative z-10">
+    <div className="w-full h-full flex justify-center items-center md:px-12 lg:px-0 relative z-10">
       <div className="rounded-sm flex flex-col w-full lg:w-2/3 h-full shadow-md bg-white pt-16">
         <div className="p-4 text-2xl">
           <h3>{title}</h3>
@@ -16,7 +16,7 @@ export default function ComponentWrapper({ steps, title }: { steps: [string, JSX
               <div className='h-2px bg-blue-800'></div>
             ) : (
               steps.map(([title], index) => (
-                <div className={`px-2 py-1 relative border-y border-blue-800 overflow-hidden`}>
+                <div className={`px-2 py-1 h-full flex items-center relative border-y border-blue-800 overflow-hidden`}>
                   <div
                     className={`z-10 relative text-center flex items-center justify-center ${
                       index === currentStep ? 'text-white' : 'text-black'

@@ -23,7 +23,7 @@ export default function RecoverOwnerShip() {
     setTxState,
   } = useContext(GlobalContext);
 
-  const [canRecover, setCanRecover] = useState<[boolean, string]>([false, '']);
+  const [canRecover, setCanRecover] = useState<[boolean, string]>([true, '']);
   const [loading, setLoading] = useState<boolean>(false);
   const [userCanRecover, recoverMessage] = canRecover;
 
@@ -59,11 +59,11 @@ export default function RecoverOwnerShip() {
   return (
     <>
       {showConfetti ? <Confetti /> : <></>}
-      <div className="w-full flex">
-        <div className="w-1/2">
+      <div className="w-full flex flex-col md:flex-row">
+        <div className="md:w-1/2">
           <ListProcessIds />
         </div>
-        <div className="w-1/2">
+        <div className="md:w-1/2">
           <RecoverIdInput />
           <UpdateSecretFields renderFields={{ old: true, secret: true, updateSecret: true }} />
           <div className='ml-6 my-6'>

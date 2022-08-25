@@ -9,10 +9,20 @@ export default function CreateVault() {
   return (
     <ComponentWrapper
       steps={[
-        ['Connect Wallet', <ConnectWallet />],
-        ['Setup Recovery Vault', <VaultSetup renderFields={fieldsToRender} />],
-        ['Add Guardians', <GuardianForm />],
-        ['Review & Deploy', <ReviewChanges />],
+        [
+          <p>
+            Connect <span className="hidden md:visible">Wallet</span>{' '}
+          </p>,
+          <ConnectWallet />,
+        ],
+        [
+          <p>
+            Setup <span className="hidden md:visible">Recovery Vault</span>
+          </p>,
+          <VaultSetup renderFields={fieldsToRender} />,
+        ],
+        [<p><span className='hidden md:visible'>Add </span>Guardians</p>, <GuardianForm />],
+        [<p>Review <span className="hidden md:visible">& Deploy</span></p>, <ReviewChanges />],
       ]}
       title="Create a New Recovery Vault"
     />

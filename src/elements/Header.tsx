@@ -11,12 +11,12 @@ export default function Header() {
   return (
     <>
       <header
-        className={`w-full  bg-white flex justify-between items-center shadow-md z-20 absolute transition-transform transform ${
+        className={`w-full bg-white flex justify-between items-center shadow-md z-20 absolute transition-transform transform ${
           location.pathname === '/' ? '-translate-y-full' : ''
         }`}
       >
         <Link to="/" className="ml-4">
-          <img src={logo} className="w-32" />
+          <img src={logo} className="w-28 md:w-32" />
         </Link>
         <div className="text-xs grid grid-flow-col gap-4 mr-4 ">
           {walletAddress ? (

@@ -42,7 +42,8 @@ export default function ManageVaults() {
   };
 
   const links = (vault: IVaultInfo) => (
-    <div className="flex items-center">
+    <>
+      {' '}
       <Link
         id={'edit_vault_' + vault.vaultAddress}
         onClick={() => {
@@ -74,10 +75,7 @@ export default function ManageVaults() {
       >
         Vote
       </Link>
-      <BsChevronDown
-        className={`transition-transform ${currentVaultEdits.vaultAddress === vault.vaultAddress ? 'rotate-180' : ''}`}
-      />
-    </div>
+    </>
   );
 
   useEffect(() => {
@@ -122,10 +120,10 @@ export default function ManageVaults() {
     } catch (error) {}
   };
 
-  const stringOrAddress = (text: string) => {
+  const stringOrAddress = (text: string, short: boolean) => {
     const first2 = text.slice(0, 2);
     if (first2 === '0x') {
-      return [getShortId(text), true];
+      return [short ? getShortId(text) : text, true];
     }
 
     return [text, false];
@@ -133,10 +131,10 @@ export default function ManageVaults() {
 
   return (
     <>
-      <div className="m-6 font-light flex flex-col">
+      <div className="m-2 lg:m-6 font-light flex flex-col overflow-x-scroll">
         <p>Your Recovery Vaults</p>
         {allVaults ? (
-          <table className="w-full border-separate border-spacing-y-6">
+          <table className="w-full border-separate border-spacing-y-6 overflow-x-scroll">
             <thead className="text-left text-xs text-gray-400 table-header-group">
               <tr>
                 <th>Name</th>
@@ -146,7 +144,7 @@ export default function ManageVaults() {
                 <th></th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="overflow-x-scoll">
               {Object.entries(allVaults).map(([_, vault]) => (
                 <>
                   <tr
@@ -174,32 +172,43 @@ export default function ManageVaults() {
                     </td>
                     <td className={selectedClasses(vault)}>{vault.guardianCount}</td>
                     <td className={selectedClasses(vault)}>{vault.threshold}</td>
-                    <td className={selectedClasses(vault)}>{getShortId(vault.vaultAddress)}</td>
+                    <td className={selectedClasses(vault) + ' border-r rounded-r-sm lg:border-0 lg:rounded-r-none'}>
+                      {getShortId(vault.vaultAddress)}
+                    </td>
                     <td className={'hidden lg:table-cell border-r rounded-r-sm ' + selectedClasses(vault)}>
-                      {links(vault)}
+                      <div className="flex items-center mb-6 lg:mb-0">
+                        {links(vault)}
+                        <BsChevronDown
+                          className={`transition-transform ${
+                            currentVaultEdits.vaultAddress === vault.vaultAddress ? 'rotate-180' : ''
+                          }`}
+                        />
+                      </div>
                     </td>
                   </tr>
                   <tr className={`${currentVaultEdits.vaultAddress === vault.vaultAddress ? 'visible' : 'hidden'} `}>
-                    <td colSpan={5}>
-                    {/* className={`${currentVaultEdits.vaultAddress === vault.vaultAddress ? 'h-56 max-h-fit py-1' : 'h-0 overflow-hidden'} inline-flex transition-height`} */}
-                      <div className='inline-flex'>
+                    <td colSpan={5} className="p-0">
+                      {/* className={`${currentVaultEdits.vaultAddress === vault.vaultAddress ? 'h-56 max-h-fit py-1' : 'h-0 overflow-hidden'} inline-flex transition-height`} */}
+                      <div className="lg:inline-flex">
+                        <div className="flex items-center mb-6 lg:mb-0 lg:hidden">{links(vault)}</div>
                         <div className="">
                           {[
                             ['Recovery Vault Address', vault.vaultAddress],
                             ['Profile Address', vault.ERC725Address],
                             ['Last Updated', getLastUpdated()],
                           ].map((item: string[]) => (
-                            <div className="mb-6 mr-6 flex justify-center">
+                            <div className="mb-6 lg:mr-6 flex justify-center">
                               <ElementWithTitle
                                 title={item[0]}
                                 element={
-                                  stringOrAddress(item[1])[1] ? (
+                                  stringOrAddress(item[1], true)[1] ? (
                                     <a
                                       target="_blank"
                                       href={`${blockExplorer}${item[1]}`}
-                                      className="vaultInfo hover:text-blue-800 px-12 w-full flex items-center"
+                                      className="vaultInfo hover:text-blue-800 lg:px-12 w-full flex items-center justify-center"
                                     >
-                                      <span className='mr-3'>{stringOrAddress(item[1])[0]}</span>
+                                      <span className="mr-3 hidden lg:block">{stringOrAddress(item[1], true)[0]}</span>
+                                      <span className="mr-3 lg:hidden">{stringOrAddress(item[1], false)[0]}</span>
                                       <BsBoxArrowUpRight />
                                     </a>
                                   ) : (
@@ -214,9 +223,9 @@ export default function ManageVaults() {
                           title={`Guardian List (${vault.guardianCount})`}
                           element={
                             <>
-                              <div className="border px-6 py-3 rounded-sm">
+                              <div className="border px-6 py-3 rounded-sm flex flex-col items-center justify-center">
                                 {Object.entries(vault.guardianList).map(([_, guardian]) => (
-                                  <div className="flex w-fit items-center my-2">
+                                  <div className="flex w-fit items-center justify-center my-2">
                                     <p className="mr-6">{guardian.name}</p>
                                     <a
                                       href={`${blockExplorer}${guardian.address}`}
@@ -225,7 +234,6 @@ export default function ManageVaults() {
                                       <span className="hidden xl:block mr-3">{guardian.address}</span>
                                       <span className="block xl:hidden mr-3">{getShortId(guardian.address)}</span>
                                       <BsBoxArrowUpRight />
-
                                     </a>
                                   </div>
                                 ))}
@@ -241,7 +249,7 @@ export default function ManageVaults() {
             </tbody>
           </table>
         ) : (
-          <div className="w-full my-4 py-2 border border-red-400 rounded-sm text-center">
+          <div className="w-full my-4 p-2 border border-red-400 rounded-sm text-center">
             <span>No Recovery Vaults in memory! Try importing a one below or </span>
             <span>
               <Link to="/app/create" className="text-blue-800 hover:underline" onClick={() => resetVaultAndSteps()}>

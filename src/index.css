@@ -91,5 +91,5 @@ select {
 }
 
 th, td{
-  @apply px-2
+  @apply lg:px-2
 }
