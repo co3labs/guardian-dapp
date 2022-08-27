@@ -239,7 +239,7 @@ export default function ReviewChanges() {
                       <div className="border rounded-sm">
                         <div className="grid grid-flow-col p-4 text-left">
                           <span className="text-gray-300 mr-3">{index + 1}</span> <span>{name}</span>{' '}
-                          <span className="hidden mb:block">{address}</span>
+                          <span className="hidden md:block">{address}</span>
                           <span className="md:hidden">{getShortId(address)}</span>
                         </div>
                       </div>
