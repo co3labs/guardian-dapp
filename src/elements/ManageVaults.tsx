@@ -228,6 +228,7 @@ export default function ManageVaults() {
                                   <div className="flex w-fit items-center justify-center my-2">
                                     <p className="mr-6">{guardian.name}</p>
                                     <a
+                                      target="_blank"
                                       href={`${blockExplorer}${guardian.address}`}
                                       className="mr-6 text-sm text-gray-400 hover:text-black flex items-center"
                                     >

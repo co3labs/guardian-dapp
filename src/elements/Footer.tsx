@@ -28,7 +28,7 @@ export default function Footer() {
         ))}
         <li>
           <span className="mx-2">|</span>
-          <a className="hover:text-blue-800" href={`https://github.com/hashmesh/guardian-dapp/commit/${data?.hash}`}>
+          <a target="_blank" className="hover:text-blue-800" href={`https://github.com/hashmesh/guardian-dapp/commit/${data?.hash}`}>
             {data?.shortHash}
           </a>
         </li>
