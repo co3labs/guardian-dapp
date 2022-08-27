@@ -17,9 +17,6 @@ export default function Confetti() {
       gravity={0.2}
       recycle={false}
       onConfettiComplete={() => {
-        if (location?.pathname === '/app/create' || location?.pathname === '/app/update') {
-          navigate('/app/manage');
-        }
         setShowConfetti(false);
       }}
       className="relative z-50"

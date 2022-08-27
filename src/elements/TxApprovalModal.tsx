@@ -58,7 +58,7 @@ export default function TxApprovalModal() {
                     onClick={() => {
                       setTxState({ ...txState, showModal: false });
                       if (location?.pathname === '/app/create' || location?.pathname === '/app/update') {
-                        navigate('/app/welcome');
+                        navigate('/app/manage');
                       }
                     }}
                   >
