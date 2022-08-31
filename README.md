@@ -1,4 +1,9 @@
+
+<img width="1422" alt="image" src="https://user-images.githubusercontent.com/7534044/187704748-2a139d04-e97b-44c5-bab6-9a6289deeb07.png">
+
 # Guardians -  Web3 Social Recovery Dapp
+
+
 
 Guardians is a web3 Social Recovery Dapp that allows you to protect your online legacy by safeguarding your access to your web3 account (ERC725 account) in case you lose access to your current wallet or your private key is compromised. 
 
