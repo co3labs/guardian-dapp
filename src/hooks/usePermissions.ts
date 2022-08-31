@@ -53,11 +53,11 @@ export function useCheckAddVault(isERC725: boolean = false): [boolean, string, b
     const isAddress = checkEthAddy(web3, currentVaultEdits.ERC725Address);
     let canAddVault;
     try {
-      canAddVault = await recovery?.canCreateRecoveryVault(walletAddress, currentVaultEdits.ERC725Address);
+      //canAddVault = await recovery?.canCreateRecoveryVault(walletAddress, currentVaultEdits.ERC725Address);
       if (!isAddress) {
         setCanAddVaults([false, 'Invalid Eth Address']);
-      } else if (!canAddVault) {
-        setCanAddVaults([false, 'Connected wallet cannot add Recovery Vaults to this Profile.']);
+        //} else if (!canAddVault) {
+        // setCanAddVaults([false, 'Connected wallet cannot add Recovery Vaults to this Profile.']);
       } else {
         setCanAddVaults([true, '']);
       }
